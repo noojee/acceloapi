@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi;
+package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
 import java.net.URL;
@@ -6,9 +6,16 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import au.com.noojee.acceloapi.entities.Activity;
-import au.com.noojee.acceloapi.entities.Affiliation;
-import au.com.noojee.acceloapi.entities.Status;
+import au.com.noojee.acceloapi.AcceloApi;
+import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.AcceloFieldList;
+import au.com.noojee.acceloapi.AcceloFieldValues;
+import au.com.noojee.acceloapi.AcceloFilter;
+import au.com.noojee.acceloapi.AcceloResponse;
+import au.com.noojee.acceloapi.AcceloResponseList;
+import au.com.noojee.acceloapi.AcceloApi.EndPoints;
+import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
+import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
 
 public class Ticket
 {

@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi.entities;
+package au.com.noojee.acceloapi;
 
 public class Accelo
 {

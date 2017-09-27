@@ -1,5 +1,5 @@
 package au.com.noojee.acceloapi.entities;
-public class Account_details
+public class AccountDetails
 {
     private String position;
 
@@ -21,13 +21,13 @@ public class Account_details
 
     private String title;
 
-    private User_defined_titles user_defined_titles;
+    private UserDefinedTitles user_defined_titles;
 
     private String initials;
 
     private String email;
 
-    private User_access user_access;
+    private UserAccess user_access;
 
     private String mobile;
 
@@ -131,12 +131,12 @@ public class Account_details
         this.title = title;
     }
 
-    public User_defined_titles getUser_defined_titles ()
+    public UserDefinedTitles getUser_defined_titles ()
     {
         return user_defined_titles;
     }
 
-    public void setUser_defined_titles (User_defined_titles user_defined_titles)
+    public void setUser_defined_titles (UserDefinedTitles user_defined_titles)
     {
         this.user_defined_titles = user_defined_titles;
     }
@@ -161,12 +161,12 @@ public class Account_details
         this.email = email;
     }
 
-    public User_access getUser_access ()
+    public UserAccess getUser_access ()
     {
         return user_access;
     }
 
-    public void setUser_access (User_access user_access)
+    public void setUser_access (UserAccess user_access)
     {
         this.user_access = user_access;
     }

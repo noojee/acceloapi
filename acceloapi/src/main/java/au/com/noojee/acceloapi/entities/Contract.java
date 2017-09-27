@@ -1,10 +1,21 @@
-package au.com.noojee.acceloapi;
+package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import au.com.noojee.acceloapi.AcceloApi;
+import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.AcceloFieldList;
+import au.com.noojee.acceloapi.AcceloFilter;
+import au.com.noojee.acceloapi.AcceloResponseList;
+import au.com.noojee.acceloapi.Meta;
+import au.com.noojee.acceloapi.AcceloApi.EndPoints;
+import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
+import au.com.noojee.acceloapi.AcceloFilter.CompoundMatch;
+import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
 
 public class Contract implements Serializable
 {

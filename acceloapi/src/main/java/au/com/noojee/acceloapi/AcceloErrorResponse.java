@@ -11,9 +11,9 @@ public class AcceloErrorResponse
 	@SuppressWarnings("unused")
 	private Meta meta;
 	
-	private HttpResponse httpResponse;
+	private HTTPResponse httpResponse;
 	
-	public void setHttpResponse(HttpResponse httpResponse)
+	public void setHttpResponse(HTTPResponse httpResponse)
 	{
 		this.httpResponse = httpResponse;
 	}

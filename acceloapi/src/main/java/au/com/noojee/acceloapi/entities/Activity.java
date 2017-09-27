@@ -20,7 +20,6 @@ import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.Ticket;
 
 public class Activity
 {

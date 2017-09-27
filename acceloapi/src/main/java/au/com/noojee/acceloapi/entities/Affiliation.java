@@ -13,7 +13,6 @@ import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
 import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.Contact;
 
 public class Affiliation
 {

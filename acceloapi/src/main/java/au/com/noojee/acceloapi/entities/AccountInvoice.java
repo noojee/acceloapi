@@ -1,7 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
 
-public class Account_invoice
+public class AccountInvoice
 {
 private String manages;
 

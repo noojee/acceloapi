@@ -1,6 +1,8 @@
-package au.com.noojee.acceloapi;
+package au.com.noojee.acceloapi.entities;
 
 import java.util.Date;
+
+import au.com.noojee.acceloapi.AcceloResponseList;
 
 public class ContractPeriod
 {

@@ -1,13 +1,8 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.Company;
-import au.com.noojee.acceloapi.Contact;
-import au.com.noojee.acceloapi.Contract;
-import au.com.noojee.acceloapi.ContractPeriod;
 import au.com.noojee.acceloapi.Request;
-import au.com.noojee.acceloapi.Ticket;
 
-public class User_defined_titles
+public class UserDefinedTitles
 {
     private Location location;
 
@@ -29,7 +24,7 @@ public class User_defined_titles
 
     private Quote quote;
 
-    private Account_invoice account_invoice;
+    private AccountInvoice account_invoice;
 
     private Request request;
 
@@ -39,7 +34,7 @@ public class User_defined_titles
 
     private Campaign campaign;
 
-    private Campaign_action campaign_action;
+    private CampaignAction campaign_action;
 
     private Site site;
 
@@ -169,12 +164,12 @@ public class User_defined_titles
         this.quote = quote;
     }
 
-    public Account_invoice getAccount_invoice ()
+    public AccountInvoice getAccount_invoice ()
     {
         return account_invoice;
     }
 
-    public void setAccount_invoice (Account_invoice account_invoice)
+    public void setAccount_invoice (AccountInvoice account_invoice)
     {
         this.account_invoice = account_invoice;
     }
@@ -219,12 +214,12 @@ public class User_defined_titles
         this.campaign = campaign;
     }
 
-    public Campaign_action getCampaign_action ()
+    public CampaignAction getCampaign_action ()
     {
         return campaign_action;
     }
 
-    public void setCampaign_action (Campaign_action campaign_action)
+    public void setCampaign_action (CampaignAction campaign_action)
     {
         this.campaign_action = campaign_action;
     }

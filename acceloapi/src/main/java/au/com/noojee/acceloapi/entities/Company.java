@@ -1,11 +1,20 @@
-package au.com.noojee.acceloapi;
+package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.noojee.acceloapi.AcceloApi;
+import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.AcceloFieldList;
+import au.com.noojee.acceloapi.AcceloFilter;
+import au.com.noojee.acceloapi.AcceloResponseList;
+import au.com.noojee.acceloapi.CustomField;
+import au.com.noojee.acceloapi.AcceloApi.EndPoints;
+import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
 import au.com.noojee.acceloapi.AcceloFilter.Search;
+import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
 
 public class Company
 {
@@ -232,9 +241,9 @@ public class Company
 		String PIN = "";
 		for (CustomField field : this.customFields)
 		{
-			if (field.field_name.compareToIgnoreCase("Contract PIN") == 0)
+			if (field.getName().compareToIgnoreCase("Contract PIN") == 0)
 			{
-				PIN = field.value;
+				PIN = field.getValue();
 				break;
 			}
 		}

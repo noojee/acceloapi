@@ -1,13 +1,8 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.Company;
-import au.com.noojee.acceloapi.Contact;
-import au.com.noojee.acceloapi.Contract;
-import au.com.noojee.acceloapi.ContractPeriod;
 import au.com.noojee.acceloapi.Request;
-import au.com.noojee.acceloapi.Ticket;
 
-public class User_access
+public class UserAccess
 {
     private Asset asset;
 
@@ -41,7 +36,7 @@ public class User_access
 
     private Company company;
 
-    private Account_invoice account_invoice;
+    private AccountInvoice account_invoice;
 
     private Campaign campaign;
 
@@ -209,12 +204,12 @@ public class User_access
         this.company = company;
     }
 
-    public Account_invoice getAccount_invoice ()
+    public AccountInvoice getAccount_invoice ()
     {
         return account_invoice;
     }
 
-    public void setAccount_invoice (Account_invoice account_invoice)
+    public void setAccount_invoice (AccountInvoice account_invoice)
     {
         this.account_invoice = account_invoice;
     }

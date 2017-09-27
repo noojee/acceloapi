@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import au.com.noojee.acceloapi.entities.Company;
+
 @SuppressWarnings("unused")
 public class Request
 {

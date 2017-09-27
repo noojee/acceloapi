@@ -25,7 +25,6 @@ import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.entities.Accelo;
 
 public class AcceloApi
 {
@@ -166,7 +165,7 @@ public class AcceloApi
 
 		String json = buildJsonBody(method, fields, filters);
 
-		HttpResponse response = _request(HTTPMethod.POST, url, json);
+		HTTPResponse response = _request(HTTPMethod.POST, url, json);
 
 		return response.parseBody(clazz);
 
@@ -188,7 +187,7 @@ public class AcceloApi
 		String urlArgs = fieldNameValues.buildUrlArgs();
 
 		URL completeUrl = new URL(url.toExternalForm() + "?" + urlArgs);
-		HttpResponse response = _request(method, completeUrl, null);
+		HTTPResponse response = _request(method, completeUrl, null);
 
 		return response.parseBody(clazz);
 	}
@@ -198,10 +197,10 @@ public class AcceloApi
 	 * 
 	 * @throws AcceloException
 	 */
-	public HttpResponse _request(HTTPMethod method, URL url, String jsonArgs) throws IOException, AcceloException
+	public HTTPResponse _request(HTTPMethod method, URL url, String jsonArgs) throws IOException, AcceloException
 	{
 
-		HttpResponse response;
+		HTTPResponse response;
 
 		logger.debug(method + " url: " + url.toString());
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -248,7 +247,7 @@ public class AcceloApi
 				buffer += (char) read;
 			}
 
-			response = new HttpResponse(responseCode, connection.getResponseMessage(), buffer);
+			response = new HTTPResponse(responseCode, connection.getResponseMessage(), buffer);
 		}
 
 		return response;

@@ -34,13 +34,13 @@ import com.google.gson.Gson;
 //
 // }
 
-class HttpResponse
+class HTTPResponse
 {
 	int responseCode;
 	String responseMessage;
 	String responseBody;
 
-	public HttpResponse(int responseCode, String responseMessage, String responseBody)
+	public HTTPResponse(int responseCode, String responseMessage, String responseBody)
 	{
 		this.responseCode = responseCode;
 		this.responseMessage = responseMessage;
