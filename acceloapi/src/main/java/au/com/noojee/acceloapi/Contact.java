@@ -1,6 +1,7 @@
 package au.com.noojee.acceloapi;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloFilter.Search;
@@ -33,6 +34,8 @@ public class Contact
 	private String communication;
 	private String invoice_method;
 
+	private static HashMap<Integer, Contact> contactCache = new HashMap<>();
+
 	public static Contact getContact(AcceloApi acceloApi, String contact_firstname, String contact_lastname)
 			throws AcceloException
 	{
@@ -44,7 +47,8 @@ public class Contact
 				AcceloFilter filters = new AcceloFilter();
 				filters.add(new Search(contact_firstname + " " + contact_lastname));
 
-				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contacts.getURL(), filters, AcceloFieldList.ALL, Contact.Response.class);
+				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contacts.getURL(), filters,
+						AcceloFieldList.ALL, Contact.Response.class);
 			}
 		}
 		catch (IOException e)
@@ -64,14 +68,15 @@ public class Contact
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add(AcceloFieldList._ALL);
 		fields.add(Company.FIELDS_ALL);
-		
+
 		AcceloFilter filters = new AcceloFilter();
 		filters.add(new AcceloFilter.SimpleMatch("contact_number", phone));
 
 		Contact.Response request;
 		try
 		{
-			request = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contacts.getURL(), filters, fields, Contact.Response.class);
+			request = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contacts.getURL(), filters, fields,
+					Contact.Response.class);
 		}
 		catch (IOException e)
 		{
@@ -79,6 +84,38 @@ public class Contact
 		}
 
 		return request.getList();
+
+	}
+
+	public static Contact getById(AcceloApi acceloApi, int contactId) throws AcceloException
+	{
+		Contact contact = contactCache.get(contactId);
+
+		if (contact == null)
+		{
+			AcceloFieldList fields = new AcceloFieldList();
+			fields.add(AcceloFieldList._ALL);
+
+			AcceloFilter filters = new AcceloFilter();
+			filters.add(new AcceloFilter.SimpleMatch("id", contactId));
+
+			Contact.Response response;
+			try
+			{
+				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contacts.getURL(), filters,
+						fields, Contact.Response.class);
+			}
+			catch (IOException e)
+			{
+				throw new AcceloException(e);
+			}
+
+			if (response != null)
+				contact = response.getList().size() > 0 ? response.getList().get(0) : null;
+			contactCache.put(contactId, contact);
+		}
+
+		return contact;
 
 	}
 
@@ -199,7 +236,7 @@ public class Contact
 	@Override
 	public String toString()
 	{
-		return "Contact [company=" + company + ", firstname=" + firstname + ", middlename=" + middlename
+		return "Contact [id=" + id + " company=" + company + ", firstname=" + firstname + ", middlename=" + middlename
 				+ ", surname=" + surname + ", preferred_name=" + preferred_name + ", username=" + username
 				+ ", password=" + password + ", title=" + title + ", salutation=" + salutation + ", comments="
 				+ comments + ", status=" + status + ", standing=" + standing + ", country_id=" + country_id

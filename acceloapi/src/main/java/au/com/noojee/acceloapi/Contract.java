@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Contract implements Serializable
 {
+	
 	private static final long serialVersionUID = 1L;
 	int id;
 	String company;
@@ -22,6 +23,7 @@ public class Contract implements Serializable
 	String auto_renew;
 	String deployment;
 	String against;
+	
 
 	String against_type;
 	String manager;
@@ -205,15 +207,10 @@ public class Contract implements Serializable
 
 	public static List<Contract> getByCompany(AcceloApi acceloApi, Company company) throws AcceloException
 	{
-		// String args = "_fields=_ALL&_filters=against(company(" + company.getId() + "))";
-
 		Contract.Response request;
 		try
 		{
 			AcceloFilter filters = new AcceloFilter();
-			//filters.add("against_id", "company(" + company.getId() + ")");
-//			filters.add("against_id", company.getId());
-//			filters.add("against_type", "company");
 			
 			filters.add(new AcceloFilter.CompoundMatch("against")).add(new AcceloFilter.SimpleMatch("company", company.getId()));
 			request = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contracts.getURL(), filters, AcceloFieldList.ALL, Contract.Response.class);
@@ -287,6 +284,15 @@ public class Contract implements Serializable
 				+ value + ", status=" + status + ", billable=" + billable + ", send_invoice=" + send_invoice
 				+ ", staff_bookmarked=" + staff_bookmarked + ", type=" + type + ", against_id=" + against_id
 				+ ", notes=" + notes + ", period_template_id=" + period_template_id + "]";
+	}
+
+	/**
+	 * The dollar amount this contract includes in value
+	 * @return
+	 */
+	public double getValue()
+	{
+		return value;
 	}
 
 }

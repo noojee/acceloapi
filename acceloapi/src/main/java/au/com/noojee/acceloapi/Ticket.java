@@ -1,14 +1,19 @@
 package au.com.noojee.acceloapi;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import au.com.noojee.acceloapi.entities.Activity;
+import au.com.noojee.acceloapi.entities.Affiliation;
+import au.com.noojee.acceloapi.entities.Status;
+
 public class Ticket
 {
-    //private Logger logger = LogManager.getLogger(Ticket.class);
-    static public String PRIORITY_CRITICAL = "1";
+	// private Logger logger = LogManager.getLogger(Ticket.class);
+	static public String PRIORITY_CRITICAL = "1";
 
 	public class Response extends AcceloResponse<Ticket>
 	{
@@ -23,14 +28,20 @@ public class Ticket
 	private String custom_id;
 	private String description;
 	private String type;
+	private int affiliation; // The affiliated with this ticket which links
+								// through to the contact
 	private String against;
 	private int against_id;
 	private String against_type;
-	//private int aContact_id;
+	// private int aContact_id;
+	private int company; // If against_type is company, the company the issue is
+							// against.
 	private String priority;
 	private int classId;
 	private int resolution;
-	private String status;
+	private Status status; // Breaks our rules of using Ids but there is no
+							// other way to get the status.
+	// private String status; // id of the status
 	private String standing;
 	private String submitted_by;
 	private long date_submitted;
@@ -42,9 +53,7 @@ public class Ticket
 	private String closed_by;
 	private String opened_by;
 	private String resolved_by;
-	private String company;
 	@SuppressWarnings("unused")
-	private String contact;
 	private String object_budget;
 	private String assignee;
 	private int billable_seconds;
@@ -53,8 +62,10 @@ public class Ticket
 	private String contract;
 	private String resolution_detail;
 
-	private Contact aContact;
-	private Company aCompany;
+	// these are related objects that we need to fetch separately and we then
+	// cache them here for fast access.
+	private Contact cacheContact;
+	private Company cacheCompany;
 
 	public static List<Ticket> getTickets(AcceloApi acceloApi) throws AcceloException
 	{
@@ -64,138 +75,178 @@ public class Ticket
 
 	}
 
-    public void initCriticalIncident(Company aCompany, Contact aContact, String aContactNo)
-    {
-        this.setTitle("Out of Hours Critical Incident");
-        this.setType("2"); // General Support
-        this.setContact(aContact);
-        this.setCompany(aCompany);
-        this.setStatus("2"); // Open
-        this.setClass(1); // General Support
-        this.setPriority(PRIORITY_CRITICAL); // Critical, I think
-
-        String description = "An after hours Critical Incident has been lodged.\n"
-        + " The contact no. is " + aContactNo;
-
-        if (aCompany != null)
-            description += " \nCompany: " + aCompany.getName();
-
-        this.setDescription(description);
-
-        // validate - contract
-
-    }
-
-    /**
-     * TicketNo is the id.
-     */
-    static public Ticket getByTicketNo(AcceloApi api, String ticketNo)throws AcceloException
+	/**
+	 * TicketNo is the id.
+	 */
+	static public Ticket getByTicketNo(AcceloApi api, int ticketNo) throws AcceloException
 	{
-	    Ticket ticket = null;
+		Ticket ticket = null;
+
+		if (ticketNo != 0)
+		{
+			Ticket.ResponseList response;
+			try
+			{
+				AcceloFilter filter = new AcceloFilter();
+				filter.add(new AcceloFilter.SimpleMatch("id", ticketNo));
+
+				AcceloFieldList fields = new AcceloFieldList();
+				fields.add("_ALL");
+				fields.add("status(_ALL)");
+
+				response = api.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.tickets.getURL(), filter, fields,
+						Ticket.ResponseList.class);
+			}
+			catch (IOException e)
+			{
+				throw new AcceloException(e);
+			}
+
+			if (response != null)
+				ticket = response.getList().size() > 0 ? response.getList().get(0) : null;
+		}
+
+		return ticket;
+	}
+
+	/**
+	 * Returns a list of tickets attached to the passed contract.
+	 * 
+	 * @param acceloApi
+	 * @param contract
+	 * @return
+	 * @throws AcceloException
+	 */
+	public static List<Ticket> getByContract(AcceloApi acceloApi, Contract contract) throws AcceloException
+	{
+		List<Ticket> tickets = new ArrayList<>();
 
 		Ticket.ResponseList response;
 		try
 		{
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new AcceloFilter.SimpleMatch("id", ticketNo));
-			
+			filter.add(new AcceloFilter.SimpleMatch("contract", contract.getId()));
+
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");
-			
+			fields.add("status(_ALL)");
 
-			response = api.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.tickets.getURL(), filter, fields, Ticket.ResponseList.class);
+			URL url = AcceloApi.EndPoints.tickets.getURL();
+
+			boolean more = true;
+			int page = 0;
+			while (more)
+			{
+				URL pagedURL = new URL(url + "?_page=" + page + "&_limit=50");
+				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, pagedURL, filter, fields,
+						Ticket.ResponseList.class);
+				if (response != null)
+				{
+					List<Ticket> responseList = response.getList();
+
+					// If we get less than a page we must now have everything.
+					if (responseList.size() < 10)
+						more = false;
+
+					tickets.addAll(responseList);
+					page += 1;
+				}
+
+			}
 		}
 		catch (IOException e)
 		{
 			throw new AcceloException(e);
 		}
 
-		if (response != null)
-			ticket = response.getList().size() > 0 ? response.getList().get(0) : null;
+		return tickets;
 
-		 return ticket;
 	}
-    
-  
-    public Ticket insert(AcceloApi acceloApi) throws IOException, AcceloException
-	{
-	    Ticket result = null;
 
-		// if (aCompany.getDefault_affiliation() == 0 ||
-		// aCompany.getDefault_affiliation() == -1)
-		// throw new AcceloException("Default Contact for " +
-		// this.getCompanyName() + " Not found.");
+	public Ticket insert(AcceloApi acceloApi) throws IOException, AcceloException
+	{
+		Ticket result = null;
 
 		// Assign the Ticket to the owning aCompany.
 		AcceloFieldValues fields = new AcceloFieldValues();
 		fields.add("title", this.getTitle()); // URLEncoder.encode(ticket.getTitle()));
 		fields.add("type_id", getType());
 
-		if (this.aContact != null)
+		if (this.cacheContact != null)
 		{
-			fields.add("against_id", "" + aContact.getid());
+			fields.add("against_id", "" + cacheContact.getid());
 			fields.add("against_type", "contact");
 		}
 
-        if (this.aCompany == null)
-        {
-            // then assign the ticket to Noojee.
-            this.aCompany = Company.getByName(acceloApi, "Noojee Contact Solutions Pty Ltd");
-        }
-        if (this.aCompany != null)
+		if (this.cacheCompany == null)
 		{
-        	
-    		fields.add("against_id", "" + aCompany.getId());
-    		fields.add("against_type", "company");
+			// then assign the ticket to Noojee.
+			this.cacheCompany = Company.getByName(acceloApi, "Noojee Contact Solutions Pty Ltd");
+		}
+		if (this.cacheCompany != null)
+		{
 
-    		fields.add("status_id", this.getStatus()); 
-    		fields.add("date_started", "" + (System.currentTimeMillis() / 1000));
-    		fields.add("date_entered", "" + (System.currentTimeMillis() / 1000));
-    		fields.add("description", this.getDescription());
-    		fields.add("class_id", "" + getClassId()); // Imported
-    		//arguments.put("assignee", "2"); // assign to brett
+			fields.add("against_id", "" + cacheCompany.getId());
+			fields.add("against_type", "company");
 
-            // logger.error("fields" + fields);
+			fields.add("status_id", this.getStatus().getId());
+			fields.add("date_started", "" + (System.currentTimeMillis() / 1000));
+			fields.add("date_entered", "" + (System.currentTimeMillis() / 1000));
+			fields.add("description", this.getDescription());
+			fields.add("class_id", "" + getClassId()); // Imported
+			// arguments.put("assignee", "2"); // assign to brett
 
-    		Ticket.Response response = acceloApi.push(AcceloApi.HTTPMethod.POST, AcceloApi.EndPoints.tickets.getURL(), fields, Ticket.Response.class);
-    		if (response == null || response.getEntity() == null)
-    		{
-    			throw new AcceloException("Failed to insert ticket id:" + this.custom_id + " details:" + this.toString());
-    		}
+			// logger.error("fields" + fields);
 
-    		result = response.getEntity();
-    	}
+			Ticket.Response response = acceloApi.push(AcceloApi.HTTPMethod.POST, AcceloApi.EndPoints.tickets.getURL(),
+					fields, Ticket.Response.class);
+			if (response == null || response.getEntity() == null)
+			{
+				throw new AcceloException(
+						"Failed to insert ticket id:" + this.custom_id + " details:" + this.toString());
+			}
 
-	    return result;
+			result = response.getEntity();
+		}
+
+		return result;
 
 	}
 
-	/** 
+	/**
 	 * Assigns a staff member to a ticket and returns the new ticket.
 	 */
 	public Ticket assignStaff(AcceloApi acceloApi, Staff staff) throws AcceloException
 	{
-	    Ticket result = null;
-	    try
-	    {
+		Ticket result = null;
+		try
+		{
 
-	    	// 	Assign the Ticket to the owning aCompany.
-	    	AcceloFieldValues fields = new AcceloFieldValues();
-	    	fields.add("assignee",  staff.getId());
+			// Assign the Ticket to the owning aCompany.
+			AcceloFieldValues fields = new AcceloFieldValues();
+			fields.add("assignee", staff.getId());
 
-    		Ticket.Response response = acceloApi.push(AcceloApi.HTTPMethod.PUT, AcceloApi.EndPoints.tickets.getURL(this.id), fields, Ticket.Response.class);
-    		if (response == null || response.getEntity() == null)
-    		{
-    			throw new AcceloException("Failed to assign staff to ticket id:" + this.id + " details:" + this.toString());
-    		}
+			Ticket.Response response = acceloApi.push(AcceloApi.HTTPMethod.PUT,
+					AcceloApi.EndPoints.tickets.getURL(this.id), fields, Ticket.Response.class);
+			if (response == null || response.getEntity() == null)
+			{
+				throw new AcceloException(
+						"Failed to assign staff to ticket id:" + this.id + " details:" + this.toString());
+			}
 
-    		result = response.getEntity();
-	    }
-	    catch (Exception e)
-	    {
-	        throw new AcceloException(e);
-	    }
-    	return result;
+			result = response.getEntity();
+		}
+		catch (Exception e)
+		{
+			throw new AcceloException(e);
+		}
+		return result;
+	}
+
+	// Returns a list of activities associated with this ticket.
+	public List<Activity> getActivities(AcceloApi acceloApi) throws AcceloException
+	{
+		return Activity.getByTicket(acceloApi, this);
 	}
 
 	public int getId()
@@ -205,7 +256,12 @@ public class Ticket
 
 	public String getTitle()
 	{
-		return title;
+		return trim(title);
+	}
+
+	private String trim(String field)
+	{
+		return (field == null ? null : field.trim());
 	}
 
 	public String getCustom_id()
@@ -215,7 +271,7 @@ public class Ticket
 
 	public String getDescription()
 	{
-		return description;
+		return trim(description);
 	}
 
 	public String getType()
@@ -238,9 +294,20 @@ public class Ticket
 		return against_type;
 	}
 
-	public Contact getContact()
+	public Contact getContact(AcceloApi acceloApi) throws AcceloException
 	{
-		return aContact;
+		if (cacheContact == null)
+		{
+			Affiliation affiliation = Affiliation.getById(acceloApi, this.affiliation);
+
+			if (affiliation != null)
+			{
+				int contactId = affiliation.getContactId();
+
+				cacheContact = Contact.getById(acceloApi, contactId);
+			}
+		}
+		return cacheContact;
 	}
 
 	public String getPriority()
@@ -258,7 +325,7 @@ public class Ticket
 		return resolution;
 	}
 
-	public String getStatus()
+	public Status getStatus()
 	{
 		return status;
 	}
@@ -288,13 +355,13 @@ public class Ticket
 		return new Date(date_resolved * 1000);
 	}
 
-    // Returns null if the ticket is still open.
+	// Returns null if the ticket is still open.
 	public Date getDate_closed()
 	{
-	    if (date_closed == 0)
-	        return null;
-	    else
-		    return new Date(date_closed * 1000);
+		if (date_closed == 0)
+			return null;
+		else
+			return new Date(date_closed * 1000);
 	}
 
 	public Date getDate_started()
@@ -322,7 +389,7 @@ public class Ticket
 		return resolved_by;
 	}
 
-	public String getCompanyName()
+	public int getCompanyName()
 	{
 		return company;
 	}
@@ -332,15 +399,15 @@ public class Ticket
 		return object_budget;
 	}
 
-    /**
-     * The staff id or -1 if no assigned engineer.
-     */
+	/**
+	 * The staff id or -1 if no assigned engineer.
+	 */
 	public int getAssignee()
 	{
-	    if (assignee != null)
-		    return Integer.valueOf(assignee);
+		if (assignee != null)
+			return Integer.valueOf(assignee);
 		else
-		    return -1;
+			return -1;
 	}
 
 	public int getBillable_seconds()
@@ -365,7 +432,7 @@ public class Ticket
 
 	public String getResolution_detail()
 	{
-		return resolution_detail;
+		return trim(resolution_detail);
 	}
 
 	public void setId(int id)
@@ -408,11 +475,6 @@ public class Ticket
 		this.against_type = against_type;
 	}
 
-	public void setContact(Contact aContact)
-	{
-		this.aContact = aContact;
-	}
-
 	public void setPriority(String priority)
 	{
 		this.priority = priority;
@@ -426,11 +488,6 @@ public class Ticket
 	public void setResolution(int resolution)
 	{
 		this.resolution = resolution;
-	}
-
-	public void setStatus(String status)
-	{
-		this.status = status;
 	}
 
 	public void setStanding(String standing)
@@ -488,14 +545,9 @@ public class Ticket
 		this.resolved_by = resolved_by;
 	}
 
-	public void setCompanyName(String aCompany)
+	public void setCompanyId(int companyId)
 	{
-		this.company = aCompany;
-	}
-
-	public void setCompany(Company aCompany)
-	{
-		this.aCompany = aCompany;
+		this.company = companyId;
 	}
 
 	public void setObject_budget(String object_budget)
@@ -531,17 +583,21 @@ public class Ticket
 	@Override
 	public String toString()
 	{
-		return "Ticket [id=" + id + ", title=" + title + ", custom_id=" + custom_id + ", description=" + description
-				+ ", type=" + type + ", against=" + against + ", against_id=" + against_id + ", against_type="
-				+ against_type + ", priority=" + priority + ", resolution=" + resolution + ", status=" + status
-				+ ", standing=" + standing + ", submitted_by=" + submitted_by + ", date_submitted=" + date_submitted
-				+ ", date_opened=" + date_opened + ", date_resolved=" + date_resolved + ", date_closed=" + date_closed
-				+ ", date_started=" + date_started + ", date_due=" + date_due + ", closed_by=" + closed_by
-				+ ", opened_by=" + opened_by + ", resolved_by=" + resolved_by + ", company=" + company
-				+ ", object_budget=" + object_budget + ", assignee=" + assignee + ", billable_seconds="
-				+ billable_seconds + ", date_last_interacted=" + date_last_interacted + ", breadcrumbs=" + breadcrumbs
-				+ ", contract=" + contract + ", resolution_detail=" + resolution_detail + ", contact=" + aContact
-				+ ", company=" + aCompany + "]";
+		return "Ticket [id=" + id + ", title=" + title + ", custom_id=" + custom_id + ", type=" + type + ", against="
+				+ against + ", against_id=" + against_id + ", against_type=" + against_type + ", priority=" + priority
+				+ ", resolution=" + resolution + ", status=" + status + ", standing=" + standing + ", submitted_by="
+				+ submitted_by + ", date_submitted=" + date_submitted + ", date_opened=" + date_opened
+				+ ", date_resolved=" + date_resolved + ", date_closed=" + date_closed + ", date_started=" + date_started
+				+ ", date_due=" + date_due + ", closed_by=" + closed_by + ", opened_by=" + opened_by + ", resolved_by="
+				+ resolved_by + ", company=" + company + ", object_budget=" + object_budget + ", assignee=" + assignee
+				+ ", billable_seconds=" + billable_seconds + ", date_last_interacted=" + date_last_interacted
+				+ ", breadcrumbs=" + breadcrumbs + ", contract=" + contract + ", resolution_detail=" + resolution_detail
+				+ ", contact=" + cacheContact + ", company=" + cacheCompany + ", description=" + description + "]";
+	}
+
+	public int getContactId()
+	{
+		return id;
 	}
 
 }

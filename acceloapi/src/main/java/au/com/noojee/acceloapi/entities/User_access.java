@@ -5,6 +5,7 @@ import au.com.noojee.acceloapi.Contact;
 import au.com.noojee.acceloapi.Contract;
 import au.com.noojee.acceloapi.ContractPeriod;
 import au.com.noojee.acceloapi.Request;
+import au.com.noojee.acceloapi.Ticket;
 
 public class User_access
 {
@@ -16,7 +17,7 @@ public class User_access
 
     private Invoice invoice;
 
-    private Issue issue;
+    private Ticket issue;
 
     private Resource resource;
 
@@ -88,12 +89,12 @@ public class User_access
         this.invoice = invoice;
     }
 
-    public Issue getIssue ()
+    public Ticket getIssue ()
     {
         return issue;
     }
 
-    public void setIssue (Issue issue)
+    public void setIssue (Ticket issue)
     {
         this.issue = issue;
     }

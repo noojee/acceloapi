@@ -22,13 +22,14 @@ public class ContractPeriod
 	String allowance_type; // fixed_value
 	int service_item_id;
 	
-	
-	
-	
-	
 
 	public class Response extends AcceloResponseList<ContractPeriod>
 	{
+	}
+	
+	public int getId()
+	{
+		return id;
 	}
 	
 	public Date getDateCommenced()
@@ -40,6 +41,8 @@ public class ContractPeriod
 	{
 		return new Date(date_expires * 1000);
 	}
+	
+	
 
 
 
@@ -56,6 +59,11 @@ public class ContractPeriod
 				+ ", contract_budget=" + contract_budget + ", rollover=" + rollover + ", standing=" + standing
 				+ ", contract=" + contract + ", rate_id=" + rate_id + ", rate_type=" + rate_type + ", allowance_type="
 				+ allowance_type + ", service_item_id=" + service_item_id + "]";
+	}
+
+	public double getBudget()
+	{
+		return this.contract_budget;
 	}
 
 }

@@ -5,12 +5,13 @@ import au.com.noojee.acceloapi.Contact;
 import au.com.noojee.acceloapi.Contract;
 import au.com.noojee.acceloapi.ContractPeriod;
 import au.com.noojee.acceloapi.Request;
+import au.com.noojee.acceloapi.Ticket;
 
 public class User_defined_titles
 {
     private Location location;
 
-    private Issue issue;
+    private Ticket issue;
 
     private Prospect prospect;
 
@@ -78,12 +79,12 @@ public class User_defined_titles
         this.location = location;
     }
 
-    public Issue getIssue ()
+    public Ticket getIssue ()
     {
         return issue;
     }
 
-    public void setIssue (Issue issue)
+    public void setIssue (Ticket issue)
     {
         this.issue = issue;
     }

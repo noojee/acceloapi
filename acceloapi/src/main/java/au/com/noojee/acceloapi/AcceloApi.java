@@ -20,6 +20,11 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.AcceloFieldList;
+import au.com.noojee.acceloapi.AcceloFieldValues;
+import au.com.noojee.acceloapi.AcceloFilter;
+import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.entities.Accelo;
 
 public class AcceloApi
@@ -27,8 +32,7 @@ public class AcceloApi
 	private Logger logger = LogManager.getLogger(this.getClass());
 
 	/**
-	 * The base url to the Accelo api crm 
-	 * e.g. "https://myorg.api.accelo.com"
+	 * The base url to the Accelo api crm e.g. "https://myorg.api.accelo.com"
 	 * 
 	 */
 	static private String baseURL = null;
@@ -38,12 +42,16 @@ public class AcceloApi
 	 */
 	private static String clientID;
 
-	/** 
+	/**
 	 * The accelo secret
 	 */
-	private static String secret; 
-	
-	
+	private static String secret;
+
+	/**
+	 * The fully qualified domain name to the accelo instance.
+	 */
+	private static String fqdn;
+
 	private String accessToken = null;
 
 	public enum HTTPMethod
@@ -51,26 +59,27 @@ public class AcceloApi
 		GET, POST, PUT
 	}
 
-	static void setBaseURL(String baseURL)
+	static public void setFQDN(String fqdn)
 	{
-		AcceloApi.baseURL = baseURL + "/api/v0/";
+		AcceloApi.baseURL = "https://" + fqdn + "/api/v0/";
+		AcceloApi.fqdn = fqdn;
 	}
-	
-	static void setClientID(String clientID)
+
+	static public void setClientID(String clientID)
 	{
 		AcceloApi.clientID = clientID;
-		
+
 	}
-	
-	static void setClientSecret(String secret)
+
+	static public void setClientSecret(String secret)
 	{
 		AcceloApi.secret = secret;
 	}
-	
+
 	static public enum EndPoints
 	{
 		activities("activities"), affiliations("affiliations"), companies("companies"), contacts("contacts"), contracts(
-				"contracts"), tickets("issues"), requests("requests"), staff("staff");
+				"contracts"), tickets("issues"), requests("requests"), staff("staff"), statuses("statuses"), invoices("invoices");
 
 		private String endpoint;
 
@@ -149,7 +158,7 @@ public class AcceloApi
 	 * @throws AcceloException
 	 */
 
-	public <E, R> R pull(HTTPMethod method, URL url, AcceloFilter filterMap, AcceloFieldList fieldList, Class<R> clazz)
+	public <R> R pull(HTTPMethod method, URL url, AcceloFilter filterMap, AcceloFieldList fieldList, Class<R> clazz)
 			throws IOException, AcceloException
 	{
 		String fields = fieldList.formatAsJson();
@@ -162,6 +171,7 @@ public class AcceloApi
 		return response.parseBody(clazz);
 
 	}
+	
 
 	/*
 	 * FieldValues is a map of name value pair that constitute the entity that
@@ -171,11 +181,12 @@ public class AcceloApi
 			throws IOException, AcceloException
 	{
 		// String json = buildJsonBody(method, fieldNameValues);
-		
-		// looks like you can't post fields via json so we need to add data to the url.
-		
+
+		// looks like you can't post fields via json so we need to add data to
+		// the url.
+
 		String urlArgs = fieldNameValues.buildUrlArgs();
-		
+
 		URL completeUrl = new URL(url.toExternalForm() + "?" + urlArgs);
 		HttpResponse response = _request(method, completeUrl, null);
 
@@ -184,14 +195,15 @@ public class AcceloApi
 
 	/**
 	 * Returns a raw response string.
-	 * @throws AcceloException 
+	 * 
+	 * @throws AcceloException
 	 */
 	public HttpResponse _request(HTTPMethod method, URL url, String jsonArgs) throws IOException, AcceloException
 	{
 
 		HttpResponse response;
 
-		logger.error(method + " url: " + url.toString());
+		logger.debug(method + " url: " + url.toString());
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
 		// We always use post as we are using json and defining the method via
@@ -206,11 +218,10 @@ public class AcceloApi
 
 		connection.connect();
 
-
 		// Write the json arguments if any exist.
 		if (jsonArgs != null)
 		{
-			logger.error("jsonArgs: " + jsonArgs);
+			logger.debug("jsonArgs: " + jsonArgs);
 			try (OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream(), "UTF-8"))
 			{
 				osw.write(jsonArgs.toString());
@@ -225,7 +236,7 @@ public class AcceloApi
 		// 404 returns HTML so no point trying to parse it.
 		if (responseCode == 404)
 			throw new AcceloException("The passed url was not found" + url.toString());
-		
+
 		// Read the resonse.
 		try (InputStreamReader isr = ((responseCode < 300) ? new InputStreamReader(connection.getInputStream())
 				: new InputStreamReader(connection.getErrorStream())))
@@ -245,73 +256,70 @@ public class AcceloApi
 	}
 
 	// retrieve the access token.
-	public void connect()
+	public void connect() throws AcceloException
 	{
 		try
 		{
 
-			// Enable to debug https connection
-//			sun.util.logging.PlatformLogger.getLogger("sun.net.www.protocol.http.HttpURLConnection")
-//					.setLevel(sun.util.logging.PlatformLogger.Level.ALL);
+		// Enable to debug https connection
+		// sun.util.logging.PlatformLogger.getLogger("sun.net.www.protocol.http.HttpURLConnection")
+		// .setLevel(sun.util.logging.PlatformLogger.Level.ALL);
 
-			if (AcceloApi.baseURL == null)
-				throw new AssertionError("call AcceloApi.setBbaseURL first");
-			if (AcceloApi.clientID == null)
-				throw new AssertionError("call AcceloApi.setClientID first");
-			if (AcceloApi.secret == null)
-				throw new AssertionError("call AcceloApi.setSecret first");
+		if (AcceloApi.baseURL == null)
+			throw new AssertionError("call AcceloApi.setBbaseURL first");
+		if (AcceloApi.clientID == null)
+			throw new AssertionError("call AcceloApi.setClientID first");
+		if (AcceloApi.secret == null)
+			throw new AssertionError("call AcceloApi.setSecret first");
 
-			
-			String baseURL = AcceloApi.baseURL + "/oauth2/v0/";
-			
+		String baseURL = "https://" + AcceloApi.fqdn + "/oauth2/v0/";
 
-			// String resource = "authorize";
-			String resource = "token";
+		// String resource = "authorize";
+		String resource = "token";
 
-			URL url = new URL(baseURL + resource);
+		URL url = new URL(baseURL + resource);
 
-			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-			connection.setRequestMethod("POST");
-			connection.setDoOutput(true);
+		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+		connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
 
-			Map<String, String> arguments = new HashMap<>();
-			arguments.put("request_type", "code");
-			arguments.put("grant_type", "client_credentials");
-			arguments.put("client_id", AcceloApi.clientID);
-			arguments.put("client_secret", AcceloApi.secret);
+		Map<String, String> arguments = new HashMap<>();
+		arguments.put("request_type", "code");
+		arguments.put("grant_type", "client_credentials");
+		arguments.put("client_id", AcceloApi.clientID);
+		arguments.put("client_secret", AcceloApi.secret);
 
-			byte[] args = buildArgs(arguments);
+		byte[] args = buildArgs(arguments);
 
-			connection.setFixedLengthStreamingMode(args.length);
+		connection.setFixedLengthStreamingMode(args.length);
 
-			logger.debug("connect");
-			connection.connect();
-			try (OutputStream os = connection.getOutputStream())
-			{
-				os.write(args);
-			}
-
-			int responseCode = connection.getResponseCode();
-			logger.debug("Response: " + responseCode);
-			if (responseCode < 500)
-			{
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-				Gson gson = new Gson();
-				Accelo accelo = gson.fromJson(in, Accelo.class);
-
-				accessToken = accelo.getAccess_token();
-
-				in.close();
-			}
-			else
-				logger.debug("Invalid Response: " + responseCode);
-		}
-		catch (Exception e)
+		logger.debug("connect");
+		connection.connect();
+		try (OutputStream os = connection.getOutputStream())
 		{
-			logger.debug("Exception during connect", e);
+			os.write(args);
 		}
 
+		int responseCode = connection.getResponseCode();
+		logger.debug("Response: " + responseCode);
+		if (responseCode < 500)
+		{
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+			Gson gson = new Gson();
+			Accelo accelo = gson.fromJson(in, Accelo.class);
+
+			accessToken = accelo.getAccess_token();
+
+			in.close();
+		}
+		else
+			logger.debug("Invalid Response: " + responseCode);
+		}
+		catch (IOException e)
+		{
+			throw new AcceloException(e);
+		}
 	}
 
 	public String buildUrlArgList(Map<String, String> urlArgMap)

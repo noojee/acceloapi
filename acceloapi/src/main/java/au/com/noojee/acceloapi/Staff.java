@@ -1,6 +1,7 @@
 package au.com.noojee.acceloapi;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 // import au.com.noojee.accelogateway.AcceloApi.EndPoints;
 
@@ -11,20 +12,29 @@ public class Staff
 	private String surname;
 	private String username;
 	private String email;
+	private String phone;
 	private String mobile;
+	private String title;
+	private String timezone;
+	private String position;
+	private String access_level;
+	private String financial_level;
+	
+	// Staff don't change very often.
+	static HashMap<Integer, Staff>staffCache = new HashMap<>();
 
-	public static Staff getByEmail(AcceloApi acceloApi, String staffEmailAddress)
-			throws AcceloException
+	public static Staff getByEmail(AcceloApi acceloApi, String staffEmailAddress) throws AcceloException
 	{
 		Staff.ResponseList response = null;
 		try
 		{
 			if (staffEmailAddress != null)
 			{
-                AcceloFilter filter = new AcceloFilter();
-                filter.add(new AcceloFilter.SimpleMatch("email", staffEmailAddress));
+				AcceloFilter filter = new AcceloFilter();
+				filter.add(new AcceloFilter.SimpleMatch("email", staffEmailAddress));
 
-				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(), filter, AcceloFieldList.ALL, Staff.ResponseList.class);
+				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(), filter,
+						AcceloFieldList.ALL, Staff.ResponseList.class);
 			}
 		}
 		catch (IOException e)
@@ -35,35 +45,48 @@ public class Staff
 		Staff staff = null;
 		if (response != null)
 		{
-			//staff = response.getList().size() > 0 ? response.getList().get(0) : null;
+			// staff = response.getList().size() > 0 ? response.getList().get(0)
+			// : null;
 
 			for (Staff aStaff : response.getList())
 			{
-			    if (aStaff.getEmail().compareToIgnoreCase(staffEmailAddress) == 0)
-			    {
-			        staff = aStaff;
-			        break;
-			    }
+				if (aStaff.getEmail().compareToIgnoreCase(staffEmailAddress) == 0)
+				{
+					staff = aStaff;
+					break;
+				}
 			}
 		}
 
 		return staff;
 	}
 
-	public static Staff getById(AcceloApi acceloApi, int id)
-			throws AcceloException
+	public static Staff getById(AcceloApi acceloApi, int staff_id) throws AcceloException
 	{
-		Staff.Response response = null;
-		try
-		{
-			response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(id), null, AcceloFieldList.ALL, Staff.Response.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
+		Staff staff = staffCache.get(staff_id);
 
-		Staff staff = response.getEntity();
+		if (staff == null && staff_id != 0)
+		{
+			Staff.ResponseList response = null;
+			try
+			{
+				AcceloFilter filter = new AcceloFilter();
+				filter.add(new AcceloFilter.SimpleMatch("id", staff_id));
+
+				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(), filter,
+						AcceloFieldList.ALL, Staff.ResponseList.class);
+			}
+			catch (IOException e)
+			{
+				throw new AcceloException(e);
+			}
+
+			if (!response.getList().isEmpty())
+				staff = response.getList().get(0);
+			
+			if (staff != null)
+				staffCache.put(staff.getId(), staff);
+		}
 
 		return staff;
 	}
@@ -104,12 +127,55 @@ public class Staff
 	@Override
 	public String toString()
 	{
-		return "Staff [ id=" + id + " firstname=" + firstname + ", surname=" + surname  + ", username=" + username+ ", email=" + email +  "]";
+		return "Staff [id=" + id + ", firstname=" + firstname + ", surname=" + surname + ", username=" + username
+				+ ", email=" + email + ", phone=" + phone + ", mobile=" + mobile + ", title=" + title + ", timezone="
+				+ timezone + ", position=" + position + ", access_level=" + access_level + ", financial_level="
+				+ financial_level + "]";
 	}
 
 	public String getFullName()
 	{
 		return firstname + " " + surname;
+	}
+
+	public String getFirstname()
+	{
+		return firstname;
+	}
+
+	public String getPhone()
+	{
+		return phone;
+	}
+
+	public String getTitle()
+	{
+		return title;
+	}
+
+	public String getTimezone()
+	{
+		return timezone;
+	}
+
+	public String getPosition()
+	{
+		return position;
+	}
+
+	public String getAccess_level()
+	{
+		return access_level;
+	}
+
+	public String getFinancial_level()
+	{
+		return financial_level;
+	}
+
+	public static HashMap<Integer, Staff> getStaffCache()
+	{
+		return staffCache;
 	}
 
 }
