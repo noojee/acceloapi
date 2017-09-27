@@ -39,39 +39,39 @@ Examples:
     Contact contact = Contact.getContact(acceloApi, "firstname", "lastname");
 
 
-The API tries to use Json for filters/sending and recieving data. 
-To add creating json filters there is a small set of classes that try to make this easier. 
-Currenlty they don't handle every possible fitler combination:
+	The API tries to use Json for filters/sending and recieving data. 
+	To add creating json filters there is a small set of classes that try to make this easier. 
+	Currenlty they don't handle every possible fitler combination:
 
-Create a fitler to match on a Staff email address:
+	Create a fitler to match on a Staff email address:
 
-// Create a filter
-AcceloFilter filter = new AcceloFilter();
-filter.add(new AcceloFilter.SimpleMatch("email", staffEmailAddress));
+	// Create a filter
+	AcceloFilter filter = new AcceloFilter();
+	filter.add(new AcceloFilter.SimpleMatch("email", staffEmailAddress));
 
-// Pass it to the pull method 
-response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(), filter,
+	// Pass it to the pull method 
+	response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(), filter,
 			AcceloFieldList.ALL, Staff.ResponseList.class);
-            
-// get a staff member by id
-AcceloFilter filter = new AcceloFilter();
-filter.add(new AcceloFilter.SimpleMatch("id", staff_id));
 
-// Use the accelo 'search' filter get get a company by name:
-AcceloFilter filter = new AcceloFilter();
-filter.add(new Search(companyName));
+	// get a staff member by id
+	AcceloFilter filter = new AcceloFilter();
+	filter.add(new AcceloFilter.SimpleMatch("id", staff_id));
 
-// Build a compound filter
-AcceloFilter filters = new AcceloFilter();
+	// Use the accelo 'search' filter get get a company by name:
+	AcceloFilter filter = new AcceloFilter();
+	filter.add(new Search(companyName));
 
-// Filter using the against field with a type of company and an company id.
-filters.add(new AcceloFilter.CompoundMatch("against"))
-    .add(new AcceloFilter.SimpleMatch("company", company.getId()));
-    
-// Search by company and contact id
-AcceloFilter filter = new AcceloFilter();
-filter.add(new SimpleMatch("company_id", companyId))
-    .add(new SimpleMatch("contact_id", contactId));
+	// Build a compound filter
+	AcceloFilter filters = new AcceloFilter();
+
+	// Filter using the against field with a type of company and an company id.
+	filters.add(new AcceloFilter.CompoundMatch("against"))
+	.add(new AcceloFilter.SimpleMatch("company", company.getId()));
+
+	// Search by company and contact id
+	AcceloFilter filter = new AcceloFilter();
+	filter.add(new SimpleMatch("company_id", companyId))
+	.add(new SimpleMatch("contact_id", contactId));
 
 
 
