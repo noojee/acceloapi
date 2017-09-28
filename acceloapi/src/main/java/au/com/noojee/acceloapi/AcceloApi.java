@@ -507,13 +507,19 @@ public class AcceloApi
 		return out;
 	}
 
-	public static LocalDate toLocalDate(long date_expires)
+	public static LocalDate toLocalDate(long dateToSeconds)
 	{
-		return Instant.ofEpochSecond(date_expires)
+		return Instant.ofEpochSecond(dateToSeconds)
 				  .atZone(ZoneId.systemDefault())
 				  .toLocalDate();
 
 	}
+	
+	public static long toDateAsLong(LocalDate localDate)
+	{
+		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
+	}
+	
 	
 	public static Date toDate(LocalDate localDate)
 	{

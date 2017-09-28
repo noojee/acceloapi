@@ -2,6 +2,7 @@ package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -207,14 +208,14 @@ public class Company
 		return fax;
 	}
 
-	public int getDate_created()
+	public LocalDate getDateCreated()
 	{
-		return date_created;
+		return AcceloApi.toLocalDate(date_created);
 	}
 
-	public int getDate_modified()
+	public LocalDate getDateModified()
 	{
-		return date_modified;
+		return AcceloApi.toLocalDate(date_modified);
 	}
 
 	public String getComments()

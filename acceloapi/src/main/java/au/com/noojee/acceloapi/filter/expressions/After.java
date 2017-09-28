@@ -1,7 +1,6 @@
 package au.com.noojee.acceloapi.filter.expressions;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class After implements Expression
 {

@@ -1,8 +1,8 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.text.html.HTML.Tag;
@@ -181,7 +181,7 @@ public class Activity
 		this.body = body;
 	}
 
-	public void setAgainst_id(int id)
+	public void setAgainstId(int id)
 	{
 		this.against_id = id;
 	}
@@ -191,7 +191,7 @@ public class Activity
 		this.against_type = against_type;
 	}
 
-	public void setOwner_id(int id)
+	public void setOwnerId(int id)
 	{
 		this.owner_id = id;
 	}
@@ -216,54 +216,54 @@ public class Activity
 		this.details = details;
 	}
 
-	public void setPriority(int priority_id)
+	public void setPriority(int priorityId)
 	{
-		this.priority = priority_id;
+		this.priority = priorityId;
 	}
 
-	public void set_class(int _class_id)
+	public void setClass(int ClassId)
 	{
-		this._class = _class_id;
+		this._class = ClassId;
 	}
 
-	public void setThread_id(String thread_id)
+	public void setThreadId(String threadId)
 	{
-		this.thread_id = thread_id;
+		this.thread_id = threadId;
 	}
 
-	public void setTask_id(int task_id)
+	public void setTaskId(int taskId)
 	{
-		this.task = task_id;
+		this.task = taskId;
 	}
 
-	public void setParent_id(String parent_id)
+	public void setParentId(String parentId)
 	{
-		this.parent_id = parent_id;
+		this.parent_id = parentId;
 	}
 
-	public void setDate_started(Date date_started)
+	public void setDateStarted(LocalDate dateStarted)
 	{
-		this.date_started = date_started.getTime();
+		this.date_started = AcceloApi.toDateAsLong(dateStarted);
 	}
 
-	public void setDate_ended(Date date_ended)
+	public void setDateEnded(LocalDate dateEnded)
 	{
-		this.date_ended = date_ended.getTime();
+		this.date_ended = AcceloApi.toDateAsLong(dateEnded);
 	}
 
-	public void setDate_created(Date date_created)
+	public void setDateCreated(LocalDate dateCreated)
 	{
-		this.date_created = date_created.getTime();
+		this.date_created = AcceloApi.toDateAsLong(dateCreated);
 	}
 
-	public void setDate_modified(Date date_modified)
+	public void setDateModified(LocalDate dateModified)
 	{
-		this.date_modified = date_modified.getTime();
+		this.date_modified = AcceloApi.toDateAsLong(dateModified);
 	}
 
-	public void setStaff_id(int staff_id)
+	public void setStaffId(int staffId)
 	{
-		this.staff = staff_id;
+		this.staff = staffId;
 	}
 
 	public int getId()
@@ -316,24 +316,24 @@ public class Activity
 		return details;
 	}
 
-	public Date getDate_created()
+	public LocalDate getDateCreated()
 	{
-		return new Date(date_created * 1000);
+		return AcceloApi.toLocalDate(date_created);
 	}
 
-	public Date getDate_started()
+	public LocalDate getDateStarted()
 	{
-		return new Date(date_started * 1000);
+		return AcceloApi.toLocalDate(date_started);
 	}
 
-	public Date getDate_ended()
+	public LocalDate getDateEnded()
 	{
-		return new Date(date_ended * 1000);
+		return AcceloApi.toLocalDate(date_ended);
 	}
 
-	public Date getDate_modified()
+	public LocalDate getDateModified()
 	{
-		return new Date(date_modified * 1000);
+		return AcceloApi.toLocalDate(date_modified);
 	}
 
 	public int getStaff()
@@ -346,7 +346,7 @@ public class Activity
 		return priority;
 	}
 
-	public int get_class()
+	public int getActivityClass()
 	{
 		return _class;
 	}
@@ -361,17 +361,17 @@ public class Activity
 		return this.owner_type;
 	}
 
-	// public void setFrom(String from_addr, String from_name)
+	// public void setFrom(String fromAddr, String from_name)
 	// {
-	// this.from_addr = from_addr;
+	// this.fromAddr = fromAddr;
 	// this.from_name = from_name;
 	//
 	// }
 	//
 	//
-	// public void setTo(String to_addr, String to_name)
+	// public void setTo(String toAddr, String to_name)
 	// {
-	// this.to_addr = to_addr;
+	// this.toAddr = toAddr;
 	// this.to_name = to_name;
 	// }
 	//
@@ -408,24 +408,24 @@ public class Activity
 		this.standing = standing;
 	}
 
-	public int getInvoice_id()
+	public int getInvoiceId()
 	{
 		return invoice_id;
 	}
 
-	public void setInvoice_id(int invoice_id)
+	public void setInvoiceId(int invoiceId)
 	{
-		this.invoice_id = invoice_id;
+		this.invoice_id = invoiceId;
 	}
 
-	public int getContract_period_id()
+	public int getContractPeriodId()
 	{
 		return contract_period_id;
 	}
 
-	public void setContract_period_id(int contract_period_id)
+	public void setContractPeriodId(int contractPeriodId)
 	{
-		this.contract_period_id = contract_period_id;
+		this.contract_period_id = contractPeriodId;
 	}
 
 	public static Logger getLogger()
@@ -433,22 +433,22 @@ public class Activity
 		return logger;
 	}
 
-	public String getParent_id()
+	public String getParentId()
 	{
 		return parent_id;
 	}
 
-	public String getThread_id()
+	public String getThreadId()
 	{
 		return thread_id;
 	}
 
-	public int getAgainst_id()
+	public int getAgainstId()
 	{
 		return against_id;
 	}
 
-	public int getOwner_id()
+	public int getOwnerId()
 	{
 		return owner_id;
 	}
@@ -463,7 +463,7 @@ public class Activity
 		return visiblity;
 	}
 
-	public long getDate_logged()
+	public long getDateLogged()
 	{
 		return date_logged;
 	}
@@ -478,7 +478,7 @@ public class Activity
 		return nonbillable;
 	}
 
-	public int getTime_allocation()
+	public int getTimeAllocation()
 	{
 		return time_allocation;
 	}
@@ -488,7 +488,7 @@ public class Activity
 		return rate;
 	}
 
-	public int getRate_charged()
+	public int getRateCharged()
 	{
 		return rate_charged;
 	}

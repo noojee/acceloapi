@@ -1,7 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 
 import au.com.noojee.acceloapi.AcceloApi;
@@ -74,19 +74,19 @@ public class Invoice
 	/**
 	 * Get the Invoice by its id.
 	 */
-	static public Invoice getById(AcceloApi api, int invoice_id) throws AcceloException
+	static public Invoice getById(AcceloApi api, int invoiceId) throws AcceloException
 	{
 
-		Invoice invoice = invoiceCache.get(invoice_id);
+		Invoice invoice = invoiceCache.get(invoiceId);
 
-		if (invoice == null && invoice_id != 0)
+		if (invoice == null && invoiceId != 0)
 		{
 
 			Invoice.ResponseList response;
 			try
 			{
 				AcceloFilter filter = new AcceloFilter();
-				filter.add(new Eq("id", invoice_id));
+				filter.add(new Eq("id", invoiceId));
 
 				AcceloFieldList fields = new AcceloFieldList();
 				fields.add("_ALL");
@@ -136,12 +136,12 @@ public class Invoice
 		return subject;
 	}
 
-	public String getAgainst_type()
+	public String getAgainstType()
 	{
 		return against_type;
 	}
 
-	public int getAgainst_id()
+	public int getAgainstId()
 	{
 		return against_id;
 	}
@@ -156,12 +156,12 @@ public class Invoice
 		return invoice_number;
 	}
 
-	public int getCurrency_id()
+	public int getCurrencyId()
 	{
 		return currency_id;
 	}
 
-	public int getOwner_id()
+	public int getOwnerId()
 	{
 		return owner_id;
 	}
@@ -176,24 +176,24 @@ public class Invoice
 		return outstanding;
 	}
 
-	public int getModified_by()
+	public int getModifiedBy()
 	{
 		return modified_by;
 	}
 
-	public Date getDate_raised()
+	public LocalDate getDateRaised()
 	{
-		return new Date(date_raised);
+		return AcceloApi.toLocalDate(date_raised);
 	}
 
-	public Date getDate_due()
+	public LocalDate getDateDue()
 	{
-		return new Date(date_due);
+		return AcceloApi.toLocalDate(date_due);
 	}
 
-	public Date getDate_modified()
+	public LocalDate getDateModified()
 	{
-		return new Date(date_modified);
+		return AcceloApi.toLocalDate(date_modified);
 	}
 
 	public int getContact()
@@ -201,7 +201,7 @@ public class Invoice
 		return contact;
 	}
 
-	public int getAffiliation_id()
+	public int getAffiliationId()
 	{
 		return affiliation_id;
 	}
@@ -211,12 +211,12 @@ public class Invoice
 		return affiliation;
 	}
 
-	public int getCreator_id()
+	public int getCreatorId()
 	{
 		return creator_id;
 	}
 
-	public int getCreated_by()
+	public int getCreatedBy()
 	{
 		return created_by;
 	}

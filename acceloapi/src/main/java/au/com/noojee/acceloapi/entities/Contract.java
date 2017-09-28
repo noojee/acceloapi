@@ -241,7 +241,7 @@ public class Contract implements Serializable
 	{
 	}
 
-	public class aResponse // extends AcceloResponseList<Contract_period>
+	public class aResponse // extends AcceloResponseList<ContractPeriod>
 	{
 		Meta meta;
 		ResponseContactPeriods response;

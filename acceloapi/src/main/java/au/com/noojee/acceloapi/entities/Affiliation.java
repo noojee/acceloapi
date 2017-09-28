@@ -1,7 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,8 +41,8 @@ public class Affiliation
 		Affiliation.Response response;
 		try
 		{
-			// String args = "_filters=company_id(" + companyId +
-			// "),contact_id(" + contactId + ")&_fields=_ALL";
+			// String args = "_filters=companyId(" + companyId +
+			// "),contactId(" + contactId + ")&_fields=_ALL";
 
 			AcceloFilter filter = new AcceloFilter();
 			filter.add(new Eq("company_id", companyId)).add(new Eq("contact_id", contactId));
@@ -236,34 +236,34 @@ public class Affiliation
 		this.mobile = mobile;
 	}
 
-	public Date getDate_last_interacted()
+	public LocalDate DateLastInteracted()
 	{
-		return new Date(date_last_interacted);
+		return AcceloApi.toLocalDate(date_last_interacted);
 	}
 
-	public void setDate_last_interacted(Date date_last_interacted)
+	public void setDateLastInteracted(LocalDate dateLastInteracted)
 	{
-		this.date_last_interacted = date_last_interacted.getTime();
+		this.date_last_interacted = AcceloApi.toDateAsLong(dateLastInteracted);
 	}
 
-	public Date getDate_modified()
+	public LocalDate getDateModified()
 	{
-		return new Date(date_modified);
+		return AcceloApi.toLocalDate(date_modified);
 	}
 
-	public void setDate_modified(Date date_modified)
+	public void setDateModified(LocalDate dateModified)
 	{
-		this.date_modified = date_modified.getTime();
+		this.date_modified = AcceloApi.toDateAsLong(dateModified);
 	}
 
-	public int getStaff_bookmarked()
+	public int getStaffBookmarked()
 	{
 		return staff_bookmarked;
 	}
 
-	public void setStaff_bookmarked(int staff_bookmarked)
+	public void setStaffBookmarked(int staffBookmarked)
 	{
-		this.staff_bookmarked = staff_bookmarked;
+		this.staff_bookmarked = staffBookmarked;
 	}
 
 	public String getStanding()

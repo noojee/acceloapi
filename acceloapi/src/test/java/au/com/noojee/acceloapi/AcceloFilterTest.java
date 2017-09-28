@@ -1,7 +1,6 @@
 package au.com.noojee.acceloapi;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.junit.Test;
 

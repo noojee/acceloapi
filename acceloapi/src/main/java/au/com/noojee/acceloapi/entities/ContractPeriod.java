@@ -1,7 +1,6 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloResponseList;
