@@ -47,7 +47,7 @@ Examples:
 
 	// Create a filter
 	AcceloFilter filter = new AcceloFilter();
-	filter.add(new AcceloFilter.SimpleMatch("email", staffEmailAddress));
+	filter.add(new Eq("email", staffEmailAddress));
 
 	// Pass it to the pull method 
 	response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(), filter,
@@ -55,7 +55,7 @@ Examples:
 
 	// get a staff member by id
 	AcceloFilter filter = new AcceloFilter();
-	filter.add(new AcceloFilter.SimpleMatch("id", staff_id));
+	filter.add(new Eq("id", staff_id));
 
 	// Use the accelo 'search' filter get get a company by name:
 	AcceloFilter filter = new AcceloFilter();
@@ -65,13 +65,13 @@ Examples:
 	AcceloFilter filters = new AcceloFilter();
 
 	// Filter using the against field with a type of company and an company id.
-	filters.add(new AcceloFilter.CompoundMatch("against"))
-	.add(new AcceloFilter.SimpleMatch("company", company.getId()));
+	filters.add(new AcceloFilter.Compound("against"))
+	.add(new Eq("company", company.getId()));
 
 	// Search by company and contact id
 	AcceloFilter filter = new AcceloFilter();
-	filter.add(new SimpleMatch("company_id", companyId))
-	.add(new SimpleMatch("contact_id", contactId));
+	filter.add(new Eq("company_id", companyId))
+	.add(new Eq("contact_id", contactId));
 
 
 
