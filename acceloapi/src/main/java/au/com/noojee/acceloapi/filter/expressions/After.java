@@ -1,17 +1,18 @@
 package au.com.noojee.acceloapi.filter.expressions;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class After implements Expression
 {
 
 	private String fieldName;
-	private Date operand;
+	private LocalDate operand;
 
-	public After(String fieldName, Date operand)
+	public After(String fieldName, LocalDate localDate)
 	{
 		this.fieldName = fieldName;
-		this.operand = operand;
+		this.operand = localDate;
 	}
 
 	public String toJson()

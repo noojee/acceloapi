@@ -2,8 +2,8 @@ package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloApi;
@@ -16,15 +16,15 @@ import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.After;
 import au.com.noojee.acceloapi.filter.expressions.Before;
 import au.com.noojee.acceloapi.filter.expressions.Compound;
-import au.com.noojee.acceloapi.filter.expressions.Empty;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class Contract implements Serializable
 {
 
 	private static final long serialVersionUID = 1L;
 	int id;
-	String company;
+	String company;			// The owning company id.
 	String title;
 	long date_created;
 	long date_started;
@@ -49,9 +49,6 @@ public class Contract implements Serializable
 	int against_id;
 	String notes;
 	int period_template_id;
-
-	// fields obtain by additional api calls
-	private Company ownerCompany = null;
 
 	/**
 	 * Find an active Contract Period for the given phone no. We also trying
@@ -94,17 +91,16 @@ public class Contract implements Serializable
 				List<ContractPeriod> periods = contract.getContractPeriods(acceloApi);
 				for (ContractPeriod period : periods)
 				{
-					Date expires = period.getDateExpires();
-					Date now = new Date();
-					if (expires.before(now)) // expired
+					LocalDate expires = period.getDateExpires();
+					LocalDate now = LocalDate.now();
+					if (expires.isBefore(now)) // expired
 						continue;
 
-					Date commenced = period.getDateCommenced();
-					if (commenced.after(now))
+					LocalDate commenced = period.getDateCommenced();
+					if (commenced.isAfter(now))
 						continue; // hasn't started yet.
 
 					active = contract;
-					active.setCompany(company);
 					break;
 				}
 			}
@@ -135,17 +131,16 @@ public class Contract implements Serializable
 			List<ContractPeriod> periods = contract.getContractPeriods(acceloApi);
 			for (ContractPeriod period : periods)
 			{
-				Date expires = period.getDateExpires();
-				Date now = new Date();
-				if (expires.before(now)) // expired
+				LocalDate expires = period.getDateExpires();
+				LocalDate now = LocalDate.now();
+				if (expires.isBefore(now)) // expired
 					continue;
 
-				Date commenced = period.getDateCommenced();
-				if (commenced.after(now))
+				LocalDate commenced = period.getDateCommenced();
+				if (commenced.isAfter(now))
 					continue; // hasn't started yet.
 
 				active = contract;
-				active.setCompany(company);
 				break;
 			}
 		}
@@ -169,17 +164,21 @@ public class Contract implements Serializable
 			// Get all contracts where the expiry date is after today and the
 			// start date is before today
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new After("date_expires", new Date()));
-			filter.add(new Before("date_started", new Date()));
+			filter.add(new Before("date_started", LocalDate.now()));
+			filter.add(new After("date_expires", LocalDate.now()));
+			
 
 			contracts = acceloApi.getAll(EndPoint.contracts, filter, AcceloFieldList.ALL, Contract.ResponseList.class);
 
 			// Do it again looking for contracts with a null expiry date.
 
 			filter = new AcceloFilter();
-			filter.add(new Empty("date_expires"));
+			//filter.add(new Empty("date_expires")); // Empty on date_expires doesn't currently work and we seem to get back ad ate of 1970.
+			filter.add(new Before("date_started", LocalDate.now()));
+			filter.add(new Eq("date_expires", Expression.DATE1970)); // 1/1/1970
 
-			// contracts.addAll(acceloApi.getAll(EndPoint.contracts, filter, AcceloFieldList.ALL, Contract.ResponseList.class));
+			contracts.addAll(acceloApi.getAll(EndPoint.contracts, filter, AcceloFieldList.ALL, Contract.ResponseList.class));
+			
 
 		}
 		catch (IOException e)
@@ -189,17 +188,6 @@ public class Contract implements Serializable
 
 		return contracts;
 
-	}
-
-	private void setCompany(Company company)
-	{
-		this.ownerCompany = company;
-
-	}
-
-	public Company getCompany()
-	{
-		return this.ownerCompany;
 	}
 
 	public static List<Contract> getByCompany(AcceloApi acceloApi, Company company) throws AcceloException
@@ -292,6 +280,279 @@ public class Contract implements Serializable
 	public double getValue()
 	{
 		return value;
+	}
+
+	public LocalDate getDateCreated()
+	{
+		return AcceloApi.toLocalDate(date_created);
+	}
+
+	public LocalDate getDateStarted()
+	{
+		return AcceloApi.toLocalDate(date_started);
+	}
+
+	public LocalDate getDatePeriodExpires()
+	{
+		return AcceloApi.toLocalDate(date_period_expires);
+	}
+
+	public LocalDate getDateExpires()
+	{
+		return AcceloApi.toLocalDate(date_expires);
+	}
+
+	public LocalDate getDateLastInteracted()
+	{
+		return AcceloApi.toLocalDate(date_last_interacted);
+	}
+
+	public int getRenewDays()
+	{
+		return renew_days;
+	}
+
+	public String getStanding()
+	{
+		return standing;
+	}
+
+	public String getAutoRenew()
+	{
+		return auto_renew;
+	}
+
+	public String getDeployment()
+	{
+		return deployment;
+	}
+
+	public String getAgainst()
+	{
+		return against;
+	}
+
+	public String getAgainstType()
+	{
+		return against_type;
+	}
+
+	public String getManager()
+	{
+		return manager;
+	}
+
+	public String getJob()
+	{
+		return job;
+	}
+
+	public String getStatus()
+	{
+		return status;
+	}
+
+	public int getBillable()
+	{
+		return billable;
+	}
+
+	public String getSendInvoice()
+	{
+		return send_invoice;
+	}
+
+	public String getStaffBookmarked()
+	{
+		return staff_bookmarked;
+	}
+
+	public int getType()
+	{
+		return type;
+	}
+
+	public int getAgainstId()
+	{
+		return against_id;
+	}
+
+	public String getNotes()
+	{
+		return notes;
+	}
+
+	public int getPeriodTemplateId()
+	{
+		return period_template_id;
+	}
+
+	public int getCompanyId()
+	{
+		return Integer.valueOf(company);
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((against == null) ? 0 : against.hashCode());
+		result = prime * result + against_id;
+		result = prime * result + ((against_type == null) ? 0 : against_type.hashCode());
+		result = prime * result + ((auto_renew == null) ? 0 : auto_renew.hashCode());
+		result = prime * result + billable;
+		result = prime * result + ((company == null) ? 0 : company.hashCode());
+		result = prime * result + (int) (date_created ^ (date_created >>> 32));
+		result = prime * result + (int) (date_expires ^ (date_expires >>> 32));
+		result = prime * result + (int) (date_last_interacted ^ (date_last_interacted >>> 32));
+		result = prime * result + (int) (date_period_expires ^ (date_period_expires >>> 32));
+		result = prime * result + (int) (date_started ^ (date_started >>> 32));
+		result = prime * result + ((deployment == null) ? 0 : deployment.hashCode());
+		result = prime * result + id;
+		result = prime * result + ((job == null) ? 0 : job.hashCode());
+		result = prime * result + ((manager == null) ? 0 : manager.hashCode());
+		result = prime * result + ((notes == null) ? 0 : notes.hashCode());
+		result = prime * result + period_template_id;
+		result = prime * result + renew_days;
+		result = prime * result + ((send_invoice == null) ? 0 : send_invoice.hashCode());
+		result = prime * result + ((staff_bookmarked == null) ? 0 : staff_bookmarked.hashCode());
+		result = prime * result + ((standing == null) ? 0 : standing.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((title == null) ? 0 : title.hashCode());
+		result = prime * result + type;
+		long temp;
+		temp = Double.doubleToLongBits(value);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Contract other = (Contract) obj;
+		if (against == null)
+		{
+			if (other.against != null)
+				return false;
+		}
+		else if (!against.equals(other.against))
+			return false;
+		if (against_id != other.against_id)
+			return false;
+		if (against_type == null)
+		{
+			if (other.against_type != null)
+				return false;
+		}
+		else if (!against_type.equals(other.against_type))
+			return false;
+		if (auto_renew == null)
+		{
+			if (other.auto_renew != null)
+				return false;
+		}
+		else if (!auto_renew.equals(other.auto_renew))
+			return false;
+		if (billable != other.billable)
+			return false;
+		if (company == null)
+		{
+			if (other.company != null)
+				return false;
+		}
+		else if (!company.equals(other.company))
+			return false;
+		if (date_created != other.date_created)
+			return false;
+		if (date_expires != other.date_expires)
+			return false;
+		if (date_last_interacted != other.date_last_interacted)
+			return false;
+		if (date_period_expires != other.date_period_expires)
+			return false;
+		if (date_started != other.date_started)
+			return false;
+		if (deployment == null)
+		{
+			if (other.deployment != null)
+				return false;
+		}
+		else if (!deployment.equals(other.deployment))
+			return false;
+		if (id != other.id)
+			return false;
+		if (job == null)
+		{
+			if (other.job != null)
+				return false;
+		}
+		else if (!job.equals(other.job))
+			return false;
+		if (manager == null)
+		{
+			if (other.manager != null)
+				return false;
+		}
+		else if (!manager.equals(other.manager))
+			return false;
+		if (notes == null)
+		{
+			if (other.notes != null)
+				return false;
+		}
+		else if (!notes.equals(other.notes))
+			return false;
+		if (period_template_id != other.period_template_id)
+			return false;
+		if (renew_days != other.renew_days)
+			return false;
+		if (send_invoice == null)
+		{
+			if (other.send_invoice != null)
+				return false;
+		}
+		else if (!send_invoice.equals(other.send_invoice))
+			return false;
+		if (staff_bookmarked == null)
+		{
+			if (other.staff_bookmarked != null)
+				return false;
+		}
+		else if (!staff_bookmarked.equals(other.staff_bookmarked))
+			return false;
+		if (standing == null)
+		{
+			if (other.standing != null)
+				return false;
+		}
+		else if (!standing.equals(other.standing))
+			return false;
+		if (status == null)
+		{
+			if (other.status != null)
+				return false;
+		}
+		else if (!status.equals(other.status))
+			return false;
+		if (title == null)
+		{
+			if (other.title != null)
+				return false;
+		}
+		else if (!title.equals(other.title))
+			return false;
+		if (type != other.type)
+			return false;
+		if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value))
+			return false;
+		return true;
 	}
 
 }

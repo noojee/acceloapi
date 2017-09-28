@@ -3,7 +3,9 @@ package au.com.noojee.acceloapi.entities;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
@@ -24,6 +26,8 @@ public class Company
 	}
 
 	public static final String FIELDS_ALL = "company._ALL";
+
+	private static Map<Integer, Company> cache = new HashMap<>();
 
 	private int id;
 	private String name;
@@ -71,24 +75,29 @@ public class Company
 
 	}
 
-	public static Company getById(AcceloApi api, String companyId) throws AcceloException
+	public static Company getById(AcceloApi api, int companyId) throws AcceloException
 	{
 		Company.Response response;
-		try
+		Company company = cache .get(companyId);
+
+		if (company == null)
 		{
+			try
+			{
 
-			AcceloFilter filters = new AcceloFilter();
-			filters.add(new Eq("id", companyId));
+				AcceloFilter filters = new AcceloFilter();
+				filters.add(new Eq("id", companyId));
 
-			response = api.get(EndPoint.companies, filters, AcceloFieldList.ALL, Company.Response.class);
+				response = api.get(EndPoint.companies, filters, AcceloFieldList.ALL, Company.Response.class);
+			}
+			catch (IOException e)
+			{
+				throw new AcceloException(e);
+			}
+
+			company = response.getList().size() > 0 ? response.getList().get(0) : null;
+			cache.put(companyId, company);
 		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		Company company = null;
-		company = response.getList().size() > 0 ? response.getList().get(0) : null;
 
 		return company;
 	}
@@ -147,8 +156,7 @@ public class Company
 		Company.Response request;
 		try
 		{
-			request = acceloApi.get(EndPoint.companies, null, AcceloFieldList.ALL,
-					Company.Response.class);
+			request = acceloApi.get(EndPoint.companies, null, AcceloFieldList.ALL, Company.Response.class);
 		}
 		catch (IOException e)
 		{

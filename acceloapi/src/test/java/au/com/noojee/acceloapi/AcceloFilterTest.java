@@ -1,5 +1,6 @@
 package au.com.noojee.acceloapi;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class AcceloFilterTest
 		
 		against.add(new Eq("contract", "3"));
 		
-		against.add(new After("date_expried", new Date()));
+		against.add(new After("date_expried", LocalDate.now()));
 		
 		System.out.println(filter.toJson());
 		

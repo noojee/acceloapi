@@ -1,7 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -236,7 +236,7 @@ public class Ticket
 		return (field == null ? null : field.trim());
 	}
 
-	public String getCustom_id()
+	public String getCustomId()
 	{
 		return custom_id;
 	}
@@ -256,12 +256,12 @@ public class Ticket
 		return against;
 	}
 
-	public int getAgainst_id()
+	public int getAgainstId()
 	{
 		return against_id;
 	}
 
-	public String getAgainst_type()
+	public String getAgainstType()
 	{
 		return against_type;
 	}
@@ -307,56 +307,56 @@ public class Ticket
 		return standing;
 	}
 
-	public String getSubmitted_by()
+	public String getSubmittedBy()
 	{
 		return submitted_by;
 	}
 
-	public Date getDate_submitted()
+	public LocalDate getDateSubmitted()
 	{
-		return new Date(date_submitted * 1000);
+		return AcceloApi.toLocalDate(date_submitted );
 	}
 
-	public Date getDate_opened()
+	public LocalDate getDateOpened()
 	{
-		return new Date(date_opened * 1000);
+		return AcceloApi.toLocalDate(date_opened );
 	}
 
-	public Date getDate_resolved()
+	public LocalDate getDateResolved()
 	{
-		return new Date(date_resolved * 1000);
+		return AcceloApi.toLocalDate(date_resolved );
 	}
 
 	// Returns null if the ticket is still open.
-	public Date getDate_closed()
+	public LocalDate getDateClosed()
 	{
 		if (date_closed == 0)
 			return null;
 		else
-			return new Date(date_closed * 1000);
+			return AcceloApi.toLocalDate(date_closed );
 	}
 
-	public Date getDate_started()
+	public LocalDate getDateStarted()
 	{
-		return new Date(date_started * 1000);
+		return AcceloApi.toLocalDate(date_started );
 	}
 
-	public Date getDate_due()
+	public LocalDate getDateDue()
 	{
-		return new Date(date_due * 1000);
+		return AcceloApi.toLocalDate(date_due );
 	}
 
-	public String getClosed_by()
+	public String getClosedBy()
 	{
 		return closed_by;
 	}
 
-	public String getOpened_by()
+	public String getOpenedBy()
 	{
 		return opened_by;
 	}
 
-	public String getResolved_by()
+	public String getResolvedBy()
 	{
 		return resolved_by;
 	}
@@ -366,7 +366,7 @@ public class Ticket
 		return company;
 	}
 
-	public String getObject_budget()
+	public String getObjectBudget()
 	{
 		return object_budget;
 	}
@@ -382,14 +382,14 @@ public class Ticket
 			return -1;
 	}
 
-	public int getBillable_seconds()
+	public int getBillableSeconds()
 	{
 		return billable_seconds;
 	}
 
-	public Date getDate_last_interacted()
+	public LocalDate getDateLastInteracted()
 	{
-		return new Date(date_last_interacted * 1000);
+		return AcceloApi.toLocalDate(date_last_interacted );
 	}
 
 	public ArrayList<String> getBreadcrumbs()
@@ -402,7 +402,7 @@ public class Ticket
 		return contract;
 	}
 
-	public String getResolution_detail()
+	public String getResolutionDetail()
 	{
 		return trim(resolution_detail);
 	}
@@ -417,7 +417,7 @@ public class Ticket
 		this.title = title;
 	}
 
-	public void setCustom_id(String custom_id)
+	public void setCustomId(String custom_id)
 	{
 		this.custom_id = custom_id;
 	}
@@ -437,12 +437,12 @@ public class Ticket
 		this.against = against;
 	}
 
-	public void setAgainst_id(int against_id)
+	public void setAgainstId(int against_id)
 	{
 		this.against_id = against_id;
 	}
 
-	public void setAgainst_type(String against_type)
+	public void setAgainstType(String against_type)
 	{
 		this.against_type = against_type;
 	}
@@ -467,52 +467,52 @@ public class Ticket
 		this.standing = standing;
 	}
 
-	public void setSubmitted_by(String submitted_by)
+	public void setSubmittedBy(String submitted_by)
 	{
 		this.submitted_by = submitted_by;
 	}
 
-	public void setDate_submitted(long date_submitted)
+	public void setDateSubmitted(long date_submitted)
 	{
 		this.date_submitted = date_submitted;
 	}
 
-	public void setDate_opened(long date_opened)
+	public void setDateOpened(long date_opened)
 	{
 		this.date_opened = date_opened;
 	}
 
-	public void setDate_resolved(long date_resolved)
+	public void setDateResolved(long date_resolved)
 	{
 		this.date_resolved = date_resolved;
 	}
 
-	public void setDate_closed(long date_closed)
+	public void setDateClosed(long date_closed)
 	{
 		this.date_closed = date_closed;
 	}
 
-	public void setDate_started(long date_started)
+	public void setDateStarted(long date_started)
 	{
 		this.date_started = date_started;
 	}
 
-	public void setDate_due(long date_due)
+	public void setDateDue(long date_due)
 	{
 		this.date_due = date_due;
 	}
 
-	public void setClosed_by(String closed_by)
+	public void setClosedBy(String closed_by)
 	{
 		this.closed_by = closed_by;
 	}
 
-	public void setOpened_by(String opened_by)
+	public void setOpenedBy(String opened_by)
 	{
 		this.opened_by = opened_by;
 	}
 
-	public void setResolved_by(String resolved_by)
+	public void setResolvedBy(String resolved_by)
 	{
 		this.resolved_by = resolved_by;
 	}
@@ -522,17 +522,17 @@ public class Ticket
 		this.company = companyId;
 	}
 
-	public void setObject_budget(String object_budget)
+	public void setObjectBudget(String object_budget)
 	{
 		this.object_budget = object_budget;
 	}
 
-	public void setBillable_seconds(int billable_seconds)
+	public void setBillableSeconds(int billable_seconds)
 	{
 		this.billable_seconds = billable_seconds;
 	}
 
-	public void setDate_last_interacted(long date_last_interacted)
+	public void setDateLastInteracted(long date_last_interacted)
 	{
 		this.date_last_interacted = date_last_interacted;
 	}

@@ -1,8 +1,8 @@
 package au.com.noojee.acceloapi.filter.expressions;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 public class Eq implements Expression
@@ -29,7 +29,7 @@ public class Eq implements Expression
 		this.operands.addAll(Arrays.asList(operand));
 	}
 
-	public Eq(String fieldName, Date operand)
+	public Eq(String fieldName, LocalDate operand)
 	{
 		this.fieldName = fieldName;
 		this.operands.add(formatDateAsFilterOperand(operand));

@@ -1,7 +1,9 @@
 package au.com.noojee.acceloapi.entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 
+import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloResponseList;
 
 public class ContractPeriod
@@ -12,45 +14,41 @@ public class ContractPeriod
 	long date_commenced;
 	long date_closed;
 	long date_expires;
-	
+
 	String budget_type; // pre-paid
 	String duration_type; // fixed
 	float contract_budget;
 	String rollover; // yes no
 	String standing; // open
 	String contract;
-	int rate_id;  // -1
-	String rate_type; //object
+	int rate_id; // -1
+	String rate_type; // object
 	String allowance_type; // fixed_value
 	int service_item_id;
-	
 
 	public class Response extends AcceloResponseList<ContractPeriod>
 	{
 	}
-	
+
 	public int getId()
 	{
 		return id;
 	}
-	
-	public Date getDateCommenced()
+
+	public LocalDate getDateCommenced()
 	{
-		return new Date(date_commenced * 1000);
+		return AcceloApi.toLocalDate(date_commenced);
 	}
-	
-	public Date getDateExpires()
+
+	public LocalDate getDateExpires()
 	{
-		return new Date(date_expires * 1000);
+		return AcceloApi.toLocalDate(date_expires);
 	}
-	
-	
 
-
-
-
-
-
+	public double getBudget()
+	{
+		return this.contract_budget;
+	}
 
 	@Override
 	public String toString()
@@ -61,11 +59,6 @@ public class ContractPeriod
 				+ ", contract_budget=" + contract_budget + ", rollover=" + rollover + ", standing=" + standing
 				+ ", contract=" + contract + ", rate_id=" + rate_id + ", rate_type=" + rate_type + ", allowance_type="
 				+ allowance_type + ", service_item_id=" + service_item_id + "]";
-	}
-
-	public double getBudget()
-	{
-		return this.contract_budget;
 	}
 
 }

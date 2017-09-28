@@ -9,7 +9,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -501,6 +505,19 @@ public class AcceloApi
 		}
 
 		return out;
+	}
+
+	public static LocalDate toLocalDate(long date_expires)
+	{
+		return Instant.ofEpochSecond(date_expires)
+				  .atZone(ZoneId.systemDefault())
+				  .toLocalDate();
+
+	}
+	
+	public static Date toDate(LocalDate localDate)
+	{
+		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
 }
