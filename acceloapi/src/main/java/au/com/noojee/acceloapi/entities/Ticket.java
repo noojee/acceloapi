@@ -1,7 +1,6 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +9,11 @@ import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloFieldValues;
-import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.AcceloApi.EndPoints;
-import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
-import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
+import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public class Ticket
 {
@@ -74,14 +72,6 @@ public class Ticket
 	private Contact cacheContact;
 	private Company cacheCompany;
 
-	public static List<Ticket> getTickets(AcceloApi acceloApi) throws AcceloException
-	{
-
-		AcceloResponseList<Ticket> response = acceloApi.getAll(AcceloApi.EndPoints.tickets, Ticket.ResponseList.class);
-		return response.getList();
-
-	}
-
 	/**
 	 * TicketNo is the id.
 	 */
@@ -95,14 +85,13 @@ public class Ticket
 			try
 			{
 				AcceloFilter filter = new AcceloFilter();
-				filter.add(new AcceloFilter.SimpleMatch("id", ticketNo));
+				filter.add(new Eq("id", ticketNo));
 
 				AcceloFieldList fields = new AcceloFieldList();
 				fields.add("_ALL");
 				fields.add("status(_ALL)");
 
-				response = api.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.tickets.getURL(), filter, fields,
-						Ticket.ResponseList.class);
+				response = api.get(EndPoint.tickets, filter, fields, Ticket.ResponseList.class);
 			}
 			catch (IOException e)
 			{
@@ -128,38 +117,16 @@ public class Ticket
 	{
 		List<Ticket> tickets = new ArrayList<>();
 
-		Ticket.ResponseList response;
 		try
 		{
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new AcceloFilter.SimpleMatch("contract", contract.getId()));
+			filter.add(new Eq("contract", contract.getId()));
 
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");
 			fields.add("status(_ALL)");
 
-			URL url = AcceloApi.EndPoints.tickets.getURL();
-
-			boolean more = true;
-			int page = 0;
-			while (more)
-			{
-				URL pagedURL = new URL(url + "?_page=" + page + "&_limit=50");
-				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, pagedURL, filter, fields,
-						Ticket.ResponseList.class);
-				if (response != null)
-				{
-					List<Ticket> responseList = response.getList();
-
-					// If we get less than a page we must now have everything.
-					if (responseList.size() < 10)
-						more = false;
-
-					tickets.addAll(responseList);
-					page += 1;
-				}
-
-			}
+			tickets = acceloApi.getAll(EndPoint.tickets, filter, fields, Ticket.ResponseList.class);
 		}
 		catch (IOException e)
 		{
@@ -205,8 +172,7 @@ public class Ticket
 
 			// logger.error("fields" + fields);
 
-			Ticket.Response response = acceloApi.push(AcceloApi.HTTPMethod.POST, AcceloApi.EndPoints.tickets.getURL(),
-					fields, Ticket.Response.class);
+			Ticket.Response response = acceloApi.insert(EndPoint.tickets, fields, Ticket.Response.class);
 			if (response == null || response.getEntity() == null)
 			{
 				throw new AcceloException(
@@ -233,8 +199,7 @@ public class Ticket
 			AcceloFieldValues fields = new AcceloFieldValues();
 			fields.add("assignee", staff.getId());
 
-			Ticket.Response response = acceloApi.push(AcceloApi.HTTPMethod.PUT,
-					AcceloApi.EndPoints.tickets.getURL(this.id), fields, Ticket.Response.class);
+			Ticket.Response response = acceloApi.update(EndPoint.tickets, this.id, fields, Ticket.Response.class);
 			if (response == null || response.getEntity() == null)
 			{
 				throw new AcceloException(

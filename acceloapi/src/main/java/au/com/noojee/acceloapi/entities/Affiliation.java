@@ -6,13 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloApi;
-import au.com.noojee.acceloapi.AcceloApi.EndPoints;
-import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFilter;
-import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
 import au.com.noojee.acceloapi.AcceloResponseList;
+import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public class Affiliation
 {
@@ -46,10 +45,9 @@ public class Affiliation
 			// "),contact_id(" + contactId + ")&_fields=_ALL";
 
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new SimpleMatch("company_id", companyId)).add(new SimpleMatch("contact_id", contactId));
+			filter.add(new Eq("company_id", companyId)).add(new Eq("contact_id", contactId));
 
-			response = api.pull(HTTPMethod.GET, EndPoints.affiliations.getURL(), filter, AcceloFieldList.ALL,
-					Affiliation.Response.class);
+			response = api.get(EndPoint.affiliations, filter, AcceloFieldList.ALL, Affiliation.Response.class);
 		}
 		catch (IOException e)
 		{
@@ -69,13 +67,12 @@ public class Affiliation
 			fields.add(AcceloFieldList._ALL);
 
 			AcceloFilter filters = new AcceloFilter();
-			filters.add(new AcceloFilter.SimpleMatch("id", affiliationId));
+			filters.add(new Eq("id", affiliationId));
 
 			Affiliation.Response response;
 			try
 			{
-				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.affiliations.getURL(), filters,
-						fields, Affiliation.Response.class);
+				response = acceloApi.get(EndPoint.affiliations, filters, fields, Affiliation.Response.class);
 			}
 			catch (IOException e)
 			{
@@ -100,10 +97,9 @@ public class Affiliation
 			// String args = "_filters=phone(" + phone + ")";
 
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new SimpleMatch("phone", phone));
+			filter.add(new Eq("phone", phone));
 
-			response = api.pull(HTTPMethod.GET, EndPoints.affiliations.getURL(), filter, AcceloFieldList.ALL,
-					Affiliation.Response.class);
+			response = api.get(EndPoint.affiliations, filter, AcceloFieldList.ALL, Affiliation.Response.class);
 		}
 		catch (IOException e)
 		{
@@ -122,10 +118,9 @@ public class Affiliation
 			// contact.getid() + ")";
 
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new SimpleMatch("contact", contact.getid()));
+			filter.add(new Eq("contact", contact.getid()));
 
-			response = api.pull(HTTPMethod.GET, EndPoints.affiliations.getURL(), filter, AcceloFieldList.ALL,
-					Affiliation.Response.class);
+			response = api.get(EndPoint.affiliations, filter, AcceloFieldList.ALL, Affiliation.Response.class);
 		}
 		catch (IOException e)
 		{
@@ -144,10 +139,9 @@ public class Affiliation
 			// contact.getid() + ")";
 
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new SimpleMatch("activity", activity.getId()));
+			filter.add(new Eq("activity", activity.getId()));
 
-			response = acceloApi.pull(HTTPMethod.GET, EndPoints.affiliations.getURL(), filter, AcceloFieldList.ALL,
-					Affiliation.Response.class);
+			response = acceloApi.get(EndPoint.affiliations, filter, AcceloFieldList.ALL, Affiliation.Response.class);
 		}
 		catch (IOException e)
 		{

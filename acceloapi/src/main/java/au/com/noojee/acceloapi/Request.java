@@ -50,7 +50,7 @@ public class Request
 		values.add("type_id", "" + type_id);
 		values.add("affiliation_id", "" + affiliation_id);
 
-		Request.Response response = acceloApi.push(AcceloApi.HTTPMethod.POST, AcceloApi.EndPoints.requests.getURL(), values, Request.Response.class);
+		Request.Response response = acceloApi.insert(EndPoint.requests, values, Request.Response.class);
 
 		return response;
 

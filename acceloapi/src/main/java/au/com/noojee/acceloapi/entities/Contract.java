@@ -2,24 +2,26 @@ package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloResponseList;
+import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.Meta;
-import au.com.noojee.acceloapi.AcceloApi.EndPoints;
-import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
-import au.com.noojee.acceloapi.AcceloFilter.CompoundMatch;
-import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.After;
+import au.com.noojee.acceloapi.filter.expressions.Before;
+import au.com.noojee.acceloapi.filter.expressions.Compound;
+import au.com.noojee.acceloapi.filter.expressions.Empty;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public class Contract implements Serializable
 {
-	
+
 	private static final long serialVersionUID = 1L;
 	int id;
 	String company;
@@ -34,7 +36,6 @@ public class Contract implements Serializable
 	String auto_renew;
 	String deployment;
 	String against;
-	
 
 	String against_type;
 	String manager;
@@ -52,66 +53,11 @@ public class Contract implements Serializable
 	// fields obtain by additional api calls
 	private Company ownerCompany = null;
 
-	// These values are set based on the contents of the title.
-	// Premium - 24 hour support - 24 x 7
-	// Standard - 8am to 8pm - Victorian Business Days
-	// Basic - 9am to 5pm - Victorian Business Days
-
-	boolean allHours = true;
-	int startTime = 9;
-	int endTime = 5;
-	boolean nonBusinessDaysAllowed = false;
-
-	public void setSupportHours()
-	{
-		if (title.toLowerCase().contains("premium"))
-		{
-			allHours = true;
-			nonBusinessDaysAllowed = true;
-		}
-		else if (title.toLowerCase().contains("standard"))
-		{
-			allHours = false;
-			startTime = 8;
-			endTime = 20;
-			nonBusinessDaysAllowed = false;
-		}
-		else if (title.toLowerCase().contains("basic"))
-		{
-			allHours = false;
-			startTime = 9;
-			endTime = 17;
-			nonBusinessDaysAllowed = false;
-		}
-	}
-
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
-	{
-		in.defaultReadObject();
-		setSupportHours();
-	}
-
-	public boolean isInSupportHours(boolean isBusinessDay)
-	{
-		boolean supportAvailable = false;
-
-		Calendar now = Calendar.getInstance();
-
-		if (allHours)
-		{
-			supportAvailable = true;
-		}
-		else if (now.get(Calendar.HOUR) >= startTime && now.get(Calendar.HOUR) < endTime)
-		{
-			// In reality this method should only ever be called out of hours.
-			supportAvailable = isBusinessDay || nonBusinessDaysAllowed;
-		}
-		return supportAvailable;
-	}
-
-	/** 
-	 * Find an active Contract Period for the given phone no.
-	 * We also trying stripping the area code in case the phone no. is stored as just eight digits.
+	/**
+	 * Find an active Contract Period for the given phone no. We also trying
+	 * stripping the area code in case the phone no. is stored as just eight
+	 * digits.
+	 * 
 	 * @param phone
 	 * @return
 	 * @throws AcceloException
@@ -126,8 +72,9 @@ public class Contract implements Serializable
 		List<Contact> contacts = Contact.getByPhone(acceloApi, phone);
 		if (contacts.size() == 0)
 		{
-			// Didn't find by the phone number. 
-			// List try trimming off the area code and see if that gives a match.
+			// Didn't find by the phone number.
+			// List try trimming off the area code and see if that gives a
+			// match.
 
 			contacts = Contact.getByPhone(acceloApi, phone.substring(2));
 		}
@@ -168,9 +115,11 @@ public class Contract implements Serializable
 
 	}
 
-	/** 
+	/**
 	 * Find an Contract for the given company.
-	 * @param Company - we only us the Id of the company.
+	 * 
+	 * @param Company
+	 *            - we only us the Id of the company.
 	 * @return
 	 * @throws AcceloException
 	 */
@@ -205,6 +154,43 @@ public class Contract implements Serializable
 
 	}
 
+	/**
+	 * Get a complete list of the active contracts.
+	 * 
+	 * @param acceloApi
+	 * @throws AcceloException
+	 */
+	public static List<Contract> getActiveContracts(AcceloApi acceloApi) throws AcceloException
+	{
+		List<Contract> contracts = new ArrayList<>();
+
+		try
+		{
+			// Get all contracts where the expiry date is after today and the
+			// start date is before today
+			AcceloFilter filter = new AcceloFilter();
+			filter.add(new After("date_expires", new Date()));
+			filter.add(new Before("date_started", new Date()));
+
+			contracts = acceloApi.getAll(EndPoint.contracts, filter, AcceloFieldList.ALL, Contract.ResponseList.class);
+
+			// Do it again looking for contracts with a null expiry date.
+
+			filter = new AcceloFilter();
+			filter.add(new Empty("date_expires"));
+
+			// contracts.addAll(acceloApi.getAll(EndPoint.contracts, filter, AcceloFieldList.ALL, Contract.ResponseList.class));
+
+		}
+		catch (IOException e)
+		{
+			throw new AcceloException(e);
+		}
+
+		return contracts;
+
+	}
+
 	private void setCompany(Company company)
 	{
 		this.ownerCompany = company;
@@ -218,13 +204,13 @@ public class Contract implements Serializable
 
 	public static List<Contract> getByCompany(AcceloApi acceloApi, Company company) throws AcceloException
 	{
-		Contract.Response request;
+		Contract.ResponseList request;
 		try
 		{
 			AcceloFilter filters = new AcceloFilter();
-			
-			filters.add(new AcceloFilter.CompoundMatch("against")).add(new AcceloFilter.SimpleMatch("company", company.getId()));
-			request = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contracts.getURL(), filters, AcceloFieldList.ALL, Contract.Response.class);
+
+			filters.add(new Compound("against")).add(new Eq("company", company.getId()));
+			request = acceloApi.get(EndPoint.contracts, filters, AcceloFieldList.ALL, Contract.ResponseList.class);
 		}
 		catch (IOException e)
 		{
@@ -238,17 +224,18 @@ public class Contract implements Serializable
 	public List<ContractPeriod> getContractPeriods(AcceloApi acceloApi) throws AcceloException
 	{
 
-		aResponse respose;
+		List<ContractPeriod> periods;
 		try
 		{
-			respose = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contracts.getURL(this.getId(), "/periods"), null, AcceloFieldList.ALL,aResponse.class);
+			periods = acceloApi.getAll(EndPoint.contracts.getURL(this.getId(), "/periods"), null, AcceloFieldList.ALL,
+					ResponseContactPeriods.class);
 		}
 		catch (IOException e)
 		{
 			throw new AcceloException(e);
 		}
 
-		return respose.response.getList();
+		return periods;
 
 	}
 
@@ -259,10 +246,10 @@ public class Contract implements Serializable
 
 	public String getTitle()
 	{
-	    return title;
+		return title;
 	}
 
-	public class Response extends AcceloResponseList<Contract>
+	public class ResponseList extends AcceloResponseList<Contract>
 	{
 	}
 
@@ -272,7 +259,7 @@ public class Contract implements Serializable
 		ResponseContactPeriods response;
 	}
 
-	public class ResponseContactPeriods
+	public class ResponseContactPeriods extends AcceloResponseList<ContractPeriod>
 	{
 
 		List<ContractPeriod> periods;
@@ -299,6 +286,7 @@ public class Contract implements Serializable
 
 	/**
 	 * The dollar amount this contract includes in value
+	 * 
 	 * @return
 	 */
 	public double getValue()

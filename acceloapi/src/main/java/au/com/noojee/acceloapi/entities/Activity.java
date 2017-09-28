@@ -1,7 +1,6 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,14 +11,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import au.com.noojee.acceloapi.AcceloApi;
-import au.com.noojee.acceloapi.AcceloApi.EndPoints;
-import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloFieldValues;
-import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
+import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public class Activity
 {
@@ -109,8 +108,7 @@ public class Activity
 	{
 		AcceloFieldValues values = marshallArgs();
 
-		Ticket.Response response = acceloApi.push(HTTPMethod.POST, EndPoints.activities.getURL(), values,
-				Ticket.Response.class);
+		Ticket.Response response = acceloApi.insert(EndPoint.activities, values, Ticket.Response.class);
 		logger.debug(response);
 	}
 
@@ -144,37 +142,15 @@ public class Activity
 	{
 		List<Activity> activities = new ArrayList<>();
 
-		Activity.ResponseList response;
 		try
 		{
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new AcceloFilter.SimpleMatch("against_id", ticket.getId()));
+			filter.add(new Eq("against_id", ticket.getId()));
 
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");
 
-			URL url = AcceloApi.EndPoints.activities.getURL();
-
-			boolean more = true;
-			int page = 0;
-			while (more)
-			{
-				URL pagedURL = new URL(url + "?_page=" + page + "&_limit=50");
-				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, pagedURL, filter, fields,
-						Activity.ResponseList.class);
-				if (response != null)
-				{
-					List<Activity> responseList = response.getList();
-
-					// If we get less than a page we must now have everything.
-					if (responseList.size() < 10)
-						more = false;
-
-					activities.addAll(responseList);
-					page += 1;
-				}
-
-			}
+			activities = acceloApi.getAll(EndPoint.activities, filter, fields, Activity.ResponseList.class);
 		}
 		catch (IOException e)
 		{

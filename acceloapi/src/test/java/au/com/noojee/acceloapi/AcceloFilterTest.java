@@ -1,10 +1,14 @@
 package au.com.noojee.acceloapi;
 
+import java.util.Date;
+
 import org.junit.Test;
 
-import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFilter;
-import au.com.noojee.acceloapi.AcceloFilter.CompoundMatch;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.After;
+import au.com.noojee.acceloapi.filter.expressions.Compound;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class AcceloFilterTest
 {
@@ -14,16 +18,18 @@ public class AcceloFilterTest
 	{
 		AcceloFilter filter = new AcceloFilter();
 		
-		CompoundMatch against = filter.add(new AcceloFilter.CompoundMatch("against"));
+		Compound against = filter.add(new Compound("against"));
 		
-		against = against.add(new AcceloFilter.SimpleMatch("company",  new String[] {"1", "2"}));
+		against = against.add(new Eq("company",  new String[] {"1", "2"}));
 		
-		against.add(new AcceloFilter.SimpleMatch("contract", "3"));
+		against.add(new Eq("contract", "3"));
+		
+		against.add(new After("date_expried", new Date()));
 		
 		System.out.println(filter.toJson());
 		
 		filter = new AcceloFilter();
-		filter.add(new AcceloFilter.Search("911"));
+		filter.add(new Search("911"));
 		
 		System.out.println(filter.toJson());
 		

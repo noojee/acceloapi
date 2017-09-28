@@ -7,12 +7,11 @@ import java.util.List;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.AcceloApi.EndPoints;
-import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
-import au.com.noojee.acceloapi.AcceloFilter.Search;
-import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
+import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.filter.expressions.Search;
 
 // import au.com.noojee.accelogateway.AcceloApi.EndPoints;
 
@@ -55,8 +54,7 @@ public class Contact
 				AcceloFilter filters = new AcceloFilter();
 				filters.add(new Search(contact_firstname + " " + contact_lastname));
 
-				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contacts.getURL(), filters,
-						AcceloFieldList.ALL, Contact.Response.class);
+				response = acceloApi.get(EndPoint.contacts, filters, AcceloFieldList.ALL, Contact.Response.class);
 			}
 		}
 		catch (IOException e)
@@ -78,13 +76,12 @@ public class Contact
 		fields.add(Company.FIELDS_ALL);
 
 		AcceloFilter filters = new AcceloFilter();
-		filters.add(new AcceloFilter.SimpleMatch("contact_number", phone));
+		filters.add(new Eq("contact_number", phone));
 
 		Contact.Response request;
 		try
 		{
-			request = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contacts.getURL(), filters, fields,
-					Contact.Response.class);
+			request = acceloApi.get(EndPoint.contacts, filters, fields, Contact.Response.class);
 		}
 		catch (IOException e)
 		{
@@ -105,13 +102,12 @@ public class Contact
 			fields.add(AcceloFieldList._ALL);
 
 			AcceloFilter filters = new AcceloFilter();
-			filters.add(new AcceloFilter.SimpleMatch("id", contactId));
+			filters.add(new Eq("id", contactId));
 
 			Contact.Response response;
 			try
 			{
-				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.contacts.getURL(), filters,
-						fields, Contact.Response.class);
+				response = acceloApi.get(EndPoint.contacts, filters, fields, Contact.Response.class);
 			}
 			catch (IOException e)
 			{

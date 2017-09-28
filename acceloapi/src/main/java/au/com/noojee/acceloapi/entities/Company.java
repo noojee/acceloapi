@@ -8,13 +8,12 @@ import java.util.List;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.CustomField;
-import au.com.noojee.acceloapi.AcceloApi.EndPoints;
-import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
-import au.com.noojee.acceloapi.AcceloFilter.Search;
-import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
+import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class Company
 {
@@ -45,19 +44,20 @@ public class Company
 		Company.Response response;
 		try
 		{
-			//String args = "_search=" + URLEncoder.encode(companyName, "UTF-8");
-					//+ "&_fields=(_ALL),contact(_ALL)";
+			// String args = "_search=" + URLEncoder.encode(companyName,
+			// "UTF-8");
+			// + "&_fields=(_ALL),contact(_ALL)";
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add(AcceloFieldList._ALL);
 			fields.add(Contact.FIELDS_ALL);
-			
+
 			AcceloFilter filter = new AcceloFilter();
 			filter.add(new Search(companyName));
 
-			response = api.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.companies.getURL(), filter, fields, Company.Response.class);
-	    	if (!response.isOK())
+			response = api.get(EndPoint.companies, filter, fields, Company.Response.class);
+			if (!response.isOK())
 				throw new AcceloException(response.getStatusMessage());
-	    	
+
 		}
 		catch (IOException e)
 		{
@@ -78,9 +78,9 @@ public class Company
 		{
 
 			AcceloFilter filters = new AcceloFilter();
-			filters.add(new AcceloFilter.SimpleMatch("id", companyId));
+			filters.add(new Eq("id", companyId));
 
-			response = api.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.companies.getURL(), filters, AcceloFieldList.ALL, Company.Response.class);
+			response = api.get(EndPoint.companies, filters, AcceloFieldList.ALL, Company.Response.class);
 		}
 		catch (IOException e)
 		{
@@ -106,7 +106,8 @@ public class Company
 
 			String path = "/" + this.id + "/profiles/values";
 
-			response = api.pull(AcceloApi.HTTPMethod.GET, new URL(AcceloApi.EndPoints.companies.getURL(), path), null, AcceloFieldList.ALL, CustomFieldsResponse.class);
+			response = api.get(new URL(EndPoint.companies.getURL(), path), null, AcceloFieldList.ALL,
+					CustomFieldsResponse.class, 0);
 		}
 		catch (IOException e)
 		{
@@ -124,12 +125,11 @@ public class Company
 		Company.Response response;
 		try
 		{
-		
-			AcceloFilter filters = new AcceloFilter();
-			filters.add(new AcceloFilter.SimpleMatch("id",  contractId));
-			
 
-			response = api.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.companies.getURL(), filters, AcceloFieldList.ALL, Company.Response.class);
+			AcceloFilter filters = new AcceloFilter();
+			filters.add(new Eq("id", contractId));
+
+			response = api.get(EndPoint.companies, filters, AcceloFieldList.ALL, Company.Response.class);
 		}
 		catch (IOException e)
 		{
@@ -147,7 +147,8 @@ public class Company
 		Company.Response request;
 		try
 		{
-			request = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.companies.getURL(), null, AcceloFieldList.ALL, Company.Response.class);
+			request = acceloApi.get(EndPoint.companies, null, AcceloFieldList.ALL,
+					Company.Response.class);
 		}
 		catch (IOException e)
 		{
@@ -165,7 +166,7 @@ public class Company
 
 	public void setId(int companyId)
 	{
-	    this.id = companyId;
+		this.id = companyId;
 	}
 
 	public String getName()

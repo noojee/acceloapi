@@ -7,9 +7,11 @@ import java.util.HashMap;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
+import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public class Invoice
 {
@@ -84,14 +86,13 @@ public class Invoice
 			try
 			{
 				AcceloFilter filter = new AcceloFilter();
-				filter.add(new AcceloFilter.SimpleMatch("id", invoice_id));
+				filter.add(new Eq("id", invoice_id));
 
 				AcceloFieldList fields = new AcceloFieldList();
 				fields.add("_ALL");
 				fields.add("status(_ALL)");
 
-				response = api.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.invoices.getURL(), filter, fields,
-						Invoice.ResponseList.class);
+				response = api.get(EndPoint.invoices, filter, fields, Invoice.ResponseList.class);
 			}
 			catch (IOException e)
 			{

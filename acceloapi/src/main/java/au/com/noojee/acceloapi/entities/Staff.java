@@ -6,12 +6,11 @@ import java.util.HashMap;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFilter;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.AcceloApi.EndPoints;
-import au.com.noojee.acceloapi.AcceloApi.HTTPMethod;
-import au.com.noojee.acceloapi.AcceloFilter.SimpleMatch;
+import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 // import au.com.noojee.accelogateway.AcceloApi.EndPoints;
 
@@ -29,9 +28,9 @@ public class Staff
 	private String position;
 	private String access_level;
 	private String financial_level;
-	
+
 	// Staff don't change very often.
-	static HashMap<Integer, Staff>staffCache = new HashMap<>();
+	static HashMap<Integer, Staff> staffCache = new HashMap<>();
 
 	public static Staff getByEmail(AcceloApi acceloApi, String staffEmailAddress) throws AcceloException
 	{
@@ -41,10 +40,9 @@ public class Staff
 			if (staffEmailAddress != null)
 			{
 				AcceloFilter filter = new AcceloFilter();
-				filter.add(new AcceloFilter.SimpleMatch("email", staffEmailAddress));
+				filter.add(new Eq("email", staffEmailAddress));
 
-				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(), filter,
-						AcceloFieldList.ALL, Staff.ResponseList.class);
+				response = acceloApi.get(EndPoint.staff, filter, AcceloFieldList.ALL, Staff.ResponseList.class);
 			}
 		}
 		catch (IOException e)
@@ -81,10 +79,9 @@ public class Staff
 			try
 			{
 				AcceloFilter filter = new AcceloFilter();
-				filter.add(new AcceloFilter.SimpleMatch("id", staff_id));
+				filter.add(new Eq("id", staff_id));
 
-				response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(), filter,
-						AcceloFieldList.ALL, Staff.ResponseList.class);
+				response = acceloApi.get(EndPoint.staff, filter, AcceloFieldList.ALL, Staff.ResponseList.class);
 			}
 			catch (IOException e)
 			{
@@ -93,7 +90,7 @@ public class Staff
 
 			if (!response.getList().isEmpty())
 				staff = response.getList().get(0);
-			
+
 			if (staff != null)
 				staffCache.put(staff.getId(), staff);
 		}
