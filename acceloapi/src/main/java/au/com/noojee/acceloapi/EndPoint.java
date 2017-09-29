@@ -16,6 +16,7 @@ public enum EndPoint
 			this.endpoint = endpoint;
 		}
 
+		@Override
 		public String toString()
 		{
 			return this.endpoint;

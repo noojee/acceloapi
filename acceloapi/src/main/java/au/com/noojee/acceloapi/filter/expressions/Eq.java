@@ -35,6 +35,7 @@ public class Eq implements Expression
 		this.operands.add(formatDateAsFilterOperand(operand));
 	}
 
+	@Override
 	public String toJson()
 	{
 		String json = "\"" + fieldName + "\": [";

@@ -10,7 +10,7 @@ public class AcceloFieldList
 
 	
 
-	List<String> fields = new ArrayList<String>();
+	List<String> fields = new ArrayList<>();
 
 	public AcceloFieldList(String field)
 	{

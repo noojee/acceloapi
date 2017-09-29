@@ -252,6 +252,7 @@ public class Contract implements Serializable
 
 		List<ContractPeriod> periods;
 
+		@Override
 		public List<ContractPeriod> getList()
 		{
 			return periods;

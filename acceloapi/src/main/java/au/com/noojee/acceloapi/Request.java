@@ -12,11 +12,13 @@ public class Request
 	public class Response extends AcceloResponse<Request>
 	{
 
+		@Override
 		public String getStatusMessage()
 		{
 			return super.getStatusMessage();
 		}
 
+		@Override
 		public boolean isOK()
 		{
 			return super.isOK();

@@ -95,7 +95,7 @@ public class AcceloApi
 	{
 		return getAll(endPoint.getURL(), filterMap, fieldList, clazz);
 	}
-	
+
 	public <T> List<T> getAll(URL url, AcceloFilter filterMap, AcceloFieldList fieldList,
 			Class<? extends AcceloResponseList<T>> clazz) throws IOException, AcceloException
 	{
@@ -108,21 +108,16 @@ public class AcceloApi
 
 			if (responseList != null)
 			{
-				if (responseList instanceof AcceloResponseList)
+				List<T> entityList = responseList.getList();
+
+				// If we get less than a page we must now have everything.
+				if (entityList.size() < 10)
+					more = false;
+
+				for (T entity : entityList)
 				{
-					List<T> entityList = responseList.getList();
-
-					// If we get less than a page we must now have everything.
-					if (entityList.size() < 10)
-						more = false;
-
-					for (T entity : entityList)
-					{
-						entities.add(entity);
-					}
+					entities.add(entity);
 				}
-				else
-					throw new AcceloException("Expected AcceloResponseList got " + responseList);
 				page += 1;
 			}
 
@@ -130,7 +125,6 @@ public class AcceloApi
 
 		return entities;
 	}
-
 
 	/**
 	 * Send a request to get a single entity or the 'nth' page of entities. The
@@ -154,8 +148,6 @@ public class AcceloApi
 		HTTPResponse response = get(endPoint.getURL(), filterMap, fieldList, pageNo);
 		return response.parseBody(clazz);
 	}
-	
-
 
 	/**
 	 * Send a request to get a single entity or the first page of entities.
@@ -509,18 +501,15 @@ public class AcceloApi
 
 	public static LocalDate toLocalDate(long dateToSeconds)
 	{
-		return Instant.ofEpochSecond(dateToSeconds)
-				  .atZone(ZoneId.systemDefault())
-				  .toLocalDate();
+		return Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault()).toLocalDate();
 
 	}
-	
+
 	public static long toDateAsLong(LocalDate localDate)
 	{
 		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
 	}
-	
-	
+
 	public static Date toDate(LocalDate localDate)
 	{
 		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());

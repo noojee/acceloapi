@@ -21,6 +21,7 @@ public class AcceloException extends Exception
 		this.error = error;
 	}
 	
+	@Override
 	public String toString()
 	{
 		String response;

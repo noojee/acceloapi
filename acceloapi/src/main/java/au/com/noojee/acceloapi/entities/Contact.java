@@ -254,9 +254,5 @@ public class Contact
 		return firstname + " " + surname;
 	}
 
-	public static List<Contact> getByCompany(AcceloApi api, Company company2)
-	{
-		return null;
-	}
-
+	
 }

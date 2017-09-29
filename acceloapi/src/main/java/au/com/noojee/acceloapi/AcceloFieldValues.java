@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class AcceloFieldValues
 {
-	Map<String, String> fields = new HashMap<String, String>();
+	Map<String, String> fields = new HashMap<>();
 
 	public void add(String name, int i)
 	{

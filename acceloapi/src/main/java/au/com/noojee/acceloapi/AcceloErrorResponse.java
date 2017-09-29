@@ -18,6 +18,7 @@ public class AcceloErrorResponse
 		this.httpResponse = httpResponse;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return httpResponse.toString();

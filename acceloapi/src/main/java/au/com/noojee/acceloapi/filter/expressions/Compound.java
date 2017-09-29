@@ -33,6 +33,7 @@ public class Compound implements Expression
 		return this;
 	}
 
+	@Override
 	public String toJson()
 	{
 		String json = "";

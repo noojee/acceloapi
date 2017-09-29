@@ -58,7 +58,6 @@ public class Ticket
 	private String closed_by;
 	private String opened_by;
 	private String resolved_by;
-	@SuppressWarnings("unused")
 	private String object_budget;
 	private String assignee;
 	private int billable_seconds;
@@ -332,8 +331,8 @@ public class Ticket
 	{
 		if (date_closed == 0)
 			return null;
-		else
-			return AcceloApi.toLocalDate(date_closed );
+
+		return AcceloApi.toLocalDate(date_closed );
 	}
 
 	public LocalDate getDateStarted()
@@ -378,8 +377,8 @@ public class Ticket
 	{
 		if (assignee != null)
 			return Integer.valueOf(assignee);
-		else
-			return -1;
+
+		return -1;
 	}
 
 	public int getBillableSeconds()

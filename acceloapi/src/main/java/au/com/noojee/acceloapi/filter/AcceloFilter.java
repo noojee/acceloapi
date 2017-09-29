@@ -11,7 +11,7 @@ public class AcceloFilter
 {
 	public static final String ALL = "_ALL";
 
-	ArrayList<Expression> expressions = new ArrayList<Expression>();
+	ArrayList<Expression> expressions = new ArrayList<>();
 
 	private Search search = null;
 
@@ -82,6 +82,7 @@ public class AcceloFilter
 		return json;
 	}
 
+	@Override
 	public String toString()
 	{
 		return toJson();
