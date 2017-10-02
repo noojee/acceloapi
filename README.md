@@ -40,7 +40,7 @@ Examples:
 
 
 	The API tries to use Json for filters/sending and recieving data. 
-	To add creating json filters there is a small set of classes that try to make this easier. 
+	To help creating json filters there is a small set of classes that try to make this easier. 
 	Currenlty they don't handle every possible fitler combination:
 
 	Create a fitler to match on a Staff email address:
