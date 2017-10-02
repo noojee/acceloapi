@@ -32,6 +32,7 @@ import au.com.noojee.acceloapi.filter.AcceloFilter;
 public class AcceloApi
 {
 	private Logger logger = LogManager.getLogger(this.getClass());
+	private static final int PAGE_SIZE = 50;
 
 	/**
 	 * The base url to the Accelo api crm e.g. "https://myorg.api.accelo.com"
@@ -78,12 +79,13 @@ public class AcceloApi
 		AcceloApi.secret = secret;
 	}
 
-	
 	public AcceloApi()
 	{
-		System.setProperty("http.maxConnections", "8");  // set globally only once
+		System.setProperty("http.maxConnections", "8"); // set globally only
+														// once
 
 	}
+
 	/**
 	 * Pulls every matching entity. Be careful! you could run out of memory and
 	 * slam Accelo! You can only use this method of Accelo returns a list of
@@ -119,7 +121,7 @@ public class AcceloApi
 				List<T> entityList = responseList.getList();
 
 				// If we get less than a page we must now have everything.
-				if (entityList.size() < 10)
+				if (entityList.size() < PAGE_SIZE)
 					more = false;
 
 				for (T entity : entityList)
@@ -248,7 +250,7 @@ public class AcceloApi
 
 		String json = buildJsonBody(HTTPMethod.GET, fields, filters);
 
-		URL pagedURL = new URL(url + "?_page=" + pageNo + "&_limit=50");
+		URL pagedURL = new URL(url + "?_page=" + pageNo + "&_limit=" + PAGE_SIZE);
 		HTTPResponse response = _request(HTTPMethod.POST, pagedURL, json);
 
 		return response;
@@ -341,16 +343,19 @@ public class AcceloApi
 		if (responseCode == 404)
 			throw new AcceloException("The passed url was not found" + url.toString());
 
-		String body;
+		String body = "";
+		String error = "";
+
 		try (InputStream streamBody = connection.getInputStream())
 		{
 			body = fastStreamReader(streamBody);
 		}
-
-		String error;
-		try (InputStream streamError = connection.getErrorStream())
+		catch (@SuppressWarnings("unused") IOException e)
 		{
-			error = fastStreamReader(streamError);
+			try (InputStream streamError = connection.getErrorStream())
+			{
+				error = fastStreamReader(streamError);
+			}
 		}
 
 		// Read the response.
