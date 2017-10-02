@@ -1,6 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,9 @@ import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.expressions.After;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class Ticket
 {
@@ -70,6 +73,7 @@ public class Ticket
 	// cache them here for fast access.
 	private Contact cacheContact;
 	private Company cacheCompany;
+	private List<Activity> cacheActivities = null; 
 
 	/**
 	 * TicketNo is the id.
@@ -135,6 +139,103 @@ public class Ticket
 		return tickets;
 
 	}
+	
+	/**
+	 * Returns the list of tikets
+	 * @param acceloApi
+	 * @param contract
+	 * @param firstDateOfInterest
+	 * @return
+	 * @throws AcceloException
+	 */
+	public static List<Ticket> getRecentByContract(AcceloApi acceloApi, Contract contract, LocalDate firstDateOfInterest) throws AcceloException
+	{
+		// Get the day before the day of interest so we can just use isAfter
+		LocalDate dayBefore = firstDateOfInterest.minusDays(1);
+		List<Ticket> tickets = new ArrayList<>();
+
+		try
+		{
+			// Get tickets with a close date on or after the firstDateOfInterest
+			AcceloFilter filter = new AcceloFilter();
+			filter.add(new Eq("contract", contract.getId()));
+			filter.add(new After("date_closed", dayBefore));
+
+			AcceloFieldList fields = new AcceloFieldList();
+			fields.add("_ALL");
+			fields.add("status(_ALL)");
+
+			tickets = acceloApi.getAll(EndPoint.tickets, filter, fields, Ticket.ResponseList.class);
+			
+			// Get tickets with an empty close date
+			filter = new AcceloFilter();
+			filter.add(new Eq("contract", contract.getId()));
+			filter.add(new Eq("date_closed", Expression.DATE1970));
+
+			fields = new AcceloFieldList();
+			fields.add("_ALL");
+			fields.add("status(_ALL)");
+
+			tickets.addAll(acceloApi.getAll(EndPoint.tickets, filter, fields, Ticket.ResponseList.class));
+
+		}
+		catch (IOException e)
+		{
+			throw new AcceloException(e);
+		}
+
+		return tickets;
+	}
+
+	
+
+	/**
+	 * Retruns true of the ticket is currently open.
+	 * @return
+	 */
+	public boolean isOpen()
+	{
+		return getDateClosed() == null || getDateClosed().equals(Expression.DATE1970)
+				|| getDateClosed().isAfter(LocalDate.now()); // I don't think this is possible. but still.
+	}
+
+	public Duration sumMTDWork()
+	{
+		if (cacheActivities == null)
+			throw new IllegalStateException("Call getActivities first.");
+		
+		LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
+
+		
+		long work = cacheActivities.stream()
+		.filter(a -> {return a.getDateCreated().isAfter(startOfMonth)
+				|| a.getDateCreated().isEqual(startOfMonth);}) // greater than or equal to first day of month.
+		.mapToLong(a -> a.getBillable() + a.getNonbillable())
+		.sum();
+		
+		return Duration.ofSeconds(work);
+	}
+
+	public Duration sumLastMonthWork()
+	{
+		if (cacheActivities == null)
+			throw new IllegalStateException("Call getActivities first.");
+		LocalDate startOfLastMonth = LocalDate.now().withDayOfMonth(1).minus(java.time.Period.ofMonths(1));
+		
+		long work = cacheActivities.stream()
+		.filter(a -> {return (a.getDateCreated().isAfter(startOfLastMonth) // greater than or equal to the 1st day of last month.
+						|| a.getDateCreated().isEqual(startOfLastMonth))
+				&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1))   // before the first day of the current month.
+				;}) 
+		.mapToLong(a -> a.getBillable() + a.getNonbillable())
+		.sum();
+		
+		return Duration.ofSeconds(work);
+
+
+	}
+
+
 
 	public Ticket insert(AcceloApi acceloApi) throws IOException, AcceloException
 	{
@@ -217,7 +318,13 @@ public class Ticket
 	// Returns a list of activities associated with this ticket.
 	public List<Activity> getActivities(AcceloApi acceloApi) throws AcceloException
 	{
-		return Activity.getByTicket(acceloApi, this);
+		// Load and cache the activities for this ticket.
+		if (this.cacheActivities == null){
+			
+			cacheActivities = Activity.getByTicket(acceloApi, this);
+		}
+
+		return cacheActivities;
 	}
 
 	public int getId()
@@ -570,5 +677,6 @@ public class Ticket
 	{
 		return id;
 	}
+
 
 }

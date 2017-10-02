@@ -1,7 +1,9 @@
 package au.com.noojee.acceloapi;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -76,6 +78,12 @@ public class AcceloApi
 		AcceloApi.secret = secret;
 	}
 
+	
+	public AcceloApi()
+	{
+		System.setProperty("http.maxConnections", "8");  // set globally only once
+
+	}
 	/**
 	 * Pulls every matching entity. Be careful! you could run out of memory and
 	 * slam Accelo! You can only use this method of Accelo returns a list of
@@ -304,6 +312,8 @@ public class AcceloApi
 		// _method in the json data.
 		connection.setRequestMethod(method.toString());
 		connection.setDoOutput(true);
+		connection.setAllowUserInteraction(false); // no users here so don't do
+													// anything silly.
 
 		// connection.setRequestProperty("Content-Type",
 		// "application/x-www-form-urlencoded; charset=UTF-8");
@@ -331,22 +341,44 @@ public class AcceloApi
 		if (responseCode == 404)
 			throw new AcceloException("The passed url was not found" + url.toString());
 
-		// Read the response.
-		try (InputStreamReader isr = ((responseCode < 300) ? new InputStreamReader(connection.getInputStream())
-				: new InputStreamReader(connection.getErrorStream())))
+		String body;
+		try (InputStream streamBody = connection.getInputStream())
 		{
-			int read;
-			String buffer = new String();
-			while ((read = isr.read()) != -1)
-			{
-				buffer += (char) read;
-			}
-
-			response = new HTTPResponse(responseCode, connection.getResponseMessage(), buffer);
+			body = fastStreamReader(streamBody);
 		}
+
+		String error;
+		try (InputStream streamError = connection.getErrorStream())
+		{
+			error = fastStreamReader(streamError);
+		}
+
+		// Read the response.
+		if (responseCode < 300)
+
+			response = new HTTPResponse(responseCode, connection.getResponseMessage(), body);
+		else
+			response = new HTTPResponse(responseCode, connection.getResponseMessage(), error);
 
 		return response;
 
+	}
+
+	String fastStreamReader(InputStream inputStream) throws IOException
+	{
+		if (inputStream != null)
+		{
+			ByteArrayOutputStream result = new ByteArrayOutputStream();
+			byte[] buffer = new byte[4000];
+			int length;
+			while ((length = inputStream.read(buffer)) != -1)
+			{
+				result.write(buffer, 0, length);
+			}
+
+			return result.toString(StandardCharsets.UTF_8.name());
+		}
+		return "";
 	}
 
 	// retrieve the access token.
