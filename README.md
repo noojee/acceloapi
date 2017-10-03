@@ -18,26 +18,27 @@ Examples:
 
     // get a company by name
     String companyName = "Some company name";
-    Company company = Company.getByName(acceloApi, companyName);
+    Company company = new CompanyDao().getByName(acceloApi, companyName);
 
     // Get the Retainer contract
-    Contract contract = Contract.getActiveContract(acceloApi, company);
+    Contract contract = new ContractDao().getActiveContract(acceloApi, company);
 
     // Get a list of contratc periods for the retainer.
-    List<ContractPeriod> periods = contract.getContractPeriods(acceloApi);
+    List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(acceloApi, contract);
 
     // Get a list of tickets attached to the contract.
-    List<Ticket> tickets = Ticket.getByContract(acceloApi, contract);
+    List<Ticket> tickets = new TicketDao().getByContract(acceloApi, contract);
 
     // Get a ticket by its no.
-    Ticket ticket = Ticket.getByTicketNo(acceloApi, 123);
+    Ticket ticket = new TicketDao().getById(acceloApi, 123);
 
     // Get a Staff member by their email
-    Staff staff = Staff.getByEmail(acceloApi, "staffmember@myorg.com.au");
+    Staff staff = new StaffDao().getByEmail(acceloApi, "staffmember@myorg.com.au");
 
     // Get a contact by their name
-    Contact contact = Contact.getContact(acceloApi, "firstname", "lastname");
-
+    Contact contact = new ContactDao().getContact(acceloApi, "firstname", "lastname");
+	
+	
 
 	The API tries to use Json for filters/sending and recieving data. 
 	To help creating json filters there is a small set of classes that try to make this easier. 
@@ -49,17 +50,18 @@ Examples:
 	AcceloFilter filter = new AcceloFilter();
 	filter.add(new Eq("email", staffEmailAddress));
 
-	// Pass it to the pull method 
-	response = acceloApi.pull(AcceloApi.HTTPMethod.GET, AcceloApi.EndPoints.staff.getURL(), filter,
-			AcceloFieldList.ALL, Staff.ResponseList.class);
+	// Use the universal getByFitler
+	List<Staff> = new StaffDao().getByFilter(acceloApi, filter);
 
 	// get a staff member by id
 	AcceloFilter filter = new AcceloFilter();
 	filter.add(new Eq("id", staff_id));
+	List<Staff> = new StaffDao().getByFilter(acceloApi, filter);
 
 	// Use the accelo 'search' filter get get a company by name:
 	AcceloFilter filter = new AcceloFilter();
 	filter.add(new Search(companyName));
+	List<Company> = new CompanyDao().getByFilter(acceloApi, filter);
 
 	// Build a compound filter
 	AcceloFilter filters = new AcceloFilter();
@@ -67,11 +69,13 @@ Examples:
 	// Filter using the against field with a type of company and an company id.
 	filters.add(new AcceloFilter.Compound("against"))
 	.add(new Eq("company", company.getId()));
+	List<Company> = new CompanyDao().getByFilter(acceloApi, filter);
 
-	// Search by company and contact id
+	// Search for tickets by company and contact id
 	AcceloFilter filter = new AcceloFilter();
 	filter.add(new Eq("company_id", companyId))
 	.add(new Eq("contact_id", contactId));
+	List<Ticket> = new TicketDao().getByFilter(acceloApi, filter);
 
 
 
