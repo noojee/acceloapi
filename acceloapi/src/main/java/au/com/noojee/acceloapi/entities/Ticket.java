@@ -1,6 +1,5 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -8,28 +7,16 @@ import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFieldValues;
-import au.com.noojee.acceloapi.AcceloResponse;
-import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.After;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.dao.ActivityDao;
+import au.com.noojee.acceloapi.dao.AffiliationDao;
+import au.com.noojee.acceloapi.dao.ContactDao;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
-public class Ticket
+public class Ticket extends AcceloEntity<Ticket>
 {
 	// private Logger logger = LogManager.getLogger(Ticket.class);
 	static public String PRIORITY_CRITICAL = "1";
 
-	public class Response extends AcceloResponse<Ticket>
-	{
-	}
-
-	public class ResponseList extends AcceloResponseList<Ticket>
-	{
-	}
 
 	private int id;
 	private String title;
@@ -66,7 +53,7 @@ public class Ticket
 	private int billable_seconds;
 	private long date_last_interacted;
 	private ArrayList<String> breadcrumbs;
-	private String contract;
+	private int contract; // the contract id or 0 if this ticket is unassigned.
 	private String resolution_detail;
 
 	// these are related objects that we need to fetch separately and we then
@@ -75,118 +62,7 @@ public class Ticket
 	private Company cacheCompany;
 	private List<Activity> cacheActivities = null; 
 
-	/**
-	 * TicketNo is the id.
-	 */
-	static public Ticket getByTicketNo(AcceloApi api, int ticketNo) throws AcceloException
-	{
-		Ticket ticket = null;
-
-		if (ticketNo != 0)
-		{
-			Ticket.ResponseList response;
-			try
-			{
-				AcceloFilter filter = new AcceloFilter();
-				filter.add(new Eq("id", ticketNo));
-
-				AcceloFieldList fields = new AcceloFieldList();
-				fields.add("_ALL");
-				fields.add("status(_ALL)");
-
-				response = api.get(EndPoint.tickets, filter, fields, Ticket.ResponseList.class);
-			}
-			catch (IOException e)
-			{
-				throw new AcceloException(e);
-			}
-
-			if (response != null)
-				ticket = response.getList().size() > 0 ? response.getList().get(0) : null;
-		}
-
-		return ticket;
-	}
-
-	/**
-	 * Returns a list of tickets attached to the passed contract.
-	 * 
-	 * @param acceloApi
-	 * @param contract
-	 * @return
-	 * @throws AcceloException
-	 */
-	public static List<Ticket> getByContract(AcceloApi acceloApi, Contract contract) throws AcceloException
-	{
-		List<Ticket> tickets = new ArrayList<>();
-
-		try
-		{
-			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("contract", contract.getId()));
-
-			AcceloFieldList fields = new AcceloFieldList();
-			fields.add("_ALL");
-			fields.add("status(_ALL)");
-
-			tickets = acceloApi.getAll(EndPoint.tickets, filter, fields, Ticket.ResponseList.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return tickets;
-
-	}
 	
-	/**
-	 * Returns the list of tikets
-	 * @param acceloApi
-	 * @param contract
-	 * @param firstDateOfInterest
-	 * @return
-	 * @throws AcceloException
-	 */
-	public static List<Ticket> getRecentByContract(AcceloApi acceloApi, Contract contract, LocalDate firstDateOfInterest) throws AcceloException
-	{
-		// Get the day before the day of interest so we can just use isAfter
-		LocalDate dayBefore = firstDateOfInterest.minusDays(1);
-		List<Ticket> tickets = new ArrayList<>();
-
-		try
-		{
-			// Get tickets with a close date on or after the firstDateOfInterest
-			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("contract", contract.getId()));
-			filter.add(new After("date_closed", dayBefore));
-
-			AcceloFieldList fields = new AcceloFieldList();
-			fields.add("_ALL");
-			fields.add("status(_ALL)");
-
-			tickets = acceloApi.getAll(EndPoint.tickets, filter, fields, Ticket.ResponseList.class);
-			
-			// Get tickets with an empty close date
-			filter = new AcceloFilter();
-			filter.add(new Eq("contract", contract.getId()));
-			filter.add(new Eq("date_closed", Expression.DATE1970));
-
-			fields = new AcceloFieldList();
-			fields.add("_ALL");
-			fields.add("status(_ALL)");
-
-			tickets.addAll(acceloApi.getAll(EndPoint.tickets, filter, fields, Ticket.ResponseList.class));
-
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return tickets;
-	}
-
 	
 
 	/**
@@ -235,98 +111,40 @@ public class Ticket
 
 	}
 
-
-
-	public Ticket insert(AcceloApi acceloApi) throws IOException, AcceloException
-	{
-		Ticket result = null;
-
-		// Assign the Ticket to the owning aCompany.
-		AcceloFieldValues fields = new AcceloFieldValues();
-		fields.add("title", this.getTitle()); // URLEncoder.encode(ticket.getTitle()));
-		fields.add("type_id", getType());
-
-		if (this.cacheContact != null)
-		{
-			fields.add("against_id", "" + cacheContact.getid());
-			fields.add("against_type", "contact");
-		}
-
-		if (this.cacheCompany == null)
-		{
-			// then assign the ticket to Noojee.
-			this.cacheCompany = Company.getByName(acceloApi, "Noojee Contact Solutions Pty Ltd");
-		}
-		if (this.cacheCompany != null)
-		{
-
-			fields.add("against_id", "" + cacheCompany.getId());
-			fields.add("against_type", "company");
-
-			fields.add("status_id", this.getStatus().getId());
-			fields.add("date_started", "" + (System.currentTimeMillis() / 1000));
-			fields.add("date_entered", "" + (System.currentTimeMillis() / 1000));
-			fields.add("description", this.getDescription());
-			fields.add("class_id", "" + getClassId()); // Imported
-			// arguments.put("assignee", "2"); // assign to brett
-
-			// logger.error("fields" + fields);
-
-			Ticket.Response response = acceloApi.insert(EndPoint.tickets, fields, Ticket.Response.class);
-			if (response == null || response.getEntity() == null)
-			{
-				throw new AcceloException(
-						"Failed to insert ticket id:" + this.custom_id + " details:" + this.toString());
-			}
-
-			result = response.getEntity();
-		}
-
-		return result;
-
-	}
-
+	
 	/**
-	 * Assigns a staff member to a ticket and returns the new ticket.
+	 * Returns the total work on this ticket.
+	 * @return
 	 */
-	public Ticket assignStaff(AcceloApi acceloApi, Staff staff) throws AcceloException
+	public Duration totalWork()
 	{
-		Ticket result = null;
-		try
-		{
-
-			// Assign the Ticket to the owning aCompany.
-			AcceloFieldValues fields = new AcceloFieldValues();
-			fields.add("assignee", staff.getId());
-
-			Ticket.Response response = acceloApi.update(EndPoint.tickets, this.id, fields, Ticket.Response.class);
-			if (response == null || response.getEntity() == null)
-			{
-				throw new AcceloException(
-						"Failed to assign staff to ticket id:" + this.id + " details:" + this.toString());
-			}
-
-			result = response.getEntity();
-		}
-		catch (Exception e)
-		{
-			throw new AcceloException(e);
-		}
-		return result;
+		if (cacheActivities == null)
+			throw new IllegalStateException("Call getActivities first.");
+		
+		long work = cacheActivities.stream()
+		.mapToLong(a -> a.getBillable() + a.getNonbillable())
+		.sum();
+		
+		return Duration.ofSeconds(work);
 	}
 
+	
 	// Returns a list of activities associated with this ticket.
 	public List<Activity> getActivities(AcceloApi acceloApi) throws AcceloException
 	{
 		// Load and cache the activities for this ticket.
-		if (this.cacheActivities == null){
-			
-			cacheActivities = Activity.getByTicket(acceloApi, this);
+		if (this.cacheActivities == null)
+		{
+
+			cacheActivities = new ActivityDao().getByTicket(acceloApi, this);
 		}
 
 		return cacheActivities;
 	}
 
+
+
+	
 	public int getId()
 	{
 		return id;
@@ -376,13 +194,13 @@ public class Ticket
 	{
 		if (cacheContact == null)
 		{
-			Affiliation affiliation = Affiliation.getById(acceloApi, this.affiliation);
+			Affiliation affiliation = new AffiliationDao().getById(acceloApi, this.affiliation);
 
 			if (affiliation != null)
 			{
 				int contactId = affiliation.getContactId();
 
-				cacheContact = Contact.getById(acceloApi, contactId);
+				cacheContact = new ContactDao().getById(acceloApi, contactId);
 			}
 		}
 		return cacheContact;
@@ -503,7 +321,7 @@ public class Ticket
 		return breadcrumbs;
 	}
 
-	public String getContract()
+	public int getContractId()
 	{
 		return contract;
 	}
@@ -648,7 +466,7 @@ public class Ticket
 		this.breadcrumbs = breadcrumbs;
 	}
 
-	public void setContract(String contract)
+	public void setContractId(int contract)
 	{
 		this.contract = contract;
 	}
@@ -677,6 +495,7 @@ public class Ticket
 	{
 		return id;
 	}
+
 
 
 }

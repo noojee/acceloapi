@@ -3,15 +3,18 @@ package au.com.noojee.acceloapi;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AcceloResponseList<T> 
+import au.com.noojee.acceloapi.dao.AcceloList;
+
+public abstract class AcceloResponseList<T>  implements AcceloList<T>
 {
 	private Meta meta;
 	private List<T> response;
 	
 	
+	@Override
 	public List<T> getList()
 	{
-		// Guarenteed to return a list.
+		// Guaranteed to return a list.
 		if (response == null)
 			response = new ArrayList<>();
 		return response;

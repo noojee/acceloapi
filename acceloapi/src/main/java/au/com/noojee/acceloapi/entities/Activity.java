@@ -1,8 +1,6 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.text.html.HTML.Tag;
@@ -12,15 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFieldValues;
-import au.com.noojee.acceloapi.AcceloResponse;
-import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.dao.AffiliationDao;
 
-public class Activity
+public class Activity extends AcceloEntity<Activity>
 {
 
 	static private Logger logger = LogManager.getLogger(Activity.class);
@@ -105,66 +97,10 @@ public class Activity
 	// private String to_name;
 	//
 
-	public void insert(AcceloApi acceloApi) throws IOException, AcceloException
-	{
-		AcceloFieldValues values = marshallArgs();
-
-		Ticket.Response response = acceloApi.insert(EndPoint.activities, values, Ticket.Response.class);
-		logger.debug(response);
-	}
-
-	private AcceloFieldValues marshallArgs()
-	{
-		AcceloFieldValues args = new AcceloFieldValues();
-
-		args.add("subject", subject);
-		args.add("body", body);
-		args.add("against_id", "" + against_id);
-		args.add("against_type", against_type);
-		args.add("owner_id", "" + owner_id);
-		args.add("owner_type", owner_type);
-		args.add("medium", medium.toString());
-		args.add("visibility", visiblity.toString());
-		args.add("details", details);
-		// args.put("priority_id", "" + priority_id);
-		// args.put("class_id", "" + _class_id);
-		// args.put("thread_id", "" + thread_id);
-		// args.put("task_id", "" + task_id);
-		// args.put("parent_id", "" + against_id);
-		args.add("date_started", "" + date_started);
-		// args.put("date_ended", "" + date_ended);
-		args.add("date_created", "" + date_created);
-		// args.put("staff_id", "" + staff_id);
-
-		return args;
-	}
-
-	public static List<Activity> getByTicket(AcceloApi acceloApi, Ticket ticket) throws AcceloException
-	{
-		List<Activity> activities = new ArrayList<>();
-
-		try
-		{
-			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("against_id", ticket.getId()));
-
-			AcceloFieldList fields = new AcceloFieldList();
-			fields.add("_ALL");
-
-			activities = acceloApi.getAll(EndPoint.activities, filter, fields, Activity.ResponseList.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return activities;
-
-	}
-
+	
 	public List<Affiliation> getAffiliation(AcceloApi acceloApi) throws AcceloException
 	{
-		return Affiliation.getByActivity(acceloApi, this);
+		return new AffiliationDao().getByActivity(acceloApi, this);
 	}
 
 	public void setId(int id)
@@ -292,7 +228,7 @@ public class Activity
 		return against_id;
 	}
 
-	public String getAgainst_type()
+	public String getAgainstType()
 	{
 		return against_type;
 	}
@@ -376,15 +312,6 @@ public class Activity
 	// this.to_name = to_name;
 	// }
 	//
-
-	public class Response extends AcceloResponse<Activity>
-	{
-	}
-
-	public class ResponseList extends AcceloResponseList<Activity>
-	{
-	}
-
 	@Override
 	public String toString()
 	{

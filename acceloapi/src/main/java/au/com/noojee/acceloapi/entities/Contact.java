@@ -1,21 +1,6 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-
-import au.com.noojee.acceloapi.AcceloApi;
-import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
-import au.com.noojee.acceloapi.filter.expressions.Search;
-
-// import au.com.noojee.accelogateway.AcceloApi.EndPoints;
-
-public class Contact
+public class Contact extends AcceloEntity<Contact>
 {
 	public static final String FIELDS_ALL = "contact._ALL";
 	private int id;
@@ -41,87 +26,6 @@ public class Contact
 	private String communication;
 	private String invoice_method;
 
-	private static HashMap<Integer, Contact> contactCache = new HashMap<>();
-
-	public static Contact getContact(AcceloApi acceloApi, String contact_firstname, String contact_lastname)
-			throws AcceloException
-	{
-		Contact.Response response = null;
-		try
-		{
-			if (contact_firstname != null && contact_lastname != null)
-			{
-				AcceloFilter filters = new AcceloFilter();
-				filters.add(new Search(contact_firstname + " " + contact_lastname));
-
-				response = acceloApi.get(EndPoint.contacts, filters, AcceloFieldList.ALL, Contact.Response.class);
-			}
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		Contact contact = null;
-		if (response != null)
-			contact = response.getList().size() > 0 ? response.getList().get(0) : null;
-
-		return contact;
-	}
-
-	public static List<Contact> getByPhone(AcceloApi acceloApi, String phone) throws AcceloException
-	{
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add(AcceloFieldList._ALL);
-		fields.add(Company.FIELDS_ALL);
-
-		AcceloFilter filters = new AcceloFilter();
-		filters.add(new Eq("contact_number", phone));
-
-		Contact.Response request;
-		try
-		{
-			request = acceloApi.get(EndPoint.contacts, filters, fields, Contact.Response.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return request.getList();
-
-	}
-
-	public static Contact getById(AcceloApi acceloApi, int contactId) throws AcceloException
-	{
-		Contact contact = contactCache.get(contactId);
-
-		if (contact == null)
-		{
-			AcceloFieldList fields = new AcceloFieldList();
-			fields.add(AcceloFieldList._ALL);
-
-			AcceloFilter filters = new AcceloFilter();
-			filters.add(new Eq("id", contactId));
-
-			Contact.Response response;
-			try
-			{
-				response = acceloApi.get(EndPoint.contacts, filters, fields, Contact.Response.class);
-			}
-			catch (IOException e)
-			{
-				throw new AcceloException(e);
-			}
-
-			if (response != null)
-				contact = response.getList().size() > 0 ? response.getList().get(0) : null;
-			contactCache.put(contactId, contact);
-		}
-
-		return contact;
-
-	}
 
 	public int getid()
 	{
@@ -233,9 +137,6 @@ public class Contact
 		return invoice_method;
 	}
 
-	public class Response extends AcceloResponseList<Contact>
-	{
-	}
 
 	@Override
 	public String toString()
@@ -252,6 +153,30 @@ public class Contact
 	public String getFullName()
 	{
 		return firstname + " " + surname;
+	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Contact other = (Contact) obj;
+		if (id != other.id)
+			return false;
+		return true;
 	}
 
 	

@@ -3,9 +3,8 @@ package au.com.noojee.acceloapi.entities;
 import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.AcceloApi;
-import au.com.noojee.acceloapi.AcceloResponseList;
 
-public class ContractPeriod
+public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {
 	int id;
 	int contract_id;
@@ -24,10 +23,6 @@ public class ContractPeriod
 	String rate_type; // object
 	String allowance_type; // fixed_value
 	int service_item_id;
-
-	public class Response extends AcceloResponseList<ContractPeriod>
-	{
-	}
 
 	public int getId()
 	{

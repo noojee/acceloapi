@@ -27,12 +27,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import au.com.noojee.acceloapi.dao.AcceloList;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 public class AcceloApi
 {
 	private Logger logger = LogManager.getLogger(this.getClass());
-	private static final int PAGE_SIZE = 50;
+	public static final int PAGE_SIZE = 50;
 
 	/**
 	 * The base url to the Accelo api crm e.g. "https://myorg.api.accelo.com"
@@ -100,28 +101,66 @@ public class AcceloApi
 	 * @param clazz
 	 * @return
 	 */
+//	public <T> List<T> getAll(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList,
+//			Class<? extends AcceloResponseList<T>> clazz) throws IOException, AcceloException
+//	{
+//		return getAll(endPoint.getURL(), filterMap, fieldList, clazz);
+//	}
+	
 	public <T> List<T> getAll(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList,
-			Class<? extends AcceloResponseList<T>> clazz) throws IOException, AcceloException
+			Class<? extends AcceloList<T>> clazz) throws IOException, AcceloException
 	{
 		return getAll(endPoint.getURL(), filterMap, fieldList, clazz);
 	}
 
-	public <T> List<T> getAll(URL url, AcceloFilter filterMap, AcceloFieldList fieldList,
-			Class<? extends AcceloResponseList<T>> clazz) throws IOException, AcceloException
+
+	
+//	public <T> List<T> getAll(URL url, AcceloFilter filterMap, AcceloFieldList fieldList,
+//			Class<? extends AcceloResponseList<T>> clazz) throws IOException, AcceloException
+//	{
+//		List<T> entities = new ArrayList<>();
+//		boolean more = true;
+//		int page = 0;
+//		while (more)
+//		{
+//			AcceloResponseList<T> responseList = get(url, filterMap, fieldList, clazz, page);
+//
+//			if (responseList != null)
+//			{
+//				List<T> entityList = responseList.getList();
+//
+//				// If we get less than a page we must now have everything.
+//				if (entityList.size() < PAGE_SIZE)
+//					more = false;
+//
+//				for (T entity : entityList)
+//				{
+//					entities.add(entity);
+//				}
+//				page += 1;
+//			}
+//
+//		}
+//
+//		return entities;
+//	}
+	
+	
+	public <T, L extends AcceloList<T>> List<T> getAll(URL url, AcceloFilter filterMap, AcceloFieldList fieldList, Class<L> responseClass) throws IOException, AcceloException
 	{
 		List<T> entities = new ArrayList<>();
 		boolean more = true;
 		int page = 0;
 		while (more)
 		{
-			AcceloResponseList<T> responseList = get(url, filterMap, fieldList, clazz, page);
+			L responseList = get(url, filterMap, fieldList, responseClass, page);
 
 			if (responseList != null)
 			{
 				List<T> entityList = responseList.getList();
 
 				// If we get less than a page we must now have everything.
-				if (entityList.size() < PAGE_SIZE)
+				if (entityList.size() < AcceloApi.PAGE_SIZE)
 					more = false;
 
 				for (T entity : entityList)
@@ -135,6 +174,8 @@ public class AcceloApi
 
 		return entities;
 	}
+
+
 
 	/**
 	 * Send a request to get a single entity or the 'nth' page of entities. The

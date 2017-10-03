@@ -1,19 +1,10 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloApi;
-import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
 
-public class Affiliation
+public class Affiliation extends AcceloEntity<Affiliation>
 {
 	private int id;
 
@@ -30,126 +21,6 @@ public class Affiliation
 	private int staff_bookmarked;
 	private String standing;
 
-	private static HashMap<Integer, Affiliation> affiliationCache = new HashMap<>();
-
-	public class Response extends AcceloResponseList<Affiliation>
-	{
-	}
-
-	public static List<Affiliation> getAffilications(AcceloApi api, int companyId, int contactId) throws AcceloException
-	{
-		Affiliation.Response response;
-		try
-		{
-			// String args = "_filters=companyId(" + companyId +
-			// "),contactId(" + contactId + ")&_fields=_ALL";
-
-			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("company_id", companyId)).add(new Eq("contact_id", contactId));
-
-			response = api.get(EndPoint.affiliations, filter, AcceloFieldList.ALL, Affiliation.Response.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return response.getList();
-	}
-
-	public static Affiliation getById(AcceloApi acceloApi, int affiliationId) throws AcceloException
-	{
-		Affiliation affiliation = affiliationCache.get(affiliationId);
-
-		if (affiliation == null)
-		{
-			AcceloFieldList fields = new AcceloFieldList();
-			fields.add(AcceloFieldList._ALL);
-
-			AcceloFilter filters = new AcceloFilter();
-			filters.add(new Eq("id", affiliationId));
-
-			Affiliation.Response response;
-			try
-			{
-				response = acceloApi.get(EndPoint.affiliations, filters, fields, Affiliation.Response.class);
-			}
-			catch (IOException e)
-			{
-				throw new AcceloException(e);
-			}
-
-			if (response != null)
-				affiliation = response.getList().size() > 0 ? response.getList().get(0) : null;
-			affiliationCache.put(affiliationId, affiliation);
-		}
-
-		return affiliation;
-	}
-
-	public static List<Affiliation> getAffilicationsByPhone(AcceloApi api, String phone) throws AcceloException
-	{
-		Affiliation.Response response;
-		try
-		{
-			// String args = "_fields=_ALL,contact(_ALL)&filters=phone(" + phone
-			// + ")";
-			// String args = "_filters=phone(" + phone + ")";
-
-			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("phone", phone));
-
-			response = api.get(EndPoint.affiliations, filter, AcceloFieldList.ALL, Affiliation.Response.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return response.getList();
-	}
-
-	public static List<Affiliation> getAffilicationsForContact(AcceloApi api, Contact contact) throws AcceloException
-	{
-		Affiliation.Response response;
-		try
-		{
-			// String args = "_fields=_ALL,contact(_ALL)&filters=contact(" +
-			// contact.getid() + ")";
-
-			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("contact", contact.getid()));
-
-			response = api.get(EndPoint.affiliations, filter, AcceloFieldList.ALL, Affiliation.Response.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return response.getList();
-	}
-
-	public static List<Affiliation> getByActivity(AcceloApi acceloApi, Activity activity) throws AcceloException
-	{
-		Affiliation.Response response;
-		try
-		{
-			// String args = "_fields=_ALL,contact(_ALL)&filters=contact(" +
-			// contact.getid() + ")";
-
-			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("activity", activity.getId()));
-
-			response = acceloApi.get(EndPoint.affiliations, filter, AcceloFieldList.ALL, Affiliation.Response.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return response.getList();
-	}
 
 	public int getId()
 	{

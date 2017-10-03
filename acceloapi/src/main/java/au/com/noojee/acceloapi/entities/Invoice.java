@@ -1,28 +1,12 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
 
 import au.com.noojee.acceloapi.AcceloApi;
-import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloResponse;
-import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
 
-public class Invoice
+public class Invoice extends AcceloEntity<Invoice>
 {
-	public class Response extends AcceloResponse<Invoice>
-	{
-	}
-
-	public class ResponseList extends AcceloResponseList<Invoice>
-	{
-	}
-
+	
 	private int id; // A unique identifier for the invoice.
 	private float amount; // The value of the invoice, less any tax.
 	private String subject; // The title of the invoice
@@ -68,60 +52,8 @@ public class Invoice
 							// the
 	// invoice.
 
-	// Staff don't change very often.
-	static HashMap<Integer, Invoice> invoiceCache = new HashMap<>();
-
-	/**
-	 * Get the Invoice by its id.
-	 */
-	static public Invoice getById(AcceloApi api, int invoiceId) throws AcceloException
-	{
-
-		Invoice invoice = invoiceCache.get(invoiceId);
-
-		if (invoice == null && invoiceId != 0)
-		{
-
-			Invoice.ResponseList response;
-			try
-			{
-				AcceloFilter filter = new AcceloFilter();
-				filter.add(new Eq("id", invoiceId));
-
-				AcceloFieldList fields = new AcceloFieldList();
-				fields.add("_ALL");
-				fields.add("status(_ALL)");
-
-				response = api.get(EndPoint.invoices, filter, fields, Invoice.ResponseList.class);
-			}
-			catch (IOException e)
-			{
-				throw new AcceloException(e);
-			}
-
-			if (response != null)
-				invoice = response.getList().size() > 0 ? response.getList().get(0) : null;
-
-			if (invoice != null)
-				invoiceCache.put(invoice.getId(), invoice);
-		}
-
-		return invoice;
-	}
-
-	@Override
-	public String toString()
-	{
-		return "Invoice [id=" + id + ", amount=" + amount + ", subject=" + subject + ", against_type=" + against_type
-				+ ", against_id=" + against_id + ", notes=" + notes + ", invoice_number=" + invoice_number
-				+ ", currency_id=" + currency_id + ", owner_id=" + owner_id + ", tax=" + tax + ", outstanding="
-				+ outstanding + ", modified_by=" + modified_by + ", date_raised=" + date_raised + ", date_due="
-				+ date_due + ", date_modified=" + date_modified + ", contact=" + contact + ", affiliation_id="
-				+ affiliation_id + ", affiliation=" + affiliation + ", creator_id=" + creator_id + ", created_by="
-				+ created_by + "]";
-	}
-
-	public int getId()
+	
+		public int getId()
 	{
 		return id;
 	}
@@ -220,5 +152,18 @@ public class Invoice
 	{
 		return created_by;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "Invoice [id=" + id + ", amount=" + amount + ", subject=" + subject + ", against_type=" + against_type
+				+ ", against_id=" + against_id + ", notes=" + notes + ", invoice_number=" + invoice_number
+				+ ", currency_id=" + currency_id + ", owner_id=" + owner_id + ", tax=" + tax + ", outstanding="
+				+ outstanding + ", modified_by=" + modified_by + ", date_raised=" + date_raised + ", date_due="
+				+ date_due + ", date_modified=" + date_modified + ", contact=" + contact + ", affiliation_id="
+				+ affiliation_id + ", affiliation=" + affiliation + ", creator_id=" + creator_id + ", created_by="
+				+ created_by + "]";
+	}
+
 
 }

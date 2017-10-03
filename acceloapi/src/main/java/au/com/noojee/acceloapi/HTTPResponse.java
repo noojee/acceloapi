@@ -17,7 +17,7 @@ import com.google.gson.Gson;
  * @throws IOException
  * @throws AcceloException
  */
-// public <T, E extends AcceloResponse> T pull(HTTPMethod method, URL url,
+public // public <T, E extends AcceloResponse> T pull(HTTPMethod method, URL url,
 // AcceloFilter filterMap,
 // AcceloFieldList fieldList, Class<E> clazz) throws IOException,
 // AcceloException
