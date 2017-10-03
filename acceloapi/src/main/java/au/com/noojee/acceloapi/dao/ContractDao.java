@@ -200,11 +200,14 @@ public class ContractDao extends AcceloDao<Contract, ContractDao.ResponseList>
 	{
 		return ContractDao.ResponseList.class;
 	}
-
+	
 	@Override
-	public Contract getById(AcceloApi acceloApi, int id) throws AcceloException
+	protected EndPoint getEndPoint()
 	{
-		return super.getById(acceloApi, EndPoint.contracts, id);
+		return EndPoint.contracts;
 	}
+
+	
+
 
 }

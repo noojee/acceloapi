@@ -51,12 +51,14 @@ public class StaffDao extends AcceloDao<Staff, StaffDao.ResponseList>
 
 		return staff;
 	}
-
+	
 	@Override
-	public Staff getById(AcceloApi acceloApi, int staff_id) throws AcceloException
+	protected EndPoint getEndPoint()
 	{
-		return super.getById(acceloApi, EndPoint.staff, staff_id);
+		return EndPoint.staff;
 	}
+
+
 
 	@Override
 	protected Class<ResponseList> getResponseListClass()

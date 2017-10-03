@@ -47,6 +47,24 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		return getById(api, EndPoint.tickets, ticketNo, fields);
 
 	}
+	
+	/**
+	 * TicketNo is the id.
+	 * @throws AcceloException 
+	 */
+	@Override
+	public List<Ticket> getByFilter(AcceloApi api, AcceloFilter filter) throws AcceloException 
+	{
+		
+		AcceloFieldList fields = new AcceloFieldList();
+		fields.add("_ALL");
+		fields.add("status(_ALL)");
+
+		return getByFilter(api, filter, fields);
+
+	}
+
+
 
 	/**
 	 * Returns a list of tickets attached to the passed contract.
@@ -258,6 +276,13 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 			throw new AcceloException(e);
 		}
 		return result;
+	}
+
+	
+	@Override
+	protected EndPoint getEndPoint()
+	{
+		return EndPoint.tickets;
 	}
 
 

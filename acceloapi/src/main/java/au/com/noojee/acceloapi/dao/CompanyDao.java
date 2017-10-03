@@ -90,19 +90,20 @@ public class CompanyDao extends AcceloDao<Company, CompanyDao.ResponseList>
 //	}
 
 
-
-
 	@Override
-	public Company getById(AcceloApi acceloApi, int id) throws AcceloException
+	protected EndPoint getEndPoint()
 	{
-		return super.getById(acceloApi, EndPoint.companies, id);
+		return EndPoint.companies;
 	}
+
+
 	
 	@Override
 	protected Class<CompanyDao.ResponseList> getResponseListClass()
 	{
 		return CompanyDao.ResponseList.class;
 	}
+	
 
 
 }

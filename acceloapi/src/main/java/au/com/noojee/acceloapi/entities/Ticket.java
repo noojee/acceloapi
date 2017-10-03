@@ -36,7 +36,6 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int resolution;
 	private Status status; // Breaks our rules of using Ids but there is no
 							// other way to get the status.
-	// private String status; // id of the status
 	private String standing;
 	private String submitted_by;
 	private long date_submitted;

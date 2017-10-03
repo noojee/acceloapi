@@ -107,11 +107,13 @@ public class AffiliationDao extends AcceloDao<Affiliation, AffiliationDao.Respon
 		return ResponseList.class;
 	}
 
-
 	@Override
-	public Affiliation getById(AcceloApi acceloApi, int id) throws AcceloException
+	protected EndPoint getEndPoint()
 	{
-		return super.getById(acceloApi, EndPoint.affiliations, id);
+		return EndPoint.affiliations;
 	}
+
+
+	
 
 }

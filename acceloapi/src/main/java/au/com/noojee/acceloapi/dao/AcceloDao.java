@@ -8,7 +8,6 @@ import java.util.List;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
@@ -21,7 +20,10 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 
 	protected abstract Class<L> getResponseListClass();
 
-	public abstract E getById(AcceloApi acceloApi, int id) throws AcceloException;
+	// public abstract E getById(AcceloApi acceloApi, int id) throws AcceloException;
+	// pubc abstract List<E> getByFilter(AcceloApi acceloApi, AcceloFilter filter) throws AcceloException;
+	
+	protected abstract EndPoint getEndPoint();
 
 	/**
 	 * Returns the list of tickets that match the pass in filter.
@@ -32,17 +34,33 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 	 * @return
 	 * @throws AcceloException
 	 */
-	public List<E> getByFilter(AcceloApi acceloApi, EndPoint endpoint, AcceloFilter filter) throws AcceloException
+	public List<E> getByFilter(AcceloApi acceloApi,AcceloFilter filter) throws AcceloException
+	{
+		List<E> entities = new ArrayList<>();
+
+			AcceloFieldList fields = new AcceloFieldList();
+			fields.add("_ALL");
+
+			return this.getByFilter(acceloApi, filter, fields);
+	}
+	
+	/**
+	 * Returns the list of tickets that match the pass in filter.
+	 * 
+	 * @param acceloApi
+	 * @param filter
+	 *            the filter defining the tickets to be returned.
+	 * @param fileds  - the set of fields to return
+	 * @return
+	 * @throws AcceloException
+	 */
+	public List<E> getByFilter(AcceloApi acceloApi,AcceloFilter filter, AcceloFieldList fields) throws AcceloException
 	{
 		List<E> entities = new ArrayList<>();
 
 		try
 		{
-			AcceloFieldList fields = new AcceloFieldList();
-			fields.add("_ALL");
-			fields.add("status(_ALL)");
-
-			entities = acceloApi.getAll(endpoint, filter, fields, getResponseListClass());
+			entities = acceloApi.getAll(getEndPoint(), filter, fields, getResponseListClass());
 		}
 		catch (IOException e)
 		{
@@ -52,12 +70,13 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 		return entities;
 	}
 
-	public E getById(AcceloApi acceloApi, EndPoint endpoint, int id) throws AcceloException
+
+	public E getById(AcceloApi acceloApi, int id) throws AcceloException
 	{
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add(AcceloFieldList._ALL);
 
-		return getById(acceloApi, endpoint, id, fields);
+		return getById(acceloApi, getEndPoint(), id, fields);
 	}
 	
 

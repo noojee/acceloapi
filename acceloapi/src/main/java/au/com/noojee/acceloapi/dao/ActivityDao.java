@@ -90,10 +90,12 @@ public class ActivityDao extends AcceloDao<Activity, ActivityDao.ResponseList>
 	}
 
 	@Override
-	public Activity getById(AcceloApi acceloApi, int id) throws AcceloException
+	protected EndPoint getEndPoint()
 	{
-		return super.getById(acceloApi, EndPoint.activities, id);
+		return EndPoint.activities;
 	}
+
+	
 
 
 

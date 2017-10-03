@@ -78,9 +78,10 @@ public class ContactDao extends AcceloDao<Contact, ContactDao.ResponseList>
 	}
 
 	@Override
-	public Contact getById(AcceloApi acceloApi, int id) throws AcceloException
+	protected EndPoint getEndPoint()
 	{
-		return getById(acceloApi, EndPoint.contacts, id);
+		return EndPoint.contacts;
 	}
+
 
 }
