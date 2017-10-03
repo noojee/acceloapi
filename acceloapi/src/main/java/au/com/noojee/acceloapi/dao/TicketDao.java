@@ -113,7 +113,15 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		try
 		{
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("company", company.getId()));
+			// filter.add(new Compound("against", new Eq("company", company.getId())));
+			// , new Eq("against", "company")));
+			
+			filter.add(new Eq("against_type", "company"))
+					 .add(new Eq("against_id", company.getId()));
+			
+			
+			
+			// against_id=3617, against_type=company, 
 
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");
@@ -196,7 +204,8 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 			// Get tickets with a close date on or after the firstDateOfInterest
 			AcceloFilter filter = new AcceloFilter();
 			filter.add(new Eq("contract", 0));
-			filter.add(new Eq("company", company.getId()));
+			filter.add(new Eq("against_id", company.getId()));
+			filter.add(new Eq("against_type", "company"));
 
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");

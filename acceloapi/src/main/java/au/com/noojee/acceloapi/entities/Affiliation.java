@@ -107,7 +107,7 @@ public class Affiliation extends AcceloEntity<Affiliation>
 		this.mobile = mobile;
 	}
 
-	public LocalDate DateLastInteracted()
+	public LocalDate getDateLastInteracted()
 	{
 		return AcceloApi.toLocalDate(date_last_interacted);
 	}
@@ -161,5 +161,12 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	{
 		return position;
 	}
+	
+	@Override
+	public int compareTo(Affiliation o)
+	{
+		return this.getDateLastInteracted().compareTo(o.getDateLastInteracted());
+	}
+
 
 }

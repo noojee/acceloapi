@@ -54,5 +54,12 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 				+ ", contract=" + contract + ", rate_id=" + rate_id + ", rate_type=" + rate_type + ", allowance_type="
 				+ allowance_type + ", service_item_id=" + service_item_id + "]";
 	}
+	
+	@Override
+	public int compareTo(ContractPeriod o)
+	{
+		return this.getDateCommenced().compareTo(o.getDateCommenced());
+	}
+
 
 }

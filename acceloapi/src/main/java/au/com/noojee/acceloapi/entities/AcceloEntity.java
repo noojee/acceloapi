@@ -1,8 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
-public class AcceloEntity <E>
+public abstract class AcceloEntity<E> implements Comparable<E>
 {
-	
 
 
 }

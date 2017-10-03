@@ -90,5 +90,12 @@ public class Staff extends AcceloEntity<Staff>
 				+ financial_level + "]";
 	}
 
+	
+	@Override
+	public int compareTo(Staff o)
+	{
+		return this.getUsername().compareTo(o.getUsername());
+	}
+
 
 }

@@ -495,6 +495,13 @@ public class Ticket extends AcceloEntity<Ticket>
 		return id;
 	}
 
+	
+	@Override
+	public int compareTo(Ticket o)
+	{
+		return this.getId() - o.getId();
+	}
+
 
 
 }

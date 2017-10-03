@@ -20,9 +20,11 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 
 	protected abstract Class<L> getResponseListClass();
 
-	// public abstract E getById(AcceloApi acceloApi, int id) throws AcceloException;
-	// pubc abstract List<E> getByFilter(AcceloApi acceloApi, AcceloFilter filter) throws AcceloException;
-	
+	// public abstract E getById(AcceloApi acceloApi, int id) throws
+	// AcceloException;
+	// pubc abstract List<E> getByFilter(AcceloApi acceloApi, AcceloFilter
+	// filter) throws AcceloException;
+
 	protected abstract EndPoint getEndPoint();
 
 	/**
@@ -34,27 +36,27 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 	 * @return
 	 * @throws AcceloException
 	 */
-	public List<E> getByFilter(AcceloApi acceloApi,AcceloFilter filter) throws AcceloException
+	public List<E> getByFilter(AcceloApi acceloApi, AcceloFilter filter) throws AcceloException
 	{
-		List<E> entities = new ArrayList<>();
 
-			AcceloFieldList fields = new AcceloFieldList();
-			fields.add("_ALL");
+		AcceloFieldList fields = new AcceloFieldList();
+		fields.add("_ALL");
 
-			return this.getByFilter(acceloApi, filter, fields);
+		return this.getByFilter(acceloApi, filter, fields);
 	}
-	
+
 	/**
 	 * Returns the list of tickets that match the pass in filter.
 	 * 
 	 * @param acceloApi
 	 * @param filter
 	 *            the filter defining the tickets to be returned.
-	 * @param fileds  - the set of fields to return
+	 * @param fileds
+	 *            - the set of fields to return
 	 * @return
 	 * @throws AcceloException
 	 */
-	public List<E> getByFilter(AcceloApi acceloApi,AcceloFilter filter, AcceloFieldList fields) throws AcceloException
+	public List<E> getByFilter(AcceloApi acceloApi, AcceloFilter filter, AcceloFieldList fields) throws AcceloException
 	{
 		List<E> entities = new ArrayList<>();
 
@@ -70,7 +72,6 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 		return entities;
 	}
 
-
 	public E getById(AcceloApi acceloApi, int id) throws AcceloException
 	{
 		AcceloFieldList fields = new AcceloFieldList();
@@ -78,7 +79,6 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 
 		return getById(acceloApi, getEndPoint(), id, fields);
 	}
-	
 
 	protected E getById(AcceloApi acceloApi, EndPoint endpoint, int id, AcceloFieldList fields) throws AcceloException
 	{
@@ -89,7 +89,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 
 			if (entity == null)
 			{
-					AcceloFilter filters = new AcceloFilter();
+				AcceloFilter filters = new AcceloFilter();
 				filters.add(new Eq("id", id));
 
 				L response;

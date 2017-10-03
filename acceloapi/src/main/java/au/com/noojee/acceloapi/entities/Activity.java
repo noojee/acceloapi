@@ -426,4 +426,10 @@ public class Activity extends AcceloEntity<Activity>
 		return tag;
 	}
 
+	@Override
+	public int compareTo(Activity o)
+	{
+		return this.getDateCreated().compareTo(o.getDateCreated());
+	}
+
 }

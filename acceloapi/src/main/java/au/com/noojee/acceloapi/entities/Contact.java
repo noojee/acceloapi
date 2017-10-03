@@ -178,6 +178,13 @@ public class Contact extends AcceloEntity<Contact>
 			return false;
 		return true;
 	}
+	
+	
+	@Override
+	public int compareTo(Contact o)
+	{
+		return this.getSurname().compareTo(o.getSurname());
+	}
 
 	
 }

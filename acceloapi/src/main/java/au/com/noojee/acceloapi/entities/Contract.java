@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.AcceloApi;
 
-public class Contract extends AcceloEntity<Contract>
+public class Contract extends AcceloEntity<Contract> 
 {
 	int id;
 	String company;			// The owning company id.
@@ -203,6 +203,13 @@ public class Contract extends AcceloEntity<Contract>
 		if (id != other.id)
 			return false;
 		return true;
+	}
+	
+	
+	@Override
+	public int compareTo(Contract o)
+	{
+		return this.getDateStarted().compareTo(o.getDateStarted());
 	}
 
 }

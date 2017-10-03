@@ -173,5 +173,11 @@ public class Company extends AcceloEntity<Company>
 			return false;
 		return true;
 	}
+	
+	@Override
+	public int compareTo(Company o)
+	{
+		return this.getName().compareTo(o.getName());
+	}
 
 }

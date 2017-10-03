@@ -163,10 +163,7 @@ public class AcceloApi
 				if (entityList.size() < AcceloApi.PAGE_SIZE)
 					more = false;
 
-				for (T entity : entityList)
-				{
-					entities.add(entity);
-				}
+				entities.addAll(entityList);
 				page += 1;
 			}
 

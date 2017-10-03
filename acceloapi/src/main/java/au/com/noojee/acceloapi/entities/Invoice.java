@@ -164,6 +164,12 @@ public class Invoice extends AcceloEntity<Invoice>
 				+ affiliation_id + ", affiliation=" + affiliation + ", creator_id=" + creator_id + ", created_by="
 				+ created_by + "]";
 	}
+	
+	@Override
+	public int compareTo(Invoice o)
+	{
+		return this.getInvoice_number() - o.getInvoice_number();
+	}
 
 
 }
