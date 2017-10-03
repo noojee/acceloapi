@@ -24,6 +24,7 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 	String allowance_type; // fixed_value
 	int service_item_id;
 
+	@Override
 	public int getId()
 	{
 		return id;

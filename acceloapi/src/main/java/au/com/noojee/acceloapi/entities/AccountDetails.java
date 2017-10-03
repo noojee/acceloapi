@@ -1,4 +1,6 @@
 package au.com.noojee.acceloapi.entities;
+
+
 public class AccountDetails
 {
     private String position;
@@ -9,7 +11,7 @@ public class AccountDetails
 
     private String access_level;
 
-    private Locale locale;
+    // private Locale locale;
 
     private String surname;
 
@@ -71,15 +73,15 @@ public class AccountDetails
         this.access_level = access_level;
     }
 
-    public Locale getLocale ()
-    {
-        return locale;
-    }
-
-    public void setLocale (Locale locale)
-    {
-        this.locale = locale;
-    }
+//    public Locale getLocale ()
+//    {
+//        return locale;
+//    }
+//
+//    public void setLocale (Locale locale)
+//    {
+//        this.locale = locale;
+//    }
 
     public String getSurname ()
     {
@@ -184,7 +186,9 @@ public class AccountDetails
     @Override
     public String toString()
     {
-        return "ClassPojo [position = "+position+", phone = "+phone+", fax = "+fax+", access_level = "+access_level+", locale = "+locale+", surname = "+surname+", firstname = "+firstname+", id = "+id+", username = "+username+", title = "+title+", user_defined_titles = "+user_defined_titles+", initials = "+initials+", email = "+email+", user_access = "+user_access+", mobile = "+mobile+"]";
+        return "ClassPojo [position = "+position+", phone = "+phone+", fax = "+fax+", access_level = "+access_level 
+        		// +", locale = "+locale+"
+        		+ "surname = "+surname+", firstname = "+firstname+", id = "+id+", username = "+username+", title = "+title+", user_defined_titles = "+user_defined_titles+", initials = "+initials+", email = "+email+", user_access = "+user_access+", mobile = "+mobile+"]";
     }
 }
 			

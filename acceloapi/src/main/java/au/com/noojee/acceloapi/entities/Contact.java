@@ -27,7 +27,8 @@ public class Contact extends AcceloEntity<Contact>
 	private String invoice_method;
 
 
-	public int getid()
+	@Override
+	public int getId()
 	{
 		return id;
 	}

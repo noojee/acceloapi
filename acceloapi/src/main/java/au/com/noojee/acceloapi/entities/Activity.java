@@ -1,5 +1,6 @@
 package au.com.noojee.acceloapi.entities;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -7,15 +8,18 @@ import javax.swing.text.html.HTML.Tag;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javamoney.moneta.Money;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.Formatters;
 import au.com.noojee.acceloapi.dao.AffiliationDao;
 
 public class Activity extends AcceloEntity<Activity>
 {
 
 	static private Logger logger = LogManager.getLogger(Activity.class);
+	
 
 	public enum Medium
 	{
@@ -203,6 +207,7 @@ public class Activity extends AcceloEntity<Activity>
 		this.staff = staffId;
 	}
 
+	@Override
 	public int getId()
 	{
 		return id;
@@ -396,19 +401,19 @@ public class Activity extends AcceloEntity<Activity>
 		return date_logged;
 	}
 
-	public int getBillable()
+	public Duration getBillable()
 	{
-		return billable;
+		return Duration.ofSeconds(billable);
 	}
 
-	public int getNonbillable()
+	public Duration getNonBillable()
 	{
-		return nonbillable;
+		return Duration.ofSeconds(nonbillable);
 	}
 
-	public int getTimeAllocation()
+	public Duration getTimeAllocation()
 	{
-		return time_allocation;
+		return Duration.ofSeconds(time_allocation);
 	}
 
 	public int getRateId()
@@ -416,14 +421,19 @@ public class Activity extends AcceloEntity<Activity>
 		return rate;
 	}
 
-	public int getRateCharged()
+	public Money getRateCharged()
 	{
-		return rate_charged;
+		return Money.of(rate_charged, Formatters.getCurrency());
 	}
 
 	public List<Tag> getTag()
 	{
 		return tag;
+	}
+	
+	public boolean isApproved()
+	{
+		return standing != null && (standing.equals("approved") || standing.equals("invoiced"));
 	}
 
 	@Override

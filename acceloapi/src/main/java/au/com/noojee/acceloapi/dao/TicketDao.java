@@ -113,9 +113,6 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		try
 		{
 			AcceloFilter filter = new AcceloFilter();
-			// filter.add(new Compound("against", new Eq("company", company.getId())));
-			// , new Eq("against", "company")));
-			
 			filter.add(new Eq("against_type", "company"))
 					 .add(new Eq("against_id", company.getId()));
 			
@@ -233,7 +230,7 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		fields.add("title", ticket.getTitle()); // URLEncoder.encode(ticket.getTitle()));
 		fields.add("type_id", ticket.getType());
 
-		fields.add("against_id", "" + contacts.getid());
+		fields.add("against_id", "" + contacts.getId());
 		fields.add("against_type", "contact");
 
 		fields.add("against_id", "" + company.getId());

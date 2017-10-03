@@ -22,6 +22,7 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	private String standing;
 
 
+	@Override
 	public int getId()
 	{
 		return id;

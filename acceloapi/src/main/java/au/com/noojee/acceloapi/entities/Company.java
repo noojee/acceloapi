@@ -58,6 +58,7 @@ public class Company extends AcceloEntity<Company>
 
 	}
 
+	@Override
 	public int getId()
 	{
 		return id;

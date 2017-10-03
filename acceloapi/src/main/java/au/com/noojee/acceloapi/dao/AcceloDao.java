@@ -2,8 +2,12 @@ package au.com.noojee.acceloapi.dao;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+
+import org.ehcache.CacheManager;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.CacheManagerBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
@@ -15,18 +19,19 @@ import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<E>>
 {
-	// Maintains a cache of entities by their ID.
-	private HashMap<Integer, E> entityCache = new HashMap<>();
+	private static final String CACHE_NAME = "entityCache";
+	// Maintains a cache of entities.
+	static private final CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder() 
+			  .withCache(CACHE_NAME, CacheConfigurationBuilder.newCacheConfigurationBuilder(CacheKey.class, AcceloEntity.class, ResourcePoolsBuilder.heap(5000))) 
+			  .build(true) ;
+	
 
 	protected abstract Class<L> getResponseListClass();
-
-	// public abstract E getById(AcceloApi acceloApi, int id) throws
-	// AcceloException;
-	// pubc abstract List<E> getByFilter(AcceloApi acceloApi, AcceloFilter
-	// filter) throws AcceloException;
-
 	protected abstract EndPoint getEndPoint();
+	
+			
 
+	
 	/**
 	 * Returns the list of tickets that match the pass in filter.
 	 * 
@@ -63,6 +68,10 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 		try
 		{
 			entities = acceloApi.getAll(getEndPoint(), filter, fields, getResponseListClass());
+			
+			// Add them to the cache
+			for (E entity : entities)
+				cacheManager.getCache(CACHE_NAME, CacheKey.class, AcceloEntity.class).put(new CacheKey(getEndPoint(), entity.getId()), entity);
 		}
 		catch (IOException e)
 		{
@@ -80,12 +89,12 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 		return getById(acceloApi, getEndPoint(), id, fields);
 	}
 
-	protected E getById(AcceloApi acceloApi, EndPoint endpoint, int id, AcceloFieldList fields) throws AcceloException
+	protected E  getById(AcceloApi acceloApi, EndPoint endpoint, int id, AcceloFieldList fields) throws AcceloException
 	{
 		E entity = null;
 		if (id != 0)
 		{
-			entity = entityCache.get(id);
+			entity = (E) cacheManager.getCache(CACHE_NAME, CacheKey.class, AcceloEntity.class).get(new CacheKey(endpoint, id));
 
 			if (entity == null)
 			{
@@ -103,11 +112,54 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 				}
 
 				if (response != null)
+				{
 					entity = response.getList().size() > 0 ? response.getList().get(0) : null;
-				entityCache.put(id, entity);
+					if (entity != null)
+						cacheManager.getCache(CACHE_NAME, CacheKey.class, AcceloEntity.class).put(new CacheKey(endpoint, id), entity);
+				}
 			}
 		}
 		return entity;
+	}
+	
+	
+	static class CacheKey
+	{
+		EndPoint endPoint;
+		int id;
+
+		public CacheKey(EndPoint endPoint, int id)
+		{
+			this.endPoint = endPoint;
+			this.id = id;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((endPoint == null) ? 0 : endPoint.hashCode());
+			result = prime * result + id;
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj)
+		{
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			CacheKey other = (CacheKey) obj;
+			if (endPoint != other.endPoint)
+				return false;
+			if (id != other.id)
+				return false;
+			return true;
+		}
 	}
 
 }

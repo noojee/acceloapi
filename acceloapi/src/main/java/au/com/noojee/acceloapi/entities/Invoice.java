@@ -53,6 +53,7 @@ public class Invoice extends AcceloEntity<Invoice>
 	// invoice.
 
 	
+		@Override
 		public int getId()
 	{
 		return id;

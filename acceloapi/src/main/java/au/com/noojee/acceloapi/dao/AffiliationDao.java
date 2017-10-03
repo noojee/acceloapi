@@ -67,7 +67,7 @@ public class AffiliationDao extends AcceloDao<Affiliation, AffiliationDao.Respon
 			// contact.getid() + ")";
 
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("contact", contact.getid()));
+			filter.add(new Eq("contact", contact.getId()));
 
 			response = api.get(EndPoint.affiliations, filter, AcceloFieldList.ALL, AffiliationDao.ResponseList.class);
 		}

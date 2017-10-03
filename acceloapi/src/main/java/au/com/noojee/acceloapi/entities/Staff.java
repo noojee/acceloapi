@@ -16,6 +16,7 @@ public class Staff extends AcceloEntity<Staff>
 	private String financial_level;
 
 
+	@Override
 	public int getId()
 	{
 		return id;

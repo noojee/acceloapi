@@ -17,7 +17,6 @@ public class Ticket extends AcceloEntity<Ticket>
 	// private Logger logger = LogManager.getLogger(Ticket.class);
 	static public String PRIORITY_CRITICAL = "1";
 
-
 	private int id;
 	private String title;
 	private String custom_id;
@@ -59,35 +58,39 @@ public class Ticket extends AcceloEntity<Ticket>
 	// cache them here for fast access.
 	private Contact cacheContact;
 	private Company cacheCompany;
-	private List<Activity> cacheActivities = null; 
-
+	private Duration nonBillable;
+	private Duration billable = null;
 	
+	private List<Activity> cacheActivities = null;
+
 	
 
 	/**
-	 * Retruns true of the ticket is currently open.
+	 * Returns true of the ticket is currently open.
+	 * 
 	 * @return
 	 */
 	public boolean isOpen()
 	{
 		return getDateClosed() == null || getDateClosed().equals(Expression.DATE1970)
-				|| getDateClosed().isAfter(LocalDate.now()); // I don't think this is possible. but still.
+				|| getDateClosed().isAfter(LocalDate.now()); // I don't think
+																// this is
+																// possible. but
+																// still.
 	}
 
 	public Duration sumMTDWork()
 	{
 		if (cacheActivities == null)
 			throw new IllegalStateException("Call getActivities first.");
-		
+
 		LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
 
-		
-		long work = cacheActivities.stream()
-		.filter(a -> {return a.getDateCreated().isAfter(startOfMonth)
-				|| a.getDateCreated().isEqual(startOfMonth);}) // greater than or equal to first day of month.
-		.mapToLong(a -> a.getBillable() + a.getNonbillable())
-		.sum();
-		
+		long work = cacheActivities.stream().filter(a -> {
+			return a.getDateCreated().isAfter(startOfMonth) || a.getDateCreated().isEqual(startOfMonth);
+		}) // greater than or equal to first day of month.
+				.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
+
 		return Duration.ofSeconds(work);
 	}
 
@@ -96,38 +99,61 @@ public class Ticket extends AcceloEntity<Ticket>
 		if (cacheActivities == null)
 			throw new IllegalStateException("Call getActivities first.");
 		LocalDate startOfLastMonth = LocalDate.now().withDayOfMonth(1).minus(java.time.Period.ofMonths(1));
-		
-		long work = cacheActivities.stream()
-		.filter(a -> {return (a.getDateCreated().isAfter(startOfLastMonth) // greater than or equal to the 1st day of last month.
-						|| a.getDateCreated().isEqual(startOfLastMonth))
-				&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1))   // before the first day of the current month.
-				;}) 
-		.mapToLong(a -> a.getBillable() + a.getNonbillable())
-		.sum();
-		
-		return Duration.ofSeconds(work);
 
+		long work = cacheActivities.stream().filter(a -> {
+			return (a.getDateCreated().isAfter(startOfLastMonth) // greater than
+																	// or equal
+																	// to the
+																	// 1st day
+																	// of last
+																	// month.
+					|| a.getDateCreated().isEqual(startOfLastMonth))
+					&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1)) // before
+																						// the
+																						// first
+																						// day
+																						// of
+																						// the
+																						// current
+																						// month.
+			;
+		}).mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
+
+		return Duration.ofSeconds(work);
 
 	}
 
-	
 	/**
 	 * Returns the total work on this ticket.
+	 * 
 	 * @return
 	 */
 	public Duration totalWork()
 	{
 		if (cacheActivities == null)
 			throw new IllegalStateException("Call getActivities first.");
-		
-		long work = cacheActivities.stream()
-		.mapToLong(a -> a.getBillable() + a.getNonbillable())
-		.sum();
-		
+
+		long work = cacheActivities.stream().mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
+
 		return Duration.ofSeconds(work);
 	}
 
-	
+	private void cacheBillableAndNonBillable()
+	{
+		if (cacheActivities == null)
+			throw new IllegalStateException("Call getActivities first.");
+
+		if (billable != null)
+		{
+			// sum the billable hours.
+			this.billable = cacheActivities.stream().map(Activity::getBillable).reduce(Duration.ZERO, (a,b) ->  a.plus(b));
+			this.nonBillable = cacheActivities.stream().map(Activity::getNonBillable).reduce(Duration.ZERO, (a,b) ->  a.plus(b));
+		}
+
+	}
+
+
+
 	// Returns a list of activities associated with this ticket.
 	public List<Activity> getActivities(AcceloApi acceloApi) throws AcceloException
 	{
@@ -136,14 +162,27 @@ public class Ticket extends AcceloEntity<Ticket>
 		{
 
 			cacheActivities = new ActivityDao().getByTicket(acceloApi, this);
+			cacheBillableAndNonBillable();
 		}
 
 		return cacheActivities;
 	}
-
-
-
 	
+	/**
+	 * Returns true if all Activities for this ticket have been approved or invoiced.
+	 * @return
+	 */
+	public boolean isFullyApproved()
+	{
+		if (cacheActivities == null)
+			throw new IllegalStateException("Call getActivities first.");
+		
+		boolean isFullyApproved = this.cacheActivities.stream().allMatch(a -> a.isApproved());
+		return isFullyApproved;
+	}
+
+
+	@Override
 	public int getId()
 	{
 		return id;
@@ -237,17 +276,17 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public LocalDate getDateSubmitted()
 	{
-		return AcceloApi.toLocalDate(date_submitted );
+		return AcceloApi.toLocalDate(date_submitted);
 	}
 
 	public LocalDate getDateOpened()
 	{
-		return AcceloApi.toLocalDate(date_opened );
+		return AcceloApi.toLocalDate(date_opened);
 	}
 
 	public LocalDate getDateResolved()
 	{
-		return AcceloApi.toLocalDate(date_resolved );
+		return AcceloApi.toLocalDate(date_resolved);
 	}
 
 	// Returns null if the ticket is still open.
@@ -256,17 +295,17 @@ public class Ticket extends AcceloEntity<Ticket>
 		if (date_closed == 0)
 			return null;
 
-		return AcceloApi.toLocalDate(date_closed );
+		return AcceloApi.toLocalDate(date_closed);
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return AcceloApi.toLocalDate(date_started );
+		return AcceloApi.toLocalDate(date_started);
 	}
 
 	public LocalDate getDateDue()
 	{
-		return AcceloApi.toLocalDate(date_due );
+		return AcceloApi.toLocalDate(date_due);
 	}
 
 	public String getClosedBy()
@@ -310,9 +349,19 @@ public class Ticket extends AcceloEntity<Ticket>
 		return billable_seconds;
 	}
 
+	public Duration getBillable()
+	{
+		return Duration.ofSeconds(billable_seconds);
+	}
+
+	public Duration getNonBillable()
+	{
+		return this.nonBillable;
+	}
+
 	public LocalDate getDateLastInteracted()
 	{
-		return AcceloApi.toLocalDate(date_last_interacted );
+		return AcceloApi.toLocalDate(date_last_interacted);
 	}
 
 	public ArrayList<String> getBreadcrumbs()
@@ -495,13 +544,11 @@ public class Ticket extends AcceloEntity<Ticket>
 		return id;
 	}
 
-	
 	@Override
 	public int compareTo(Ticket o)
 	{
 		return this.getId() - o.getId();
 	}
-
 
 
 }

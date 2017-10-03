@@ -34,6 +34,7 @@ public class Contract extends AcceloEntity<Contract>
 	int period_template_id;
 
 	
+	@Override
 	public int getId()
 	{
 		return id;
