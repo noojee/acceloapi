@@ -48,34 +48,50 @@ Examples:
 
 	// Create a filter
 	AcceloFilter filter = new AcceloFilter();
-	filter.add(new Eq("email", staffEmailAddress));
+	filter.where(new Eq("email", staffEmailAddress));
 
 	// Use the universal getByFitler
 	List<Staff> = new StaffDao().getByFilter(acceloApi, filter);
 
 	// get a staff member by id
 	AcceloFilter filter = new AcceloFilter();
-	filter.add(new Eq("id", staff_id));
+	filter.where(new Eq("id", staff_id));
 	List<Staff> = new StaffDao().getByFilter(acceloApi, filter);
 
 	// Use the accelo 'search' filter get get a company by name:
 	AcceloFilter filter = new AcceloFilter();
-	filter.add(new Search(companyName));
+	filter.where(new Search(companyName));
 	List<Company> = new CompanyDao().getByFilter(acceloApi, filter);
 
 	// Build a compound filter
 	AcceloFilter filters = new AcceloFilter();
 
 	// Filter using the against field with a type of company and an company id.
-	filters.add(new AcceloFilter.Compound("against"))
-	.add(new Eq("company", company.getId()));
+	filters.where(new Eq("against", "company")
+		.and(new Eq("company", company.getId()))
+		);
 	List<Company> = new CompanyDao().getByFilter(acceloApi, filter);
 
 	// Search for tickets by company and contact id
 	AcceloFilter filter = new AcceloFilter();
-	filter.add(new Eq("company_id", companyId))
-	.add(new Eq("contact_id", contactId));
+	filter.where(new Eq("company_id", companyId))
+		.and(new Eq("contact_id", contactId));
 	List<Ticket> = new TicketDao().getByFilter(acceloApi, filter);
+
+	// Search for for two companies 
+	AcceloFilter filter = new AcceloFilter();
+	filter.where(new Eq("company_id", 1))
+		.and(new Eq("company_id", 2));
+	List<Ticket> = new CompanyDao().getByFilter(acceloApi, filter);
+	
+	
+	// Nest criteria
+	AcceloFilter filter = new AcceloFilter();
+	filter.where(new Eq("against", "company")
+		.and(new Eq("company_id", 1).or(new Eq("company_id", 2)))
+		);
+	List<Ticket> = new TicketDao().getByFilter(acceloApi, filter);
+
 
 
 
