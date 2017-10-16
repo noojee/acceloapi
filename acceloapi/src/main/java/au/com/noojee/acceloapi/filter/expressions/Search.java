@@ -1,6 +1,6 @@
 package au.com.noojee.acceloapi.filter.expressions;
 
-public class Search extends Expression
+public class Search 
 {
 	private String operand;
 
@@ -9,7 +9,6 @@ public class Search extends Expression
 		this.operand = operand;
 	}
 
-	@Override
 	public String toJson()
 	{
 		String json = "";

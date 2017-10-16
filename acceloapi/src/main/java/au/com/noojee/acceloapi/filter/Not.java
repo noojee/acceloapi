@@ -8,8 +8,7 @@ public class Not extends Expression
 	@Override
 	public String toJson()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("Not is not supported :)");
 	}
 
 }

@@ -17,11 +17,6 @@ public class Before extends Expression
 	@Override
 	public String toJson()
 	{
-
-		// if (simpleMatch.getOperands().size() != 1)
-		// throw new IllegalArgumentException("The BEFORE operator takes
-		// only a single operand.");
-
 		String nameAndOperator = fieldName + "_before";
 
 		String json = "\"" + nameAndOperator + "\": [";

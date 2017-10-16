@@ -12,23 +12,21 @@ public class AcceloFilter
 
 	private Search search = null;
 
-	public AcceloFilter where(Search search) throws AcceloException
+	public void where(Search search) throws AcceloException
 	{
 		if (expression != null)
 			throw new AcceloException("You may not combine filters and searches");
 
 		this.search = search;
-		return this;
 
 	}
 
-	public AcceloFilter where(Expression expression) throws AcceloException
+	public void where(Expression expression) throws AcceloException
 	{
 		if (search != null)
 			throw new AcceloException("You may not combine filters and searches");
 
 		this.expression = expression;
-		return this;
 	}
 	
 	public AcceloFilter and(Expression child) //throws AcceloException
@@ -39,27 +37,17 @@ public class AcceloFilter
 	}
 	
 	
-	public AcceloFilter or(Expression child) //throws AcceloException
+	public AcceloFilter or(Expression child) 
 	{
 		this.expression =  new Or(this.expression, child);
 		
 		return this;
 	}
 	
-
-	
-
-
-	/*
-	 * new Filter().and(new Eq(), new After()).or(new And(new Equ(), new After)
-	 * new Filter().where(new Eq().and(new After()).or(new And(new Equ(), new
-	 * After)
-	 */
-
 	/**
-	 * Takes a map of filter key/value pairs and builds a json filter
+	 * Returns the accelo json expression for this filter.
 	 * 
-	 * "_filters": { "email": ["pepper@test.com", "salt@test.com"] }
+	 * "_filters": { "_OR" : { "email": "pepper@test.com", "email" : "salt@test.com" } }
 	 * 
 	 * @param filterMap
 	 * @return
