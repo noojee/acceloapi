@@ -23,7 +23,7 @@ public class StaffDao extends AcceloDao<Staff, StaffDao.ResponseList>
 			if (staffEmailAddress != null)
 			{
 				AcceloFilter filter = new AcceloFilter();
-				filter.add(new Eq("email", staffEmailAddress));
+				filter.where(new Eq("email", staffEmailAddress));
 
 				response = acceloApi.get(EndPoint.staff, filter, AcceloFieldList.ALL, StaffDao.ResponseList.class);
 			}

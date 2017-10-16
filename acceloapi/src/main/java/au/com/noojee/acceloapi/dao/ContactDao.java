@@ -1,6 +1,5 @@
 package au.com.noojee.acceloapi.dao;
 
-import java.io.IOException;
 import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloApi;
@@ -16,30 +15,19 @@ import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class ContactDao extends AcceloDao<Contact, ContactDao.ResponseList>
 {
-	
 
 	public Contact getContact(AcceloApi acceloApi, String contact_firstname, String contact_lastname)
 			throws AcceloException
 	{
-		ContactDao.ResponseList response = null;
-		try
-		{
-			if (contact_firstname != null && contact_lastname != null)
-			{
-				AcceloFilter filters = new AcceloFilter();
-				filters.add(new Search(contact_firstname + " " + contact_lastname));
-
-				response = acceloApi.get(EndPoint.contacts, filters, AcceloFieldList.ALL, ContactDao.ResponseList.class);
-			}
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
 		Contact contact = null;
-		if (response != null)
-			contact = response.getList().size() > 0 ? response.getList().get(0) : null;
+
+		if (contact_firstname != null && contact_lastname != null)
+		{
+			AcceloFilter filters = new AcceloFilter();
+			filters.where(new Search(contact_firstname + " " + contact_lastname));
+			List<Contact> contacts = getByFilter(acceloApi, filters);
+			contact = contacts.size() > 0 ? contacts.get(0) : null;
+		}
 
 		return contact;
 	}
@@ -51,19 +39,11 @@ public class ContactDao extends AcceloDao<Contact, ContactDao.ResponseList>
 		fields.add(Company.FIELDS_ALL);
 
 		AcceloFilter filters = new AcceloFilter();
-		filters.add(new Eq("contact_number", phone));
+		filters.where(new Eq("contact_number", phone));
 
-		ContactDao.ResponseList request;
-		try
-		{
-			request = acceloApi.get(EndPoint.contacts, filters, fields, ContactDao.ResponseList.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
+		List<Contact> contacts = getByFilter(acceloApi, filters, fields);
 
-		return request.getList();
+		return contacts;
 
 	}
 
@@ -82,6 +62,5 @@ public class ContactDao extends AcceloDao<Contact, ContactDao.ResponseList>
 	{
 		return EndPoint.contacts;
 	}
-
 
 }

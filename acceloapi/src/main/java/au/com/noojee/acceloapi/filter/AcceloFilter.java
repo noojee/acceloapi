@@ -1,9 +1,6 @@
 package au.com.noojee.acceloapi.filter;
 
-import java.util.ArrayList;
-
 import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.filter.expressions.Compound;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 import au.com.noojee.acceloapi.filter.expressions.Search;
 
@@ -11,13 +8,13 @@ public class AcceloFilter
 {
 	public static final String ALL = "_ALL";
 
-	ArrayList<Expression> expressions = new ArrayList<>();
+	private Expression expression = null;
 
 	private Search search = null;
 
-	public AcceloFilter add(Search search) throws AcceloException
+	public AcceloFilter where(Search search) throws AcceloException
 	{
-		if (expressions.size() > 0)
+		if (expression != null)
 			throw new AcceloException("You may not combine filters and searches");
 
 		this.search = search;
@@ -25,25 +22,40 @@ public class AcceloFilter
 
 	}
 
-	public Compound add(Compound expression) throws AcceloException
+	public AcceloFilter where(Expression expression) throws AcceloException
 	{
 		if (search != null)
 			throw new AcceloException("You may not combine filters and searches");
 
-		expressions.add(expression);
-		return expression;
-	}
-
-	public AcceloFilter add(Expression expression) throws AcceloException
-	{
-		if (search != null)
-			throw new AcceloException("You may not combine filters and searches");
-
-		expressions.add(expression);
+		this.expression = expression;
 		return this;
 	}
+	
+	public AcceloFilter and(Expression child) //throws AcceloException
+	{
+		this.expression =  new And(this.expression, child);
+		
+		return this;
+	}
+	
+	
+	public AcceloFilter or(Expression child) //throws AcceloException
+	{
+		this.expression =  new Or(this.expression, child);
+		
+		return this;
+	}
+	
 
 	
+
+
+	/*
+	 * new Filter().and(new Eq(), new After()).or(new And(new Equ(), new After)
+	 * new Filter().where(new Eq().and(new After()).or(new And(new Equ(), new
+	 * After)
+	 */
+
 	/**
 	 * Takes a map of filter key/value pairs and builds a json filter
 	 * 
@@ -55,23 +67,16 @@ public class AcceloFilter
 	public String toJson()
 	{
 		String json = "";
-		boolean firstFilter = true;
 
-		for (Expression expression : expressions)
+		if (expression != null)
 		{
-			if (firstFilter)
-			{
-				json += "\"_filters\": {\n";
-				firstFilter = false;
-			}
-			else
-				json += ",";
+			json += "\"_filters\": {\n";
 
 			json += expression.toJson();
 
-		}
-		if (!firstFilter)
 			json += "}";
+		}
+		else
 
 		if (search != null)
 		{

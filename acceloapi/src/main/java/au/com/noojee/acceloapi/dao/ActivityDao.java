@@ -40,7 +40,7 @@ public class ActivityDao extends AcceloDao<Activity, ActivityDao.ResponseList>
 		try
 		{
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("against_id", ticket.getId()));
+			filter.where(new Eq("against_type", "issue").and(new Eq("against_id", ticket.getId())));
 
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");

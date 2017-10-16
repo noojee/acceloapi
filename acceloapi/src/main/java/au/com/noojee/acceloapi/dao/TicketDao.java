@@ -34,12 +34,13 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 
 	/**
 	 * TicketNo is the id.
-	 * @throws AcceloException 
+	 * 
+	 * @throws AcceloException
 	 */
 	@Override
-	public Ticket getById(AcceloApi api, int ticketNo) throws AcceloException 
+	public Ticket getById(AcceloApi api, int ticketNo) throws AcceloException
 	{
-		
+
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add("_ALL");
 		fields.add("status(_ALL)");
@@ -47,15 +48,16 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		return getById(api, EndPoint.tickets, ticketNo, fields);
 
 	}
-	
+
 	/**
 	 * TicketNo is the id.
-	 * @throws AcceloException 
+	 * 
+	 * @throws AcceloException
 	 */
 	@Override
-	public List<Ticket> getByFilter(AcceloApi api, AcceloFilter filter) throws AcceloException 
+	public List<Ticket> getByFilter(AcceloApi api, AcceloFilter filter) throws AcceloException
 	{
-		
+
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add("_ALL");
 		fields.add("status(_ALL)");
@@ -63,8 +65,6 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		return getByFilter(api, filter, fields);
 
 	}
-
-
 
 	/**
 	 * Returns a list of tickets attached to the passed contract.
@@ -81,7 +81,7 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		try
 		{
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("contract", contract.getId()));
+			filter.where(new Eq("contract", contract.getId()));
 
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");
@@ -113,12 +113,9 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		try
 		{
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("against_type", "company"))
-					 .add(new Eq("against_id", company.getId()));
-			
-			
-			
-			// against_id=3617, against_type=company, 
+			filter.where(new Eq("against_type", "company").and(new Eq("against_id", company.getId())));
+
+			// against_id=3617, against_type=company,
 
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");
@@ -144,8 +141,8 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 	 * @return
 	 * @throws AcceloException
 	 */
-	public List<Ticket> getRecentByContract(AcceloApi acceloApi, Contract contract,
-			LocalDate firstDateOfInterest) throws AcceloException
+	public List<Ticket> getRecentByContract(AcceloApi acceloApi, Contract contract, LocalDate firstDateOfInterest)
+			throws AcceloException
 	{
 		// Get the day before the day of interest so we can just use isAfter
 		LocalDate dayBefore = firstDateOfInterest.minusDays(1);
@@ -155,8 +152,7 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		{
 			// Get tickets with a close date on or after the firstDateOfInterest
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("contract", contract.getId()));
-			filter.add(new After("date_closed", dayBefore));
+			filter.where(new Eq("contract", contract.getId()).and(new After("date_closed", dayBefore)));
 
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");
@@ -166,8 +162,7 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 
 			// Get tickets with an empty close date
 			filter = new AcceloFilter();
-			filter.add(new Eq("contract", contract.getId()));
-			filter.add(new Eq("date_closed", Expression.DATE1970));
+			filter.where(new Eq("contract", contract.getId()).and(new Eq("date_closed", Expression.DATE1970)));
 
 			fields = new AcceloFieldList();
 			fields.add("_ALL");
@@ -200,9 +195,8 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		{
 			// Get tickets with a close date on or after the firstDateOfInterest
 			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Eq("contract", 0));
-			filter.add(new Eq("against_id", company.getId()));
-			filter.add(new Eq("against_type", "company"));
+			filter.where(new Eq("contract", 0).and(new Eq("against_id", company.getId()))
+					.and(new Eq("against_type", "company")));
 
 			AcceloFieldList fields = new AcceloFieldList();
 			fields.add("_ALL");
@@ -268,7 +262,8 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 			AcceloFieldValues fields = new AcceloFieldValues();
 			fields.add("assignee", staff.getId());
 
-			TicketDao.Response response = acceloApi.update(EndPoint.tickets, ticket.getId(), fields, TicketDao.Response.class);
+			TicketDao.Response response = acceloApi.update(EndPoint.tickets, ticket.getId(), fields,
+					TicketDao.Response.class);
 			if (response == null || response.getEntity() == null)
 			{
 				throw new AcceloException(
@@ -284,13 +279,11 @@ public class TicketDao extends AcceloDao<Ticket, TicketDao.ResponseList>
 		return result;
 	}
 
-	
 	@Override
 	protected EndPoint getEndPoint()
 	{
 		return EndPoint.tickets;
 	}
-
 
 	@Override
 	protected Class<ResponseList> getResponseListClass()

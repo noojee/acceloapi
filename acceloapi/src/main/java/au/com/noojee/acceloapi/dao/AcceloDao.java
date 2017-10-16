@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.ehcache.config.builders.CacheConfigurationBuilder;
 import org.ehcache.config.builders.CacheManagerBuilder;
@@ -19,19 +22,19 @@ import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<E>>
 {
+	static Logger logger = LogManager.getLogger();
+
 	private static final String CACHE_NAME = "entityCache";
 	// Maintains a cache of entities.
-	static private final CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder() 
-			  .withCache(CACHE_NAME, CacheConfigurationBuilder.newCacheConfigurationBuilder(CacheKey.class, AcceloEntity.class, ResourcePoolsBuilder.heap(5000))) 
-			  .build(true) ;
-	
+	static private final CacheManager cacheManager = CacheManagerBuilder
+			.newCacheManagerBuilder().withCache(CACHE_NAME, CacheConfigurationBuilder
+					.newCacheConfigurationBuilder(CacheKey.class, AcceloEntity.class, ResourcePoolsBuilder.heap(5000)))
+			.build(true);
 
 	protected abstract Class<L> getResponseListClass();
-	protected abstract EndPoint getEndPoint();
-	
-			
 
-	
+	protected abstract EndPoint getEndPoint();
+
 	/**
 	 * Returns the list of tickets that match the pass in filter.
 	 * 
@@ -68,10 +71,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 		try
 		{
 			entities = acceloApi.getAll(getEndPoint(), filter, fields, getResponseListClass());
-			
-			// Add them to the cache
-			for (E entity : entities)
-				cacheManager.getCache(CACHE_NAME, CacheKey.class, AcceloEntity.class).put(new CacheKey(getEndPoint(), entity.getId()), entity);
+			entities = updateCache(entities);
 		}
 		catch (IOException e)
 		{
@@ -79,6 +79,35 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 		}
 
 		return entities;
+	}
+
+	/*
+	 * Adds new entries to the cache. If it finds an entry in the cache then it
+	 * returns that entry as the entry is likely to have other entities attached
+	 * to it.
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	private List<E> updateCache(List<E> entities)
+	{
+		List<E> updated = new ArrayList<>();
+
+		@SuppressWarnings("rawtypes")
+		Cache<CacheKey, AcceloEntity> cache = cacheManager.getCache(CACHE_NAME, CacheKey.class, AcceloEntity.class);
+		// Add them to the cache
+		for (E entity : entities)
+		{
+			CacheKey key = new CacheKey(getEndPoint(), entity.getId());
+
+			AcceloEntity<E> existingEntity = cache.get(key);
+			if (existingEntity == null)
+			{
+				cache.put(key, entity);
+				existingEntity = entity;
+			}
+			updated.add((E) existingEntity);
+		}
+		return updated;
 	}
 
 	public E getById(AcceloApi acceloApi, int id) throws AcceloException
@@ -89,17 +118,18 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 		return getById(acceloApi, getEndPoint(), id, fields);
 	}
 
-	protected E  getById(AcceloApi acceloApi, EndPoint endpoint, int id, AcceloFieldList fields) throws AcceloException
+	protected E getById(AcceloApi acceloApi, EndPoint endpoint, int id, AcceloFieldList fields) throws AcceloException
 	{
 		E entity = null;
 		if (id != 0)
 		{
-			entity = (E) cacheManager.getCache(CACHE_NAME, CacheKey.class, AcceloEntity.class).get(new CacheKey(endpoint, id));
+			entity = (E) cacheManager.getCache(CACHE_NAME, CacheKey.class, AcceloEntity.class)
+					.get(new CacheKey(endpoint, id));
 
 			if (entity == null)
 			{
 				AcceloFilter filters = new AcceloFilter();
-				filters.add(new Eq("id", id));
+				filters.where(new Eq("id", id));
 
 				L response;
 				try
@@ -115,14 +145,16 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 				{
 					entity = response.getList().size() > 0 ? response.getList().get(0) : null;
 					if (entity != null)
-						cacheManager.getCache(CACHE_NAME, CacheKey.class, AcceloEntity.class).put(new CacheKey(endpoint, id), entity);
+						cacheManager.getCache(CACHE_NAME, CacheKey.class, AcceloEntity.class)
+								.put(new CacheKey(endpoint, id), entity);
+					else
+						logger.error("Failed to find entity for key: " + new CacheKey(endpoint, id));
 				}
 			}
 		}
 		return entity;
 	}
-	
-	
+
 	static class CacheKey
 	{
 		EndPoint endPoint;

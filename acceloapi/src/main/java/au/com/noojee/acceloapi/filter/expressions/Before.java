@@ -2,7 +2,7 @@ package au.com.noojee.acceloapi.filter.expressions;
 
 import java.time.LocalDate;
 
-public class Before implements Expression
+public class Before extends Expression
 {
 
 	private String fieldName;

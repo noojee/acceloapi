@@ -1,6 +1,6 @@
 package au.com.noojee.acceloapi.dao;
 
-import java.io.IOException;
+import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
@@ -20,75 +20,53 @@ public class CompanyDao extends AcceloDao<Company, CompanyDao.ResponseList>
 
 	}
 
-
 	public Company getByName(AcceloApi api, String companyName) throws AcceloException
 	{
-		CompanyDao.ResponseList response;
-		try
-		{
-			AcceloFieldList fields = new AcceloFieldList();
-			fields.add(AcceloFieldList._ALL);
-			fields.add(Contact.FIELDS_ALL);
+		AcceloFieldList fields = new AcceloFieldList();
+		fields.add(AcceloFieldList._ALL);
+		fields.add(Contact.FIELDS_ALL);
 
-			AcceloFilter filter = new AcceloFilter();
-			filter.add(new Search(companyName));
+		AcceloFilter filter = new AcceloFilter();
+		filter.where(new Search(companyName));
 
-			response = api.get(EndPoint.companies, filter, fields, CompanyDao.ResponseList.class);
-			if (!response.isOK())
-				throw new AcceloException(response.getStatusMessage());
-
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
+		List<Company> companies = getByFilter(api, filter, fields);
 
 		Company company = null;
-		company = response.getList().size() > 0 ? response.getList().get(0) : null;
+		company = companies.size() > 0 ? companies.get(0) : null;
 
 		return company;
-
 	}
-	
+
 	public Company getCompanyByContactId(AcceloApi api, String contractId) throws AcceloException
 	{
-		CompanyDao.ResponseList response;
-		try
-		{
 
-			AcceloFilter filters = new AcceloFilter();
-			filters.add(new Eq("id", contractId));
-
-			response = api.get(EndPoint.companies, filters, AcceloFieldList.ALL, CompanyDao.ResponseList.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
+		AcceloFilter filters = new AcceloFilter();
+		filters.where(new Eq("id", contractId));
+		List<Company> companies = getByFilter(api, filters);
 
 		Company company = null;
-		company = response.getList().size() > 0 ? response.getList().get(0) : null;
+		company = companies.size() > 0 ? companies.get(0) : null;
 
 		return company;
 	}
 
-	
-//	public static List<Company> getList(AcceloApi acceloApi) throws AcceloException
-//	{
-//		Company.Response request;
-//		try
-//		{
-//			request = acceloApi.get(EndPoint.companies, null, AcceloFieldList.ALL, Company.Response.class);
-//		}
-//		catch (IOException e)
-//		{
-//			throw new AcceloException(e);
-//		}
-//
-//		return request.getList();
-//
-//	}
-
+	// public static List<Company> getList(AcceloApi acceloApi) throws
+	// AcceloException
+	// {
+	// Company.Response request;
+	// try
+	// {
+	// request = acceloApi.get(EndPoint.companies, null, AcceloFieldList.ALL,
+	// Company.Response.class);
+	// }
+	// catch (IOException e)
+	// {
+	// throw new AcceloException(e);
+	// }
+	//
+	// return request.getList();
+	//
+	// }
 
 	@Override
 	protected EndPoint getEndPoint()
@@ -96,14 +74,10 @@ public class CompanyDao extends AcceloDao<Company, CompanyDao.ResponseList>
 		return EndPoint.companies;
 	}
 
-
-	
 	@Override
 	protected Class<CompanyDao.ResponseList> getResponseListClass()
 	{
 		return CompanyDao.ResponseList.class;
 	}
-	
-
 
 }

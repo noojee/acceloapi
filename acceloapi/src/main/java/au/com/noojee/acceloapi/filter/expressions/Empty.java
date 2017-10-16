@@ -1,6 +1,6 @@
 package au.com.noojee.acceloapi.filter.expressions;
 
-public class Empty implements Expression
+public class Empty extends Expression
 {
 	private String fieldName;
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Eq implements Expression
+public class Eq extends Expression
 {
 
 	private String fieldName;
@@ -20,7 +20,7 @@ public class Eq implements Expression
 	public Eq(String fieldName, String operand)
 	{
 		this.fieldName = fieldName;
-		this.operands.add("" + operand);
+		this.operands.add(operand);
 	}
 
 	public Eq(String fieldName, String[] operand)
