@@ -53,13 +53,11 @@
 			<version>3.0</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.ehcache/ehcache -->
 		<dependency>
-			<groupId>org.ehcache</groupId>
-			<artifactId>ehcache</artifactId>
-			<version>3.4.0</version>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>23.2-jre</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>junit</groupId>

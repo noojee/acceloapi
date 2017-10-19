@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -107,10 +108,20 @@ public class AcceloApi
 //		return getAll(endPoint.getURL(), filterMap, fieldList, clazz);
 //	}
 	
-	public <T> List<T> getAll(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList,
-			Class<? extends AcceloList<T>> clazz) throws IOException, AcceloException
+	public <E> List<E> getAll(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList,
+			Class<? extends AcceloList<E>> clazz) throws AcceloException
 	{
-		return getAll(endPoint.getURL(), filterMap, fieldList, clazz);
+		List<E> list;
+		try
+		{
+			list = getAll(endPoint.getURL(), filterMap, fieldList, clazz);
+		}
+		catch (MalformedURLException e)
+		{
+			throw new AcceloException(e);
+		}
+		
+		return list;
 	}
 
 
@@ -146,9 +157,9 @@ public class AcceloApi
 //	}
 	
 	
-	public <T, L extends AcceloList<T>> List<T> getAll(URL url, AcceloFilter filterMap, AcceloFieldList fieldList, Class<L> responseClass) throws IOException, AcceloException
+	public <E, L extends AcceloList<E>> List<E> getAll(URL url, AcceloFilter filterMap, AcceloFieldList fieldList, Class<L> responseClass) throws AcceloException
 	{
-		List<T> entities = new ArrayList<>();
+		List<E> entities = new ArrayList<>();
 		boolean more = true;
 		int page = 0;
 		while (more)
@@ -157,7 +168,7 @@ public class AcceloApi
 
 			if (responseList != null)
 			{
-				List<T> entityList = responseList.getList();
+				List<E> entityList = responseList.getList();
 
 				// If we get less than a page we must now have everything.
 				if (entityList.size() < AcceloApi.PAGE_SIZE)
@@ -258,7 +269,7 @@ public class AcceloApi
 	 */
 
 	public <R> R get(URL url, AcceloFilter filterMap, AcceloFieldList fieldList, Class<R> clazz, int pageNo)
-			throws IOException, AcceloException
+			throws AcceloException
 	{
 		HTTPResponse response = get(url, filterMap, fieldList, pageNo);
 		return response.parseBody(clazz);
@@ -281,15 +292,26 @@ public class AcceloApi
 	 */
 
 	private HTTPResponse get(URL url, AcceloFilter filterMap, AcceloFieldList fieldList, int pageNo)
-			throws IOException, AcceloException
+			throws AcceloException
 	{
 		String fields = fieldList.formatAsJson();
 		String filters = (filterMap == null) ? null : filterMap.toJson();
 
 		String json = buildJsonBody(HTTPMethod.GET, fields, filters);
+		
+		HTTPResponse response = null;
 
-		URL pagedURL = new URL(url + "?_page=" + pageNo + "&_limit=" + PAGE_SIZE);
-		HTTPResponse response = _request(HTTPMethod.POST, pagedURL, json);
+		URL pagedURL;
+		try
+		{
+			pagedURL = new URL(url + "?_page=" + pageNo + "&_limit=" + PAGE_SIZE);
+			response = _request(HTTPMethod.POST, pagedURL, json);
+		}
+		catch (IOException e)
+		{
+			
+			throw new AcceloException(e);
+		}
 
 		return response;
 

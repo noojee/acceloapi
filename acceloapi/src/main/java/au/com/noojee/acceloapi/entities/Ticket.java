@@ -142,7 +142,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		if (cacheActivities == null)
 			throw new IllegalStateException("Call getActivities first.");
 
-		if (billable != null)
+		if (billable == null)
 		{
 			// sum the billable hours.
 			this.billable = cacheActivities.stream().map(Activity::getBillable).reduce(Duration.ZERO, (a,b) ->  a.plus(b));

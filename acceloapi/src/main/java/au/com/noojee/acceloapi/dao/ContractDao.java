@@ -14,6 +14,7 @@ import au.com.noojee.acceloapi.entities.Contract;
 import au.com.noojee.acceloapi.entities.ContractPeriod;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.After;
+import au.com.noojee.acceloapi.filter.expressions.Against;
 import au.com.noojee.acceloapi.filter.expressions.Before;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
@@ -128,33 +129,20 @@ public class ContractDao extends AcceloDao<Contract, ContractDao.ResponseList>
 	 */
 	public List<Contract> getActiveContracts(AcceloApi acceloApi) throws AcceloException
 	{
-		List<Contract> contracts = new ArrayList<>();
-
-		// Get all contracts where the expiry date is after today and the
+		// Get all contracts where the expiry date is after today or null and the
 		// start date is before today
 		AcceloFilter filter = new AcceloFilter();
-		filter.where(new Before("date_started", LocalDate.now()).and(new After("date_expires", LocalDate.now())));
+		filter.where(new Before("date_started", LocalDate.now())
+				.and(new After("date_expires", LocalDate.now()).or(new Eq("date_expires", Expression.DATE1970))));
 
-		contracts = getByFilter(acceloApi, filter);
-
-		// Do it again looking for contracts with a null expiry date.
-
-		filter = new AcceloFilter();
-		// filter.add(new Empty("date_expires")); // Empty on date_expires
-		// doesn't currently work and we seem to get back ad ate of 1970.
-		filter.where(new Before("date_started", LocalDate.now()).and(new Eq("date_expires", Expression.DATE1970))); // 1/1/1970
-
-		contracts.addAll(getByFilter(acceloApi, filter));
-
-		return contracts;
-
+		return getByFilter(acceloApi, filter);
 	}
 
 	public List<Contract> getByCompany(AcceloApi acceloApi, Company company) throws AcceloException
 	{
 		List<Contract> contracts;
 		AcceloFilter filters = new AcceloFilter();
-		filters.where(new Eq("against", "company").and(new Eq("company", company.getId())));
+		filters.where(new Against("company", company.getId()));
 		contracts = getByFilter(acceloApi, filters);
 		return contracts;
 	}

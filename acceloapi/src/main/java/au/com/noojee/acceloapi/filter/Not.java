@@ -10,5 +10,11 @@ public class Not extends Expression
 	{
 		throw new RuntimeException("Not is not supported :)");
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		return 0;
+	}
 
 }

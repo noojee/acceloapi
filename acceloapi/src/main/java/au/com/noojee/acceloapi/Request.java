@@ -1,8 +1,6 @@
 package au.com.noojee.acceloapi;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import au.com.noojee.acceloapi.entities.Company;
 

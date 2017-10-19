@@ -1,6 +1,7 @@
 package au.com.noojee.acceloapi.filter;
 
 import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 import au.com.noojee.acceloapi.filter.expressions.Search;
 
@@ -78,7 +79,62 @@ public class AcceloFilter
 	@Override
 	public String toString()
 	{
-		return toJson();
+		return toJson().replaceAll("\n", " ") + " filter hashcode:" + hashCode();
+	} 
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((expression == null) ? 0 : expression.hashCode());
+		result = prime * result + ((search == null) ? 0 : search.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AcceloFilter other = (AcceloFilter) obj;
+		if (expression == null)
+		{
+			if (other.expression != null)
+				return false;
+		}
+		else if (!expression.equals(other.expression))
+			return false;
+		if (search == null)
+		{
+			if (other.search != null)
+				return false;
+		}
+		else if (!search.equals(other.search))
+			return false;
+		return true;
+	}
+
+	/**
+	 * Returns true if the filter is for a simple id match.
+	 * @return
+	 */
+	public boolean isIDFilter()
+	{
+		boolean isIDFilter = false;
+		
+		if (expression != null && expression instanceof Eq)
+		{
+			Eq simple = (Eq)expression;
+			if (simple.isFieldName("id"))
+				isIDFilter = true;
+		}
+			
+		return isIDFilter;
 	}
 
 }

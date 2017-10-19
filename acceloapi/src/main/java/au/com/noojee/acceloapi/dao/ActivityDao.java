@@ -17,12 +17,11 @@ import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.filter.expressions.Against;
 
 public class ActivityDao extends AcceloDao<Activity, ActivityDao.ResponseList>
 {
 	static private Logger logger = LogManager.getLogger(Activity.class);
-
 
 	public class Response extends AcceloResponse<Activity>
 	{
@@ -32,30 +31,14 @@ public class ActivityDao extends AcceloDao<Activity, ActivityDao.ResponseList>
 	{
 	}
 
-
 	public List<Activity> getByTicket(AcceloApi acceloApi, Ticket ticket) throws AcceloException
 	{
-		List<Activity> activities = new ArrayList<>();
-
-		try
-		{
-			AcceloFilter filter = new AcceloFilter();
-			filter.where(new Eq("against_type", "issue").and(new Eq("against_id", ticket.getId())));
-
-			AcceloFieldList fields = new AcceloFieldList();
-			fields.add("_ALL");
-
-			activities = acceloApi.getAll(EndPoint.activities, filter, fields, ActivityDao.ResponseList.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return activities;
-
+		AcceloFilter filter = new AcceloFilter();
+		filter.where(new Against("issue", ticket.getId()));
+		
+		return getByFilter(acceloApi, filter);
 	}
-	
+
 	public void insert(AcceloApi acceloApi, Activity activity) throws IOException, AcceloException
 	{
 		AcceloFieldValues values = marshallArgs(activity);
@@ -94,9 +77,5 @@ public class ActivityDao extends AcceloDao<Activity, ActivityDao.ResponseList>
 	{
 		return EndPoint.activities;
 	}
-
-	
-
-
 
 }
