@@ -12,6 +12,7 @@ public abstract class Expression
 
 	public abstract String toJson();
 
+	@Override
 	public abstract int hashCode();
 	
 	public Expression and(Expression child) // throws AcceloException

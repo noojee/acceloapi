@@ -19,6 +19,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 {
 	static Logger logger = LogManager.getLogger();
 
+	@SuppressWarnings("rawtypes")
 	static private AcceloCache cache = new AcceloCache(); 
 	
 	protected abstract Class<L> getResponseListClass();
@@ -83,6 +84,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>, L extends AcceloList<
 			AcceloFilter filter = new AcceloFilter();
 			filter.where(new Eq("id", id));
 
+			@SuppressWarnings({ "rawtypes", "unchecked" })
 			List<E> entities = AcceloCache.getInstance().get(new CacheKey(acceloApi, endpoint, filter, fields, getResponseListClass()));
 			if (entities.size() > 0)
 				entity = entities.get(0);

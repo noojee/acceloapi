@@ -1,11 +1,9 @@
 package au.com.noojee.acceloapi.dao;
 
-import java.io.IOException;
 import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;

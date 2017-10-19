@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.junit.Test;
 
-import au.com.noojee.acceloapi.entities.ContractPeriod;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.HTTPResponse;
+import au.com.noojee.acceloapi.entities.ContractPeriod;
 
 public class ContractPeriodDaoTest
 {

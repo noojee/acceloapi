@@ -30,6 +30,7 @@ public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
 	// We cache queries and the set of entities that are returned.
 	// We also create extra entries for each id so that
 	// any subsequent queries by the entities id will find that entity.
+	@SuppressWarnings("rawtypes")
 	static private  LoadingCache<CacheKey, List> queryCache;
 
 	static private AcceloCache<?, ?> self;
@@ -44,11 +45,13 @@ public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
 
 	AcceloCache()
 	{
+		@SuppressWarnings("rawtypes")
 		LoadingCache<CacheKey, List> tmp = CacheBuilder.newBuilder().maximumSize(1000)
 				.expireAfterAccess(10, TimeUnit.MINUTES)
 				// .removalListener(this)
 				.build(new CacheLoader<CacheKey, List>()
 				{
+					@SuppressWarnings("unchecked")
 					@Override
 					public List<E> load(CacheKey key) throws AcceloException
 					{
