@@ -108,6 +108,8 @@ public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
 		List<E> list;
 		try
 		{
+			if (cacheKey.getFilter().isInvalideCache())
+				queryCache.invalidate(cacheKey);
 			list = queryCache.get(cacheKey);
 		}
 		catch (ExecutionException e)

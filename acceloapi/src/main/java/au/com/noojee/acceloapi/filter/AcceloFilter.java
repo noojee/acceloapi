@@ -13,6 +13,8 @@ public class AcceloFilter
 
 	private Search search = null;
 
+	private boolean invalidateCache = false;
+
 	public void where(Search search) throws AcceloException
 	{
 		if (expression != null)
@@ -44,6 +46,23 @@ public class AcceloFilter
 		
 		return this;
 	}
+	
+	
+	/**
+	 * Use this method to invalid any cache data associated with this filter.
+	 * This will force the system to re-fetch the data from the accelo servers.
+	 */
+	public void invalidateCache()
+	{
+		this.invalidateCache = true;
+	}
+	
+	public boolean isInvalideCache()
+	{
+		return invalidateCache;
+	}
+
+	
 	
 	/**
 	 * Returns the accelo json expression for this filter.
@@ -136,5 +155,6 @@ public class AcceloFilter
 			
 		return isIDFilter;
 	}
+
 
 }
