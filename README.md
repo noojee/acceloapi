@@ -8,7 +8,30 @@ The Api automatically caches the results of each query (filter) so that if you r
 When you run a query the individual entities are also added to the cache using their id as a key so a subsequent call to AcceloDao.getById() will retrieve the results from the cache.
 
 Cache Example
-AcceloFilter filter = new AcceloFilter().where("... - to be completed.
+filter.where(new Eq("contract", contract.getId())
+	.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATE1970))));
+List<Ticket> tickets = new TicketDao().getByFilter(filter);
+
+All tickets returned are now cached.
+
+if we run the same query
+List<Ticket> tickets = new TicketDao().getByFilter(filter);
+
+Then there we be no calls to the accelo server.
+We can also get the ticket by id and again this will be returned from the cache:
+
+Ticket ticketFromPriorQuery = tickets.get(0);
+Ticket ticket = new TicketDao().getById(ticketFromPriorQuery.getId());
+
+Some times however you need to bypass the cache to get the latest version from Accelo.
+To do this you need to use a filter and set it to refresh the cache.
+
+filter.where(new Eq("contract", contract.getId())
+	.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATE1970))))
+	.refreshCache();
+
+// The following query will now flush the cache (just for this query) and refetch the data from the accelo server.
+List<Ticket> tickets = new TicketDao().getByFilter(filter);
 
 Examples:
 
