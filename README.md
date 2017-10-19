@@ -3,6 +3,13 @@ Java api for the Accelo CRM
 
 As they name says this is an Java API that makes it easier to talk to the Accelo REST API.
 
+Fetching data from the Accelo servers is slow so the library is heavily cached.
+The Api automatically caches the results of each query (filter) so that if you run the same query again the results will come back from the cache.
+When you run a query the individual entities are also added to the cache using their id as a key so a subsequent call to AcceloDao.getById() will retrieve the results from the cache.
+
+Cache Example
+AcceloFilter filter = new AcceloFilter().where("... - to be completed.
+
 Examples:
 
     // get an instance of the api.
@@ -42,7 +49,6 @@ Examples:
 
 	The API tries to use Json for filters/sending and recieving data. 
 	To help creating json filters there is a small set of classes that try to make this easier. 
-	Currenlty they don't handle every possible fitler combination:
 
 	Create a fitler to match on a Staff email address:
 
@@ -50,7 +56,10 @@ Examples:
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Eq("email", staffEmailAddress));
 
-	// Use the universal getByFitler
+	// Use the universal getByFitler 
+	//
+	// You will use getByFilter most of the time.
+	//
 	List<Staff> = new StaffDao().getByFilter(acceloApi, filter);
 
 	// get a staff member by id
@@ -63,12 +72,11 @@ Examples:
 	filter.where(new Search(companyName));
 	List<Company> = new CompanyDao().getByFilter(acceloApi, filter);
 
-	// Build a compound filter
-	AcceloFilter filters = new AcceloFilter();
 
-	// Filter using the against field with a type of company and an company id.
+	// Filter using theNest criteria against field with a type of company and an company id.
 	// Accelos processing of the 'Against' field is just weird so 
 	// we have a special expression type of 'Against' to handle these.
+	AcceloFilter filters = new AcceloFilter();
 	filters.where(new Against("company", company.getId()));
 	List<Company> = new CompanyDao().getByFilter(acceloApi, filter);
 
@@ -81,11 +89,11 @@ Examples:
 	// Search for for two companies 
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Eq("company_id", 1))
-		.and(new Eq("company_id", 2));
+		.or(new Eq("company_id", 2));
 	List<Ticket> = new CompanyDao().getByFilter(acceloApi, filter);
 	
 	
-	// Nest criteria
+	// Fetch Tickets which are against (owned) by a company with id 1 or id 2.
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Against("company", "company_id", 1, 2)));
 	List<Ticket> = new TicketDao().getByFilter(acceloApi, filter);
