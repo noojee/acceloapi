@@ -9,11 +9,11 @@ The Api automatically caches the results of each query (filter) so that if you r
 
 When you run a query the individual entities are also added to the cache using their id as a key. Subsequent calls using the entities id will retrieve the results from the cache. 	
 
-Cache Example
+#Cache Example
 
-filter.where(new Eq("contract", contract.getId())
-	.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATE1970))));
-List<Ticket> tickets = new TicketDao().getByFilter(filter);
+	filter.where(new Eq("contract", contract.getId())
+		.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATE1970))));
+	List<Ticket> tickets = new TicketDao().getByFilter(filter);
 
 All tickets returned are now cached.
 
@@ -37,7 +37,7 @@ The following query will now flush the cache (just for this query) and refetch t
 
 	List<Ticket> tickets = new TicketDao().getByFilter(filter);
 
-Examples:
+#Examples:
 
 Get an instance of the api.
 
