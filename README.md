@@ -1,13 +1,16 @@
 # acceloapi
 Java api for the Accelo CRM
 
-As they name says this is an Java API that makes it easier to talk to the Accelo REST API.
+As the name says, this is an Java API that makes it easier to talk to the Accelo REST API.
 
-Fetching data from the Accelo servers is slow so the library is heavily cached.
-The Api automatically caches the results of each query (filter) so that if you run the same query again the results will come back from the cache.
-When you run a query the individual entities are also added to the cache using their id as a key so a subsequent call to AcceloDao.getById() will retrieve the results from the cache.
+Fetching data from the Accelo servers rather slow so the library is heavily cached.
+
+The Api automatically caches the results of each query (filter) so that if you run the same query again, the results will come back from the cache.
+
+When you run a query the individual entities are also added to the cache using their id as a key. Subsequent calls using the entities id will retrieve the results from the cache. 	
 
 Cache Example
+
 filter.where(new Eq("contract", contract.getId())
 	.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATE1970))));
 List<Ticket> tickets = new TicketDao().getByFilter(filter);
@@ -17,14 +20,14 @@ All tickets returned are now cached.
 if we run the same query
 	List<Ticket> tickets = new TicketDao().getByFilter(filter);
 
-Then there we be no calls to the accelo server.
+Then there will be no calls to the accelo server.
 We can also get the ticket by id and again this will be returned from the cache:
 
 	Ticket ticketFromPriorQuery = tickets.get(0);
 	Ticket ticket = new TicketDao().getById(ticketFromPriorQuery.getId());
 
-Some times however you need to bypass the cache to get the latest version from Accelo.
-To do this you need to use a filter and set it to refresh the cache.
+Sometimes you need to bypass the cache to get the latest version from Accelo.
+To do this you need to use a filter and set it to refresh the cache by adding a call to 'refreshCache()'.
 
 	filter.where(new Eq("contract", contract.getId())
 		.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATE1970))))
