@@ -67,9 +67,9 @@ Examples:
 	AcceloFilter filters = new AcceloFilter();
 
 	// Filter using the against field with a type of company and an company id.
-	filters.where(new Eq("against", "company")
-		.and(new Eq("company", company.getId()))
-		);
+	// Accelos processing of the 'Against' field is just weird so 
+	// we have a special expression type of 'Against' to handle these.
+	filters.where(new Against("company", company.getId()));
 	List<Company> = new CompanyDao().getByFilter(acceloApi, filter);
 
 	// Search for tickets by company and contact id
@@ -87,9 +87,7 @@ Examples:
 	
 	// Nest criteria
 	AcceloFilter filter = new AcceloFilter();
-	filter.where(new Eq("against", "company")
-		.and(new Eq("company_id", 1).or(new Eq("company_id", 2)))
-		);
+	filter.where(new Against("company", "company_id", 1, 2)));
 	List<Ticket> = new TicketDao().getByFilter(acceloApi, filter);
 
 
