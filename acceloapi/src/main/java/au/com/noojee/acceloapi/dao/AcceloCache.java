@@ -74,7 +74,7 @@ public class AcceloCache
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected List<AcceloEntity> runAccelQuery(CacheKey key) throws AcceloException
 	{
-		logger.error("Cache Missing for " + key.toString());
+		logger.error("Cache miss for " + key.toString());
 		List<AcceloEntity> list = AcceloApi.getInstance().getAll(key.getEndPoint(), key.getFilter(), key.getFields(),
 				key.getResponseListClass());
 

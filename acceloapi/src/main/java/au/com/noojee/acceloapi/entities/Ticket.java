@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.dao.ActivityDao;
@@ -14,6 +17,8 @@ import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class Ticket extends AcceloEntity<Ticket>
 {
+	static Logger logger = LogManager.getLogger();
+	
 	// private Logger logger = LogManager.getLogger(Ticket.class);
 	static public String PRIORITY_CRITICAL = "1";
 
@@ -170,11 +175,12 @@ public class Ticket extends AcceloEntity<Ticket>
 	/**
 	 * Returns true if all Activities for this ticket have been approved or invoiced.
 	 * @return
+	 * @throws AcceloException 
 	 */
-	public boolean isFullyApproved()
+	public boolean isFullyApproved() throws AcceloException 
 	{
 		if (cacheActivities == null)
-			throw new IllegalStateException("Call getActivities first.");
+			this.getActivities();
 		
 		boolean isFullyApproved = this.cacheActivities.stream().allMatch(a -> a.isApproved());
 		return isFullyApproved;

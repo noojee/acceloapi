@@ -406,12 +406,12 @@ public class AcceloApi
 			// sun.util.logging.PlatformLogger.getLogger("sun.net.www.protocol.http.HttpURLConnection")
 			// .setLevel(sun.util.logging.PlatformLogger.Level.ALL);
 
-			String baseURL = "https://" + secret.getFQDN() + "/oauth2/v0/";
+			String authURL = "https://" + secret.getFQDN() + "/oauth2/v0/";
 
 			// String resource = "authorize";
 			String resource = "token";
 
-			URL url = new URL(baseURL + resource);
+			URL url = new URL(authURL + resource);
 
 			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");

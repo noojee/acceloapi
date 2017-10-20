@@ -98,7 +98,7 @@ public class AcceloFilter
 	@Override
 	public String toString()
 	{
-		return toJson().replaceAll("\n", " ") + " filter hashcode:" + hashCode();
+		return toJson().replaceAll("\n", " ");
 	} 
 
 	@Override
