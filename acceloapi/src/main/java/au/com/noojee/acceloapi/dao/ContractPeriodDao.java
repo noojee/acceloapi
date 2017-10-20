@@ -10,16 +10,16 @@ import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Contract;
 import au.com.noojee.acceloapi.entities.ContractPeriod;
 
-public class ContractPeriodDao extends AcceloDao<ContractPeriod, ContractPeriodDao.ResponseContactPeriods>
+public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 {
 
-	public List<ContractPeriod> getContractPeriods(AcceloApi acceloApi, Contract contract) throws AcceloException
+	public List<ContractPeriod> getContractPeriods(Contract contract) throws AcceloException
 	{
 
 		List<ContractPeriod> periods;
 		try
 		{
-			periods = acceloApi.getAll(EndPoint.contracts.getURL(contract.getId(), "/periods"), null, AcceloFieldList.ALL,
+			periods = AcceloApi.getInstance().getAll(EndPoint.contracts.getURL(contract.getId(), "/periods"), null, AcceloFieldList.ALL,
 					ResponseContactPeriods.class);
 		}
 		catch (IOException e)

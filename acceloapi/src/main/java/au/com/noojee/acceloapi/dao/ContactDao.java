@@ -2,7 +2,6 @@ package au.com.noojee.acceloapi.dao;
 
 import java.util.List;
 
-import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponseList;
@@ -13,10 +12,10 @@ import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Search;
 
-public class ContactDao extends AcceloDao<Contact, ContactDao.ResponseList>
+public class ContactDao extends AcceloDao<Contact>
 {
 
-	public Contact getContact(AcceloApi acceloApi, String contact_firstname, String contact_lastname)
+	public Contact getContact(String contact_firstname, String contact_lastname)
 			throws AcceloException
 	{
 		Contact contact = null;
@@ -25,14 +24,14 @@ public class ContactDao extends AcceloDao<Contact, ContactDao.ResponseList>
 		{
 			AcceloFilter filters = new AcceloFilter();
 			filters.where(new Search(contact_firstname + " " + contact_lastname));
-			List<Contact> contacts = getByFilter(acceloApi, filters);
+			List<Contact> contacts = getByFilter(filters);
 			contact = contacts.size() > 0 ? contacts.get(0) : null;
 		}
 
 		return contact;
 	}
 
-	public List<Contact> getByPhone(AcceloApi acceloApi, String phone) throws AcceloException
+	public List<Contact> getByPhone(String phone) throws AcceloException
 	{
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add(AcceloFieldList._ALL);
@@ -41,7 +40,7 @@ public class ContactDao extends AcceloDao<Contact, ContactDao.ResponseList>
 		AcceloFilter filters = new AcceloFilter();
 		filters.where(new Eq("contact_number", phone));
 
-		List<Contact> contacts = getByFilter(acceloApi, filters, fields);
+		List<Contact> contacts = getByFilter(filters, fields);
 
 		return contacts;
 

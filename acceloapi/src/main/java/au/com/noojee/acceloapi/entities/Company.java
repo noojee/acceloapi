@@ -35,7 +35,7 @@ public class Company extends AcceloEntity<Company>
 	{
 	}
 
-	public void retrieveCustomFields(AcceloApi api) throws AcceloException
+	public void retrieveCustomFields() throws AcceloException
 	{
 
 		CustomFieldsResponse response;
@@ -44,7 +44,7 @@ public class Company extends AcceloEntity<Company>
 
 			String path = "/" + this.id + "/profiles/values";
 
-			response = api.get(new URL(EndPoint.companies.getURL(), path), null, AcceloFieldList.ALL,
+			response = AcceloApi.getInstance().get(new URL(EndPoint.companies.getURL(), path), null, AcceloFieldList.ALL,
 					CustomFieldsResponse.class, 0);
 		}
 		catch (IOException e)

@@ -17,7 +17,7 @@ import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.Against;
 
-public class ActivityDao extends AcceloDao<Activity, ActivityDao.ResponseList>
+public class ActivityDao extends AcceloDao<Activity>
 {
 	static private Logger logger = LogManager.getLogger(Activity.class);
 
@@ -29,19 +29,19 @@ public class ActivityDao extends AcceloDao<Activity, ActivityDao.ResponseList>
 	{
 	}
 
-	public List<Activity> getByTicket(AcceloApi acceloApi, Ticket ticket) throws AcceloException
+	public List<Activity> getByTicket(Ticket ticket) throws AcceloException
 	{
 		AcceloFilter filter = new AcceloFilter();
 		filter.where(new Against("issue", ticket.getId()));
 		
-		return getByFilter(acceloApi, filter);
+		return getByFilter(filter);
 	}
 
-	public void insert(AcceloApi acceloApi, Activity activity) throws IOException, AcceloException
+	public void insert(Activity activity) throws IOException, AcceloException
 	{
 		AcceloFieldValues values = marshallArgs(activity);
 
-		ActivityDao.Response response = acceloApi.insert(EndPoint.activities, values, ActivityDao.Response.class);
+		ActivityDao.Response response = AcceloApi.getInstance().insert(EndPoint.activities, values, ActivityDao.Response.class);
 		logger.debug(response);
 	}
 

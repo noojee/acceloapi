@@ -36,57 +36,39 @@ public class AcceloApi
 	private Logger logger = LogManager.getLogger(this.getClass());
 	public static final int PAGE_SIZE = 50;
 
+	static private AcceloApi self = null;;
 	/**
 	 * The base url to the Accelo api crm e.g. "https://myorg.api.accelo.com"
 	 * 
 	 */
-	static String baseURL = null;
-
-	/**
-	 * The accelo client id
-	 */
-	private static String clientID;
-
-	/**
-	 * The accelo secret
-	 */
-	private static String secret;
-
-	/**
-	 * The fully qualified domain name to the accelo instance.
-	 */
-	private static String fqdn;
+	private String baseURL = null;
 
 	private String accessToken = null;
-
+	
 	public enum HTTPMethod
 	{
 		GET, POST, PUT
 	}
 
-	static public void setFQDN(String fqdn)
+	static synchronized public AcceloApi getInstance()
 	{
-		AcceloApi.baseURL = "https://" + fqdn + "/api/v0/";
-		AcceloApi.fqdn = fqdn;
+		if (self == null)
+			self = new AcceloApi();
+		
+		return AcceloApi.self;
 	}
-
-	static public void setClientID(String clientID)
-	{
-		AcceloApi.clientID = clientID;
-
-	}
-
-	static public void setClientSecret(String secret)
-	{
-		AcceloApi.secret = secret;
-	}
-
-	public AcceloApi()
+	
+	private AcceloApi()
 	{
 		System.setProperty("http.maxConnections", "8"); // set globally only
 														// once
-
 	}
+
+	public String getBaseURL()
+	{
+		return baseURL;
+	}
+
 
 	/**
 	 * Pulls every matching entity. Be careful! you could run out of memory and
@@ -102,12 +84,6 @@ public class AcceloApi
 	 * @param clazz
 	 * @return
 	 */
-//	public <T> List<T> getAll(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList,
-//			Class<? extends AcceloResponseList<T>> clazz) throws IOException, AcceloException
-//	{
-//		return getAll(endPoint.getURL(), filterMap, fieldList, clazz);
-//	}
-	
 	public <E> List<E> getAll(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList,
 			Class<? extends AcceloList<E>> clazz) throws AcceloException
 	{
@@ -124,38 +100,6 @@ public class AcceloApi
 		return list;
 	}
 
-
-	
-//	public <T> List<T> getAll(URL url, AcceloFilter filterMap, AcceloFieldList fieldList,
-//			Class<? extends AcceloResponseList<T>> clazz) throws IOException, AcceloException
-//	{
-//		List<T> entities = new ArrayList<>();
-//		boolean more = true;
-//		int page = 0;
-//		while (more)
-//		{
-//			AcceloResponseList<T> responseList = get(url, filterMap, fieldList, clazz, page);
-//
-//			if (responseList != null)
-//			{
-//				List<T> entityList = responseList.getList();
-//
-//				// If we get less than a page we must now have everything.
-//				if (entityList.size() < PAGE_SIZE)
-//					more = false;
-//
-//				for (T entity : entityList)
-//				{
-//					entities.add(entity);
-//				}
-//				page += 1;
-//			}
-//
-//		}
-//
-//		return entities;
-//	}
-	
 	
 	public <E, L extends AcceloList<E>> List<E> getAll(URL url, AcceloFilter filterMap, AcceloFieldList fieldList, Class<L> responseClass) throws AcceloException
 	{
@@ -445,25 +389,24 @@ public class AcceloApi
 		}
 		return "";
 	}
-
-	// retrieve the access token.
-	public void connect() throws AcceloException
+	
+	
+	/**
+	 * @param secret - use AcceloSecret.load
+	 * 
+	 * @throws AcceloException 
+	 */
+	public void connect(AcceloSecret secret) throws AcceloException
 	{
+		this.baseURL = "https://" + secret.getFQDN() + "/api/v0/";
+
 		try
 		{
-
 			// Enable to debug https connection
 			// sun.util.logging.PlatformLogger.getLogger("sun.net.www.protocol.http.HttpURLConnection")
 			// .setLevel(sun.util.logging.PlatformLogger.Level.ALL);
 
-			if (AcceloApi.baseURL == null)
-				throw new AssertionError("call AcceloApi.setBbaseURL first");
-			if (AcceloApi.clientID == null)
-				throw new AssertionError("call AcceloApi.setClientID first");
-			if (AcceloApi.secret == null)
-				throw new AssertionError("call AcceloApi.setSecret first");
-
-			String baseURL = "https://" + AcceloApi.fqdn + "/oauth2/v0/";
+			String baseURL = "https://" + secret.getFQDN() + "/oauth2/v0/";
 
 			// String resource = "authorize";
 			String resource = "token";
@@ -477,8 +420,8 @@ public class AcceloApi
 			Map<String, String> arguments = new HashMap<>();
 			arguments.put("request_type", "code");
 			arguments.put("grant_type", "client_credentials");
-			arguments.put("client_id", AcceloApi.clientID);
-			arguments.put("client_secret", AcceloApi.secret);
+			arguments.put("client_id", secret.getClientId());
+			arguments.put("client_secret", secret.getClientSecret());
 
 			byte[] args = buildArgs(arguments);
 
@@ -611,5 +554,6 @@ public class AcceloApi
 	{
 		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
+
 
 }

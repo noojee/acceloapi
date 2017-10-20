@@ -2,7 +2,6 @@ package au.com.noojee.acceloapi.dao;
 
 import java.util.List;
 
-import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponseList;
@@ -13,14 +12,14 @@ import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Search;
 
-public class CompanyDao extends AcceloDao<Company, CompanyDao.ResponseList>
+public class CompanyDao extends AcceloDao<Company>
 {
 	public class ResponseList extends AcceloResponseList<Company>
 	{
 
 	}
 
-	public Company getByName(AcceloApi api, String companyName) throws AcceloException
+	public Company getByName(String companyName) throws AcceloException
 	{
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add(AcceloFieldList._ALL);
@@ -29,7 +28,7 @@ public class CompanyDao extends AcceloDao<Company, CompanyDao.ResponseList>
 		AcceloFilter filter = new AcceloFilter();
 		filter.where(new Search(companyName));
 
-		List<Company> companies = getByFilter(api, filter, fields);
+		List<Company> companies = getByFilter(filter, fields);
 
 		Company company = null;
 		company = companies.size() > 0 ? companies.get(0) : null;
@@ -37,12 +36,12 @@ public class CompanyDao extends AcceloDao<Company, CompanyDao.ResponseList>
 		return company;
 	}
 
-	public Company getCompanyByContactId(AcceloApi api, String contractId) throws AcceloException
+	public Company getCompanyByContactId(String contractId) throws AcceloException
 	{
 
 		AcceloFilter filters = new AcceloFilter();
 		filters.where(new Eq("id", contractId));
-		List<Company> companies = getByFilter(api, filters);
+		List<Company> companies = getByFilter(filters);
 
 		Company company = null;
 		company = companies.size() > 0 ? companies.get(0) : null;
@@ -50,23 +49,6 @@ public class CompanyDao extends AcceloDao<Company, CompanyDao.ResponseList>
 		return company;
 	}
 
-	// public static List<Company> getList(AcceloApi acceloApi) throws
-	// AcceloException
-	// {
-	// Company.Response request;
-	// try
-	// {
-	// request = acceloApi.get(EndPoint.companies, null, AcceloFieldList.ALL,
-	// Company.Response.class);
-	// }
-	// catch (IOException e)
-	// {
-	// throw new AcceloException(e);
-	// }
-	//
-	// return request.getList();
-	//
-	// }
 
 	@Override
 	protected EndPoint getEndPoint()

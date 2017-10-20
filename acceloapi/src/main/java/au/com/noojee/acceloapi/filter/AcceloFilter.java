@@ -13,7 +13,7 @@ public class AcceloFilter
 
 	private Search search = null;
 
-	private boolean invalidateCache = false;
+	private boolean refreshCache = false;
 
 	public void where(Search search) throws AcceloException
 	{
@@ -52,14 +52,14 @@ public class AcceloFilter
 	 * Use this method to invalid any cache data associated with this filter.
 	 * This will force the system to re-fetch the data from the accelo servers.
 	 */
-	public void invalidateCache()
+	public void refreshCache()
 	{
-		this.invalidateCache = true;
+		this.refreshCache = true;
 	}
 	
-	public boolean isInvalideCache()
+	public boolean isRefreshCache()
 	{
-		return invalidateCache;
+		return refreshCache;
 	}
 
 	

@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import au.com.noojee.acceloapi.entities.Company;
 
-@SuppressWarnings("unused")
 public class Request
 {
 	public class Response extends AcceloResponse<Request>
@@ -41,7 +40,7 @@ public class Request
 		this.affiliation_id = company.getDefault_affiliation();
 	}
 	
-	public Response insert(AcceloApi acceloApi) throws IOException, AcceloException
+	public Response insert() throws IOException, AcceloException
 	{
 	    AcceloFieldValues values = new AcceloFieldValues();
 
@@ -50,7 +49,7 @@ public class Request
 		values.add("type_id", "" + type_id);
 		values.add("affiliation_id", "" + affiliation_id);
 
-		Request.Response response = acceloApi.insert(EndPoint.requests, values, Request.Response.class);
+		Request.Response response = AcceloApi.getInstance().insert(EndPoint.requests, values, Request.Response.class);
 
 		return response;
 

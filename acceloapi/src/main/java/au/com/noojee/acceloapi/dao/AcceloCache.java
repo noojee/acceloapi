@@ -12,6 +12,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
@@ -22,7 +23,7 @@ class CacheValue
 
 }
 
-public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
+public class AcceloCache
 {
 	
 	private static Logger logger = LogManager.getLogger();
@@ -33,17 +34,24 @@ public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
 	@SuppressWarnings("rawtypes")
 	static private  LoadingCache<CacheKey, List> queryCache;
 
-	static private AcceloCache<?, ?> self;
+	/*
+	 * counts the no. of times we get a cache misses since the last resetMissCounter call.
+	 */
+	private int missCounter = 0;
 
-	synchronized static AcceloCache<?, ?> getInstance()
+
+
+	static private AcceloCache self;
+
+	synchronized static public AcceloCache getInstance()
 	{
 		if (self == null)
-			self = new AcceloCache<>();
+			self = new AcceloCache();
 
 		return self;
 	}
 
-	AcceloCache()
+	private AcceloCache()
 	{
 		@SuppressWarnings("rawtypes")
 		LoadingCache<CacheKey, List> tmp = CacheBuilder.newBuilder().maximumSize(1000)
@@ -51,10 +59,10 @@ public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
 				// .removalListener(this)
 				.build(new CacheLoader<CacheKey, List>()
 				{
-					@SuppressWarnings("unchecked")
 					@Override
-					public List<E> load(CacheKey key) throws AcceloException
+					public List<AcceloEntity> load(CacheKey key) throws AcceloException
 					{
+						AcceloCache.this.missCounter ++;
 						return AcceloCache.this.runAccelQuery(key);
 					}
 
@@ -63,10 +71,11 @@ public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
 		queryCache = tmp;
 	}
 
-	protected List<E> runAccelQuery(CacheKey<L> key) throws AcceloException
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected List<AcceloEntity> runAccelQuery(CacheKey key) throws AcceloException
 	{
 		logger.error("Cache Missing for " + key.toString());
-		List<E> list = key.getAcceloApi().getAll(key.getEndPoint(), key.getFilter(), key.getFields(),
+		List<AcceloEntity> list = AcceloApi.getInstance().getAll(key.getEndPoint(), key.getFilter(), key.getFields(),
 				key.getResponseListClass());
 
 		// We now insert the list of ids back into the cache to maximize hits
@@ -84,21 +93,22 @@ public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
 	 * @param list
 	 * @throws AcceloException
 	 */
-	private void populateIds(CacheKey<L> originalKey, List<E> list) throws AcceloException
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void populateIds(CacheKey originalKey, List<AcceloEntity> list) throws AcceloException
 	{
-		CacheKey<L> idKey;
+		CacheKey idKey;
 
 		// Check if the filter was already for an id, in which case we do
 		// nothing.
 		if (!originalKey.getFilter().isIDFilter())
 		{
 
-			for (E entity : list)
+			for (AcceloEntity entity : list)
 			{
 				AcceloFilter filter = new AcceloFilter();
 				filter.where(new Eq("id", entity.getId()));
 
-				idKey = new CacheKey<>(originalKey.getAcceloApi(), originalKey.getEndPoint(), filter,
+				idKey = new CacheKey(originalKey.getEndPoint(), filter,
 						originalKey.getFields(), originalKey.getResponseListClass());
 				
 				put(idKey, Arrays.asList(entity));
@@ -106,12 +116,13 @@ public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
 		}
 	}
 
-	List<E> get(CacheKey<L> cacheKey) throws AcceloException 
+	@SuppressWarnings("rawtypes")
+	List<? extends AcceloEntity> get(CacheKey cacheKey) throws AcceloException 
 	{
-		List<E> list;
+		List<AcceloEntity> list;
 		try
 		{
-			if (cacheKey.getFilter().isInvalideCache())
+			if (cacheKey.getFilter().isRefreshCache())
 				queryCache.invalidate(cacheKey);
 			list = queryCache.get(cacheKey);
 		}
@@ -123,37 +134,21 @@ public class AcceloCache<E extends AcceloEntity<E>, L extends AcceloList<E>>
 		return list;
 	}
 
-	void put(CacheKey<L> key, List<E> list)
+	@SuppressWarnings("rawtypes")
+	void put(CacheKey key, List<AcceloEntity> list)
 	{
 		queryCache.put(key, list);
 	}
 
-	/*
-	 * Adds new entries to the cache. If it finds an entry in the cache then it
-	 * returns that entry as the entry is likely to have other entities attached
-	 * to it.
-	 * 
-	 */
-	// @SuppressWarnings("unchecked")
-	// public List<CacheValue> updateCache(List<CacheValue> values)
-	// {
-	// List<CacheValue> updated = new ArrayList<>();
-	//
-	//
-	// // Add them to the cache
-	// for (E entity : entities)
-	// {
-	// CacheKey key = new CacheKey(getEndPoint(), entity.getId());
-	//
-	// AcceloEntity<E> existingEntity = getCache().get(key);
-	// if (existingEntity == null)
-	// {
-	// getCache().put(key, entity);
-	// existingEntity = entity;
-	// }
-	// updated.add((E) existingEntity);
-	// }
-	// return updated;
-	// }
+	public void resetMissCounter()
+	{
+		this.missCounter  = 0;
+	}
+
+	public int getMissCounter()
+	{
+		return this.missCounter;
+	}
+
 
 }

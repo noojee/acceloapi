@@ -4,37 +4,8 @@ import java.io.StringReader;
 
 import com.google.gson.Gson;
 
-/**
- * Use this method to fetch data from accelo.
- * 
- * 
- * @param method
- * @param url
- * @param urlArgs
- * @param fieldList
- * @param clazz
- * @return
- * @throws IOException
- * @throws AcceloException
- */
-public // public <T, E extends AcceloResponse> T pull(HTTPMethod method, URL url,
-// AcceloFilter filterMap,
-// AcceloFieldList fieldList, Class<E> clazz) throws IOException,
-// AcceloException
-// {
-// String fields = fieldList.formatAsJson();
-// String filters = filterMap.formatAsJson();
-// int a = 1;
-//
-// String json = buildJsonBody(method, fields, filters);
-//
-// HttpResponse response = _request(HTTPMethod.POST, url, json);
-//
-// return response.parseBody(clazz);
-//
-// }
 
-class HTTPResponse
+public class HTTPResponse
 {
 	int responseCode;
 	String responseMessage;

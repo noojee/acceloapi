@@ -1,23 +1,22 @@
 package au.com.noojee.acceloapi.dao;
 
-import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
-class CacheKey<L>
+@SuppressWarnings("rawtypes")
+class CacheKey<E extends AcceloEntity>
 {
 	EndPoint endPoint;
 	AcceloFilter filter;
-	private AcceloApi acceloApi;
 	private AcceloFieldList fields;
-	private Class<L> responseListClass;
+	private Class<? extends AcceloList<E>> responseListClass;
 
 	
-	public CacheKey(AcceloApi acceloApi, EndPoint endPoint, AcceloFilter filter, AcceloFieldList fields,
-			Class<L> responseListClass)
+	public CacheKey(EndPoint endPoint, AcceloFilter filter, AcceloFieldList fields,
+			Class<? extends AcceloList<E>> responseListClass)
 	{
-		this.acceloApi = acceloApi;
 		this.endPoint = endPoint;
 		this.filter = filter;
 		this.fields = fields;
@@ -36,18 +35,13 @@ class CacheKey<L>
 		return endPoint;
 	}
 
-		public AcceloApi getAcceloApi()
-	{
-		return acceloApi;
-	}
-
 	public AcceloFieldList getFields()
 	{
 		return fields;
 	}
 
 
-	public Class<L> getResponseListClass()
+	public Class<? extends AcceloList<E>> getResponseListClass()
 	{
 		return responseListClass;
 	}
@@ -73,8 +67,8 @@ class CacheKey<L>
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings({ "unchecked", "rawtypes" })
-		CacheKey<L> other = (CacheKey) obj;
+		@SuppressWarnings({ })
+		CacheKey other = (CacheKey) obj;
 		if (endPoint != other.endPoint)
 			return false;
 		if (fields == null)

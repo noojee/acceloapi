@@ -154,13 +154,13 @@ public class Ticket extends AcceloEntity<Ticket>
 
 
 	// Returns a list of activities associated with this ticket.
-	public List<Activity> getActivities(AcceloApi acceloApi) throws AcceloException
+	public List<Activity> getActivities() throws AcceloException
 	{
 		// Load and cache the activities for this ticket.
 		if (this.cacheActivities == null)
 		{
 
-			cacheActivities = new ActivityDao().getByTicket(acceloApi, this);
+			cacheActivities = new ActivityDao().getByTicket(this);
 			cacheBillableAndNonBillable();
 		}
 
@@ -228,17 +228,17 @@ public class Ticket extends AcceloEntity<Ticket>
 		return against_type;
 	}
 
-	public Contact getContact(AcceloApi acceloApi) throws AcceloException
+	public Contact getContact() throws AcceloException
 	{
 		if (cacheContact == null)
 		{
-			Affiliation affiliation = new AffiliationDao().getById(acceloApi, this.affiliation);
+			Affiliation affiliation = new AffiliationDao().getById(this.affiliation);
 
 			if (affiliation != null)
 			{
 				int contactId = affiliation.getContactId();
 
-				cacheContact = new ContactDao().getById(acceloApi, contactId);
+				cacheContact = new ContactDao().getById(contactId);
 			}
 		}
 		return cacheContact;

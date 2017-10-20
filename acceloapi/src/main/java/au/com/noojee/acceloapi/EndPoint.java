@@ -24,22 +24,22 @@ public enum EndPoint
 
 	public URL getURL() throws MalformedURLException
 	{
-		return new URL(AcceloApi.baseURL + this.endpoint);
+		return new URL(AcceloApi.getInstance().getBaseURL() + this.endpoint);
 	}
 
 	public URL getURL(int id) throws MalformedURLException
 	{
-		return new URL(AcceloApi.baseURL + this.endpoint + "/" + id);
+		return new URL(AcceloApi.getInstance().getBaseURL() + this.endpoint + "/" + id);
 	}
 
 	public URL getURL(String args) throws MalformedURLException
 	{
-		return new URL(AcceloApi.baseURL + this.endpoint + "?" + args);
+		return new URL(AcceloApi.getInstance().getBaseURL() + this.endpoint + "?" + args);
 	}
 
 	public URL getURL(int id, String path) throws MalformedURLException
 	{
-		return new URL(AcceloApi.baseURL + this.endpoint + "/" + id + path);
+		return new URL(AcceloApi.getInstance().getBaseURL() + this.endpoint + "/" + id + path);
 	}
 
 }

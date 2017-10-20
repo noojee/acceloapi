@@ -102,9 +102,9 @@ public class Activity extends AcceloEntity<Activity>
 	//
 
 	
-	public List<Affiliation> getAffiliation(AcceloApi acceloApi) throws AcceloException
+	public List<Affiliation> getAffiliation() throws AcceloException
 	{
-		return new AffiliationDao().getByActivity(acceloApi, this);
+		return new AffiliationDao().getByActivity(this);
 	}
 
 	public void setId(int id)

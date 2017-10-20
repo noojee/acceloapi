@@ -3,7 +3,6 @@ package au.com.noojee.acceloapi.dao;
 import java.time.LocalDate;
 import java.util.List;
 
-import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
@@ -18,33 +17,33 @@ import au.com.noojee.acceloapi.filter.expressions.Before;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
-public class ContractDao extends AcceloDao<Contract, ContractDao.ResponseList>
+public class ContractDao extends AcceloDao<Contract>
 {
 
 	/**
 	 * Find an active Contract Period for the given phone no. We also trying
 	 * stripping the area code in case the phone no. is stored as just eight
 	 * digits.
-	 * 
 	 * @param phone
+	 * 
 	 * @return
 	 * @throws AcceloException
 	 */
-	public Contract getActiveContractByPhone(AcceloApi acceloApi, String phone) throws AcceloException
+	public Contract getActiveContractByPhone(String phone) throws AcceloException
 	{
 		Contract active = null;
 
 		if (phone.length() != 10)
 			throw new AcceloException("The phone number must be 10 digits long, found '" + phone + "'");
 
-		List<Contact> contacts = new ContactDao().getByPhone(acceloApi, phone);
+		List<Contact> contacts = new ContactDao().getByPhone(phone);
 		if (contacts.size() == 0)
 		{
 			// Didn't find by the phone number.
 			// List try trimming off the area code and see if that gives a
 			// match.
 
-			contacts = new ContactDao().getByPhone(acceloApi, phone.substring(2));
+			contacts = new ContactDao().getByPhone(phone.substring(2));
 		}
 
 		// If we get multiple matches we are just going to use the first one.
@@ -54,12 +53,12 @@ public class ContractDao extends AcceloDao<Contract, ContractDao.ResponseList>
 			Contact contact = contacts.get(0);
 
 			Company company = contact.getCompany();
-			List<Contract> contracts = this.getByCompany(acceloApi, company);
+			List<Contract> contracts = this.getByCompany(company);
 
 			// find the first contract with a non-expired contract_period
 			for (Contract contract : contracts)
 			{
-				List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(acceloApi, contract);
+				List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(contract);
 				for (ContractPeriod period : periods)
 				{
 					LocalDate expires = period.getDateExpires();
@@ -84,22 +83,22 @@ public class ContractDao extends AcceloDao<Contract, ContractDao.ResponseList>
 
 	/**
 	 * Find an Contract for the given company.
-	 * 
 	 * @param Company
 	 *            - we only us the Id of the company.
+	 * 
 	 * @return
 	 * @throws AcceloException
 	 */
-	public Contract getActiveContract(AcceloApi acceloApi, Company company) throws AcceloException
+	public Contract getActiveContract(Company company) throws AcceloException
 	{
 		Contract active = null;
 
-		List<Contract> contracts = this.getByCompany(acceloApi, company);
+		List<Contract> contracts = this.getByCompany(company);
 
 		// find the first contract with a non-expired contract_period
 		for (Contract contract : contracts)
 		{
-			List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(acceloApi, contract);
+			List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(contract);
 			for (ContractPeriod period : periods)
 			{
 				LocalDate expires = period.getDateExpires();
@@ -126,7 +125,7 @@ public class ContractDao extends AcceloDao<Contract, ContractDao.ResponseList>
 	 * @param acceloApi
 	 * @throws AcceloException
 	 */
-	public List<Contract> getActiveContracts(AcceloApi acceloApi) throws AcceloException
+	public List<Contract> getActiveContracts() throws AcceloException
 	{
 		// Get all contracts where the expiry date is after today or null and the
 		// start date is before today
@@ -134,15 +133,15 @@ public class ContractDao extends AcceloDao<Contract, ContractDao.ResponseList>
 		filter.where(new Before("date_started", LocalDate.now())
 				.and(new After("date_expires", LocalDate.now()).or(new Eq("date_expires", Expression.DATE1970))));
 
-		return getByFilter(acceloApi, filter);
+		return getByFilter(filter);
 	}
 
-	public List<Contract> getByCompany(AcceloApi acceloApi, Company company) throws AcceloException
+	public List<Contract> getByCompany(Company company) throws AcceloException
 	{
 		List<Contract> contracts;
 		AcceloFilter filters = new AcceloFilter();
 		filters.where(new Against("company", company.getId()));
-		contracts = getByFilter(acceloApi, filters);
+		contracts = getByFilter(filters);
 		return contracts;
 	}
 
@@ -150,11 +149,6 @@ public class ContractDao extends AcceloDao<Contract, ContractDao.ResponseList>
 	{
 	}
 
-	// public class Response // extends AcceloResponseList<ContractPeriod>
-	// {
-	// Meta meta;
-	// ResponseContactPeriods response;
-	// }
 
 	@Override
 	protected Class<ContractDao.ResponseList> getResponseListClass()

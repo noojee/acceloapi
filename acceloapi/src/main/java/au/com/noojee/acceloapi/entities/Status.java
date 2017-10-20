@@ -103,51 +103,6 @@ public enum Status
 	}
 	
 	
-	/*
-	private static HashMap<Integer, Status> statusCache = new HashMap<>();
-	
-	public class Response extends AcceloResponseList<Status>
-	{
-	}
-
-	
-	public static List<Status> getStatuses(AcceloApi acceloApi) throws AcceloException
-	{
-		Status.Response response;
-		try
-		{
-			response = acceloApi.pull(HTTPMethod.GET, EndPoints.statuses.getURL(), null, AcceloFieldList.ALL,
-					Status.Response.class);
-		}
-		catch (IOException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		// fill the cache.
-		List<Status> list = response.getList();	
-		for (Status status : list)
-		{
-			statusCache.put(status.id, status);
-		}
-		
-		
-		return list;
-	}
-
-	public static Status getById(AcceloApi acceloApi, int statusId) throws AcceloException
-	{
-		Status status = statusCache.get(statusId);
-
-		if (status == null)
-		{
-			// fill the cache.
-			getStatuses(acceloApi);
-		}
-
-		return status;
-	}
-	*/
 
 	public String getTitle()
 	{
