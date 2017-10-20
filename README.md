@@ -54,31 +54,31 @@ The file must be formatted as:
 Get a company by name
 
     String companyName = "Some company name";
-    Company company = new CompanyDao().getByName(acceloApi, companyName);
+    Company company = new CompanyDao().getByName(companyName);
 
 Get the Retainer contract
 
-    Contract contract = new ContractDao().getActiveContract(acceloApi, company);
+    Contract contract = new ContractDao().getActiveContract(company);
 
 Get a list of contratc periods for the retainer.
 
-    List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(acceloApi, contract);
+    List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(contract);
 
 Get a list of tickets attached to the contract.
 
-    List<Ticket> tickets = new TicketDao().getByContract(acceloApi, contract);
+    List<Ticket> tickets = new TicketDao().getByContract(contract);
 
 Get a ticket by its no.
 
-    Ticket ticket = new TicketDao().getById(acceloApi, 123);
+    Ticket ticket = new TicketDao().getById(123);
 
 Get a Staff member by their email
 
-    Staff staff = new StaffDao().getByEmail(acceloApi, "staffmember@myorg.com.au");
+    Staff staff = new StaffDao().getByEmail("staffmember@myorg.com.au");
 
 Get a contact by their name
 
-    Contact contact = new ContactDao().getContact(acceloApi, "firstname", "lastname");
+    Contact contact = new ContactDao().getContact("firstname", "lastname");
 
 The API tries to use Json for filters/sending and recieving data. 
 To help creating json filters there is a small set of classes that try to make this easier. 
@@ -93,19 +93,19 @@ Create a filter
 Use the universal getByFitler 
 You will use getByFilter most of the time.
 
-	List<Staff> = new StaffDao().getByFilter(acceloApi, filter);
+	List<Staff> = new StaffDao().getByFilter(filter);
 
 Get a staff member by id
 
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Eq("id", staff_id));
-	List<Staff> = new StaffDao().getByFilter(acceloApi, filter);
+	List<Staff> = new StaffDao().getByFilter(filter);
 
 Use the accelo 'search' filter get get a company by name:
 
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Search(companyName));
-	List<Company> = new CompanyDao().getByFilter(acceloApi, filter);
+	List<Company> = new CompanyDao().getByFilter(filter);
 
 
 Filter using Against expression field with a type of company and an company id.
@@ -114,25 +114,25 @@ we have a special expression type of 'Against' to handle these.
 
 	AcceloFilter filters = new AcceloFilter();
 	filters.where(new Against("company", company.getId()));
-	List<Company> = new CompanyDao().getByFilter(acceloApi, filter);
+	List<Company> = new CompanyDao().getByFilter(filter);
 
 Search for tickets by company and contact id
 
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Eq("company_id", companyId))
 		.and(new Eq("contact_id", contactId));
-	List<Ticket> = new TicketDao().getByFilter(acceloApi, filter);
+	List<Ticket> = new TicketDao().getByFilter(filter);
 
 Search for for two companies 
 
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Eq("company_id", 1))
 		.or(new Eq("company_id", 2));
-	List<Ticket> = new CompanyDao().getByFilter(acceloApi, filter);
+	List<Ticket> = new CompanyDao().getByFilter(filter);
 	
 	
 Fetch Tickets which are against (owned) by a company with id 1 or id 2.
 
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Against("company", "company_id", 1, 2)));
-	List<Ticket> = new TicketDao().getByFilter(acceloApi, filter);   
+	List<Ticket> = new TicketDao().getByFilter(filter);   
