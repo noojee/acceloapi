@@ -37,21 +37,19 @@ The following query will now flush the cache (just for this query) and refetch t
 
 	List<Ticket> tickets = new TicketDao().getByFilter(filter);
 
-#Examples:
+Examples:
 
-Get an instance of the api.
+Initialise the Accelo Api
 
-    AcceloApi acceloApi = new AcceloApi();
+You need to create a json file which contains the auth details. The json file must be on the class path and be called:
 
-Initialise it.
+	accelosecrets.json
 
-    AcceloApi.setFQDN("<youraccelohostname>.api.accelo.com");
-    AcceloApi.setClientID("<your accelo client id>);
-    AcceloApi.setClientSecret("<your accelo client secret>");
+The file must be formatted as:
 
-Now connect. You can use this single connect throughout your code.
+	{"fqdn":"yourdomain.api.accelo.com", "client_id":"your acccelo client id", "client_secret":"your accelo client secret"}
 
-    acceloApi.connect();
+    AcceloApi.getInstance().connect(AcceloSecret.load());
 
 Get a company by name
 
@@ -81,8 +79,6 @@ Get a Staff member by their email
 Get a contact by their name
 
     Contact contact = new ContactDao().getContact(acceloApi, "firstname", "lastname");
-	
-	
 
 The API tries to use Json for filters/sending and recieving data. 
 To help creating json filters there is a small set of classes that try to make this easier. 
@@ -139,26 +135,4 @@ Fetch Tickets which are against (owned) by a company with id 1 or id 2.
 
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Against("company", "company_id", 1, 2)));
-	List<Ticket> = new TicketDao().getByFilter(acceloApi, filter);
-
-
-
-
-
-
-
-
-            
-
-	
-
-
-
-
-
-
-    
-    
-    
-    
-    
+	List<Ticket> = new TicketDao().getByFilter(acceloApi, filter);   
