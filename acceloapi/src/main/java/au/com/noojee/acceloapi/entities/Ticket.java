@@ -18,7 +18,7 @@ import au.com.noojee.acceloapi.filter.expressions.Expression;
 public class Ticket extends AcceloEntity<Ticket>
 {
 	static Logger logger = LogManager.getLogger();
-	
+
 	// private Logger logger = LogManager.getLogger(Ticket.class);
 	static public String PRIORITY_CRITICAL = "1";
 
@@ -62,12 +62,17 @@ public class Ticket extends AcceloEntity<Ticket>
 	// cache them here for fast access.
 	private Contact cacheContact;
 	private Company cacheCompany;
-	private Duration nonBillable;
-	private Duration billable = null;
-	
-	private List<Activity> cacheActivities = null;
 
-	
+	// Total non billable work for this ticket
+	private Duration nonBillable;
+	// Total billable work for this ticket
+	private Duration billable = null;
+
+	// Total time worked on this ticket MTD (billable and non billable)
+	private Duration mtdWork;
+
+	// Total time worked on this ticket last month (billable and non billable)
+	private Duration lastMonthWork = null;
 
 	/**
 	 * Returns true of the ticket is currently open.
@@ -85,46 +90,85 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public Duration sumMTDWork()
 	{
-		if (cacheActivities == null)
-			throw new IllegalStateException("Call getActivities first.");
+		if (mtdWork == null)
+		{
+			try
+			{
+				LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
 
-		LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
+				List<Activity> activities = new ActivityDao().getByTicket(this);
+				long work = activities.stream().filter(a -> {
+					return a.getDateCreated().isAfter(startOfMonth) || a.getDateCreated().isEqual(startOfMonth);
+				}) // greater than or equal to first day of month.
+						.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
-		long work = cacheActivities.stream().filter(a -> {
-			return a.getDateCreated().isAfter(startOfMonth) || a.getDateCreated().isEqual(startOfMonth);
-		}) // greater than or equal to first day of month.
-				.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
-
-		return Duration.ofSeconds(work);
+				mtdWork = Duration.ofSeconds(work);
+			}
+			catch (AcceloException e)
+			{
+				logger.error(e, e);
+			}
+		}
+		return mtdWork;
 	}
 
 	public Duration sumLastMonthWork()
 	{
-		if (cacheActivities == null)
-			throw new IllegalStateException("Call getActivities first.");
-		LocalDate startOfLastMonth = LocalDate.now().withDayOfMonth(1).minus(java.time.Period.ofMonths(1));
+		if (lastMonthWork == null)
+		{
+			try
+			{
+				List<Activity> activities = new ActivityDao().getByTicket(this);
 
-		long work = cacheActivities.stream().filter(a -> {
-			return (a.getDateCreated().isAfter(startOfLastMonth) // greater than
-																	// or equal
-																	// to the
-																	// 1st day
-																	// of last
-																	// month.
-					|| a.getDateCreated().isEqual(startOfLastMonth))
-					&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1)) // before
-																						// the
-																						// first
-																						// day
-																						// of
-																						// the
-																						// current
-																						// month.
-			;
-		}).mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
+				LocalDate startOfLastMonth = LocalDate.now().withDayOfMonth(1).minus(java.time.Period.ofMonths(1));
 
-		return Duration.ofSeconds(work);
+				long work = activities.stream().filter(a -> {
+					return (a.getDateCreated().isAfter(startOfLastMonth) // greater
+																			// than
+																			// or
+																			// equal
+																			// to
+																			// the
+																			// 1st
+																			// day
+																			// of
+																			// last
+																			// month.
+							|| a.getDateCreated().isEqual(startOfLastMonth))
+							&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1)) // before
+																								// the
+																								// first
+																								// day
+																								// of
+																								// the
+																								// current
+																								// month.
+					;
+				}).mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
+				lastMonthWork = Duration.ofSeconds(work);
+			}
+			catch (AcceloException e)
+			{
+				logger.error(e, e);
+			}
+		}
+		return lastMonthWork;
+
+	}
+
+	public List<Activity> getActivities()
+	{
+		List<Activity> list = null;
+		try
+		{
+			list = new ActivityDao().getByTicket(this);
+		}
+		catch (AcceloException e)
+		{
+			logger.error(e, e);
+		}
+		return list;
 	}
 
 	/**
@@ -134,58 +178,25 @@ public class Ticket extends AcceloEntity<Ticket>
 	 */
 	public Duration totalWork()
 	{
-		if (cacheActivities == null)
-			throw new IllegalStateException("Call getActivities first.");
 
-		long work = cacheActivities.stream().mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
+		long work = getActivities().stream().mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds())
+				.sum();
 
 		return Duration.ofSeconds(work);
 	}
 
-	private void cacheBillableAndNonBillable()
-	{
-		if (cacheActivities == null)
-			throw new IllegalStateException("Call getActivities first.");
-
-		if (billable == null)
-		{
-			// sum the billable hours.
-			this.billable = cacheActivities.stream().map(Activity::getBillable).reduce(Duration.ZERO, (a,b) ->  a.plus(b));
-			this.nonBillable = cacheActivities.stream().map(Activity::getNonBillable).reduce(Duration.ZERO, (a,b) ->  a.plus(b));
-		}
-
-	}
-
-
-
-	// Returns a list of activities associated with this ticket.
-	public List<Activity> getActivities() throws AcceloException
-	{
-		// Load and cache the activities for this ticket.
-		if (this.cacheActivities == null)
-		{
-
-			cacheActivities = new ActivityDao().getByTicket(this);
-			cacheBillableAndNonBillable();
-		}
-
-		return cacheActivities;
-	}
-	
 	/**
-	 * Returns true if all Activities for this ticket have been approved or invoiced.
+	 * Returns true if all Activities for this ticket have been approved or
+	 * invoiced.
+	 * 
 	 * @return
-	 * @throws AcceloException 
+	 * @throws AcceloException
 	 */
-	public boolean isFullyApproved() throws AcceloException 
+	public boolean isFullyApproved() throws AcceloException
 	{
-		if (cacheActivities == null)
-			this.getActivities();
-		
-		boolean isFullyApproved = this.cacheActivities.stream().allMatch(a -> a.isApproved());
+		boolean isFullyApproved = this.getActivities().stream().allMatch(a -> a.isApproved());
 		return isFullyApproved;
 	}
-
 
 	@Override
 	public int getId()
@@ -193,7 +204,6 @@ public class Ticket extends AcceloEntity<Ticket>
 		return id;
 	}
 
-	
 	public String getTitle()
 	{
 		return trim(title);
@@ -350,18 +360,21 @@ public class Ticket extends AcceloEntity<Ticket>
 		return -1;
 	}
 
-	public int getBillableSeconds()
-	{
-		return billable_seconds;
-	}
-
 	public Duration getBillable()
 	{
-		return Duration.ofSeconds(billable_seconds);
+		if (this.billable == null)
+			this.billable = getActivities().stream().map(Activity::getBillable).reduce(Duration.ZERO,
+					(a, b) -> a.plus(b));
+
+		return this.billable; // Duration.ofSeconds(billable_seconds);
 	}
 
 	public Duration getNonBillable()
 	{
+		if (this.nonBillable == null)
+			this.nonBillable = getActivities().stream().map(Activity::getNonBillable).reduce(Duration.ZERO,
+					(a, b) -> a.plus(b));
+
 		return this.nonBillable;
 	}
 
@@ -545,12 +558,10 @@ public class Ticket extends AcceloEntity<Ticket>
 				+ ", contact=" + cacheContact + ", company=" + cacheCompany + ", description=" + description + "]";
 	}
 
-	
 	@Override
 	public int compareTo(Ticket o)
 	{
 		return this.getId() - o.getId();
 	}
-
 
 }

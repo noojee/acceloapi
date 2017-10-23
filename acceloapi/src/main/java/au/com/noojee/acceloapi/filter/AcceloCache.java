@@ -1,9 +1,10 @@
-package au.com.noojee.acceloapi.dao;
+package au.com.noojee.acceloapi.filter;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,11 +12,12 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 class CacheValue
@@ -23,7 +25,8 @@ class CacheValue
 
 }
 
-public class AcceloCache
+@SuppressWarnings("rawtypes")
+public class AcceloCache implements RemovalListener<CacheKey, List>
 {
 	
 	private static Logger logger = LogManager.getLogger();
@@ -54,9 +57,10 @@ public class AcceloCache
 	private AcceloCache()
 	{
 		@SuppressWarnings("rawtypes")
-		LoadingCache<CacheKey, List> tmp = CacheBuilder.newBuilder().maximumSize(1000)
+		LoadingCache<CacheKey, List> tmp = CacheBuilder.newBuilder()
+				.maximumSize(10000)
 				.expireAfterAccess(10, TimeUnit.MINUTES)
-				// .removalListener(this)
+				.removalListener(this)
 				.build(new CacheLoader<CacheKey, List>()
 				{
 					@Override
@@ -117,14 +121,35 @@ public class AcceloCache
 	}
 
 	@SuppressWarnings("rawtypes")
+	public
 	List<? extends AcceloEntity> get(CacheKey cacheKey) throws AcceloException 
 	{
 		List<AcceloEntity> list;
 		try
 		{
-			if (cacheKey.getFilter().isRefreshCache())
-				queryCache.invalidate(cacheKey);
-			list = queryCache.get(cacheKey);
+			List<AcceloEntity> cachedList = queryCache.getIfPresent(cacheKey);
+			if (cachedList == null || cacheKey.getFilter().isRefreshCache())
+			{
+				if (cachedList != null) 
+					queryCache.invalidate(cacheKey);
+				
+				// Now go out and fetch the new list.
+				list = queryCache.get(cacheKey);
+				
+				// delete any ids that no longer exist in the list returned by the query.
+				if (cachedList != null)
+				{
+					
+					List<AcceloEntity> badEntities = cachedList.stream()
+					        .filter(entity -> !list.contains(entity))
+					        .collect(Collectors.toList());
+					
+					// evict any of the badEntities
+					badEntities.stream().forEach(entity -> {queryCache.invalidate(entity); logger.debug("Evicting: " + entity);});
+				}
+			}
+			else
+				list = cachedList;
 		}
 		catch (ExecutionException e)
 		{
@@ -148,6 +173,13 @@ public class AcceloCache
 	public int getMissCounter()
 	{
 		return this.missCounter;
+	}
+
+	@Override
+	public void onRemoval(@SuppressWarnings("rawtypes") RemovalNotification<CacheKey, List> notification)
+	{
+		logger.error("Cache eviction of " + notification.getKey() + " because: " + notification.getCause());
+		
 	}
 
 

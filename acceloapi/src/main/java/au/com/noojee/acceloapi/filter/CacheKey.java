@@ -1,12 +1,12 @@
-package au.com.noojee.acceloapi.dao;
+package au.com.noojee.acceloapi.filter;
 
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.dao.AcceloList;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 @SuppressWarnings("rawtypes")
-class CacheKey<E extends AcceloEntity>
+public class CacheKey<E extends AcceloEntity>
 {
 	EndPoint endPoint;
 	AcceloFilter filter;

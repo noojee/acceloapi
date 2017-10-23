@@ -11,7 +11,9 @@ import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.filter.AcceloCache;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
+import au.com.noojee.acceloapi.filter.CacheKey;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public abstract class AcceloDao<E extends AcceloEntity<E>>
@@ -22,7 +24,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 	protected abstract EndPoint getEndPoint();
 	
-	
+
 
 	/**
 	 * Returns the list of tickets that match the pass in filter.
@@ -42,7 +44,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		return this.getByFilter(filter, fields);
 	}
 
-	/**
+		/**
 	 * Returns the list of tickets that match the pass in filter.
 	 * 
 	 * @param acceloApi

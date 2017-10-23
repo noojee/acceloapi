@@ -14,8 +14,7 @@ import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.After;
 import au.com.noojee.acceloapi.filter.expressions.Against;
 import au.com.noojee.acceloapi.filter.expressions.Before;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
-import au.com.noojee.acceloapi.filter.expressions.Expression;
+import au.com.noojee.acceloapi.filter.expressions.Empty;
 
 public class ContractDao extends AcceloDao<Contract>
 {
@@ -82,7 +81,9 @@ public class ContractDao extends AcceloDao<Contract>
 	}
 
 	/**
-	 * Find an Contract for the given company.
+	 * Find an Active Contract for the given company.
+	 * 
+	 * This will return a random contract if the company has more than one activie contract.
 	 * @param Company
 	 *            - we only us the Id of the company.
 	 * 
@@ -131,7 +132,7 @@ public class ContractDao extends AcceloDao<Contract>
 		// start date is before today
 		AcceloFilter filter = new AcceloFilter();
 		filter.where(new Before("date_started", LocalDate.now())
-				.and(new After("date_expires", LocalDate.now()).or(new Eq("date_expires", Expression.DATE1970))));
+				.and(new After("date_expires", LocalDate.now()).or(new Empty("date_expires"))));
 
 		return getByFilter(filter);
 	}
