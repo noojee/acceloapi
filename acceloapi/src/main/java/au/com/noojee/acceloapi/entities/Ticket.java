@@ -3,16 +3,13 @@ package au.com.noojee.acceloapi.entities;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.dao.ActivityDao;
-import au.com.noojee.acceloapi.dao.AffiliationDao;
-import au.com.noojee.acceloapi.dao.ContactDao;
+import au.com.noojee.acceloapi.dao.TicketDao;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class Ticket extends AcceloEntity<Ticket>
@@ -74,6 +71,12 @@ public class Ticket extends AcceloEntity<Ticket>
 	// Total time worked on this ticket last month (billable and non billable)
 	private Duration lastMonthWork = null;
 
+	
+	public int getAffiliation()
+	{
+		return affiliation;
+	}
+
 	/**
 	 * Returns true of the ticket is currently open.
 	 * 
@@ -92,22 +95,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	{
 		if (mtdWork == null)
 		{
-			try
-			{
-				LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
-
-				List<Activity> activities = new ActivityDao().getByTicket(this);
-				long work = activities.stream().filter(a -> {
-					return a.getDateCreated().isAfter(startOfMonth) || a.getDateCreated().isEqual(startOfMonth);
-				}) // greater than or equal to first day of month.
-						.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
-
-				mtdWork = Duration.ofSeconds(work);
-			}
-			catch (AcceloException e)
-			{
-				logger.error(e, e);
-			}
+			mtdWork = new TicketDao().sumMTDWork(this);
 		}
 		return mtdWork;
 	}
@@ -116,60 +104,14 @@ public class Ticket extends AcceloEntity<Ticket>
 	{
 		if (lastMonthWork == null)
 		{
-			try
-			{
-				List<Activity> activities = new ActivityDao().getByTicket(this);
+			
+			lastMonthWork = new TicketDao().sumLastMonthWork(this);
 
-				LocalDate startOfLastMonth = LocalDate.now().withDayOfMonth(1).minus(java.time.Period.ofMonths(1));
-
-				long work = activities.stream().filter(a -> {
-					return (a.getDateCreated().isAfter(startOfLastMonth) // greater
-																			// than
-																			// or
-																			// equal
-																			// to
-																			// the
-																			// 1st
-																			// day
-																			// of
-																			// last
-																			// month.
-							|| a.getDateCreated().isEqual(startOfLastMonth))
-							&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1)) // before
-																								// the
-																								// first
-																								// day
-																								// of
-																								// the
-																								// current
-																								// month.
-					;
-				}).mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
-
-				lastMonthWork = Duration.ofSeconds(work);
 			}
-			catch (AcceloException e)
-			{
-				logger.error(e, e);
-			}
-		}
 		return lastMonthWork;
 
 	}
 
-	public List<Activity> getActivities()
-	{
-		List<Activity> list = null;
-		try
-		{
-			list = new ActivityDao().getByTicket(this);
-		}
-		catch (AcceloException e)
-		{
-			logger.error(e, e);
-		}
-		return list;
-	}
 
 	/**
 	 * Returns the total work on this ticket.
@@ -179,7 +121,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	public Duration totalWork()
 	{
 
-		long work = getActivities().stream().mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds())
+		long work = new TicketDao().getActivities(this).stream().mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds())
 				.sum();
 
 		return Duration.ofSeconds(work);
@@ -194,7 +136,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	 */
 	public boolean isFullyApproved() throws AcceloException
 	{
-		boolean isFullyApproved = this.getActivities().stream().allMatch(a -> a.isApproved());
+		boolean isFullyApproved = new TicketDao().getActivities(this).stream().allMatch(a -> a.isApproved());
 		return isFullyApproved;
 	}
 
@@ -244,21 +186,6 @@ public class Ticket extends AcceloEntity<Ticket>
 		return against_type;
 	}
 
-	public Contact getContact() throws AcceloException
-	{
-		if (cacheContact == null)
-		{
-			Affiliation affiliation = new AffiliationDao().getById(this.affiliation);
-
-			if (affiliation != null)
-			{
-				int contactId = affiliation.getContactId();
-
-				cacheContact = new ContactDao().getById(contactId);
-			}
-		}
-		return cacheContact;
-	}
 
 	public String getPriority()
 	{
@@ -363,7 +290,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	public Duration getBillable()
 	{
 		if (this.billable == null)
-			this.billable = getActivities().stream().map(Activity::getBillable).reduce(Duration.ZERO,
+			this.billable = new TicketDao().getActivities(this).stream().map(Activity::getBillable).reduce(Duration.ZERO,
 					(a, b) -> a.plus(b));
 
 		return this.billable; // Duration.ofSeconds(billable_seconds);
@@ -372,7 +299,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	public Duration getNonBillable()
 	{
 		if (this.nonBillable == null)
-			this.nonBillable = getActivities().stream().map(Activity::getNonBillable).reduce(Duration.ZERO,
+			this.nonBillable = new TicketDao().getActivities(this).stream().map(Activity::getNonBillable).reduce(Duration.ZERO,
 					(a, b) -> a.plus(b));
 
 		return this.nonBillable;
@@ -397,6 +324,16 @@ public class Ticket extends AcceloEntity<Ticket>
 	{
 		return trim(resolution_detail);
 	}
+	
+	/**
+	 * Is the ticket Attached to a contract.
+	 * @return
+	 */
+	public boolean isAttached()
+	{
+		return contract != 0;
+	}
+
 
 	public void setId(int id)
 	{
@@ -563,5 +500,8 @@ public class Ticket extends AcceloEntity<Ticket>
 	{
 		return this.getId() - o.getId();
 	}
+
+
+	
 
 }
