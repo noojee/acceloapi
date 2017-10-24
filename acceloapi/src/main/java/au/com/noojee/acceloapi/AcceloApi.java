@@ -12,11 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -273,10 +269,10 @@ public class AcceloApi
 		// looks like you can't post fields via json so we need to add data to
 		// the url.
 
-		String urlArgs = fieldNameValues.buildUrlArgs();
+		//String urlArgs = fieldNameValues.buildUrlArgs();
 
-		URL completeUrl = new URL(endPoint.getURL().toExternalForm() + "?" + urlArgs);
-		HTTPResponse response = _request(HTTPMethod.POST, completeUrl, null);
+		URL completeUrl = new URL(endPoint.getURL().toExternalForm()); // + "?" + urlArgs);
+		HTTPResponse response = _request(HTTPMethod.POST, completeUrl, fieldNameValues.formatAsJson());
 
 		return response.parseBody(clazz);
 	}
@@ -293,10 +289,10 @@ public class AcceloApi
 		// looks like you can't post fields via json so we need to add data to
 		// the url.
 		// TODO: I don't think this is true actually.
-		String urlArgs = fieldNameValues.buildUrlArgs();
+		// String urlArgs = fieldNameValues.buildUrlArgs();
 
-		URL completeUrl = new URL(endPoint.getURL(entityId).toExternalForm() + "?" + urlArgs);
-		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, null);
+		URL completeUrl = new URL(endPoint.getURL(entityId).toExternalForm()); //  + "?" + urlArgs);
+		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, fieldNameValues.formatAsJson());
 
 		return response.parseBody(clazz);
 	}
@@ -306,10 +302,12 @@ public class AcceloApi
 	 * 
 	 * @throws AcceloException
 	 */
-	private HTTPResponse _request(HTTPMethod method, URL url, String jsonArgs) throws IOException, AcceloException
+	private HTTPResponse _request(HTTPMethod method, URL url, String jsonArgs) throws AcceloException
 	{
+		HTTPResponse response = null;
 
-		HTTPResponse response;
+		try
+		{
 
 		logger.debug(method + " url: " + url);
 		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
@@ -368,6 +366,11 @@ public class AcceloApi
 			response = new HTTPResponse(responseCode, connection.getResponseMessage(), body);
 		else
 			response = new HTTPResponse(responseCode, connection.getResponseMessage(), error);
+		}
+		catch (IOException e)
+		{
+			throw new AcceloException(e);
+		}
 
 		return response;
 
@@ -539,21 +542,6 @@ public class AcceloApi
 		return out;
 	}
 
-	public static LocalDate toLocalDate(long dateToSeconds)
-	{
-		return Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault()).toLocalDate();
-
-	}
-
-	public static long toDateAsLong(LocalDate localDate)
-	{
-		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
-	}
-
-	public static Date toDate(LocalDate localDate)
-	{
-		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-	}
 
 
 }

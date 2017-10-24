@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.dao.TicketDao;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
@@ -219,17 +218,17 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public LocalDate getDateSubmitted()
 	{
-		return AcceloApi.toLocalDate(date_submitted);
+		return toLocalDate(date_submitted);
 	}
 
 	public LocalDate getDateOpened()
 	{
-		return AcceloApi.toLocalDate(date_opened);
+		return toLocalDate(date_opened);
 	}
 
 	public LocalDate getDateResolved()
 	{
-		return AcceloApi.toLocalDate(date_resolved);
+		return toLocalDate(date_resolved);
 	}
 
 	// Returns null if the ticket is still open.
@@ -238,17 +237,17 @@ public class Ticket extends AcceloEntity<Ticket>
 		if (date_closed == 0)
 			return null;
 
-		return AcceloApi.toLocalDate(date_closed);
+		return toLocalDate(date_closed);
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return AcceloApi.toLocalDate(date_started);
+		return toLocalDate(date_started);
 	}
 
 	public LocalDate getDateDue()
 	{
-		return AcceloApi.toLocalDate(date_due);
+		return toLocalDate(date_due);
 	}
 
 	public String getClosedBy()
@@ -307,7 +306,7 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public LocalDate getDateLastInteracted()
 	{
-		return AcceloApi.toLocalDate(date_last_interacted);
+		return toLocalDate(date_last_interacted);
 	}
 
 	public ArrayList<String> getBreadcrumbs()

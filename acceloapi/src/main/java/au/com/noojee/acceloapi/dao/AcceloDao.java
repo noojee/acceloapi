@@ -1,5 +1,8 @@
 package au.com.noojee.acceloapi.dao;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -7,8 +10,10 @@ import java.util.concurrent.ExecutionException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
+import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.filter.AcceloCache;
@@ -23,8 +28,6 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	protected abstract Class<? extends AcceloList<E>> getResponseListClass();
 
 	protected abstract EndPoint getEndPoint();
-	
-
 
 	/**
 	 * Returns the list of tickets that match the pass in filter.
@@ -44,7 +47,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		return this.getByFilter(filter, fields);
 	}
 
-		/**
+	/**
 	 * Returns the list of tickets that match the pass in filter.
 	 * 
 	 * @param acceloApi
@@ -54,10 +57,10 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 *            - the set of fields to return
 	 * @return
 	 * @throws AcceloException
-	 * @throws ExecutionException 
+	 * @throws ExecutionException
 	 */
 	@SuppressWarnings("unchecked")
-	public List<E> getByFilter( AcceloFilter filter, AcceloFieldList fields) throws AcceloException
+	public List<E> getByFilter(AcceloFilter filter, AcceloFieldList fields) throws AcceloException
 	{
 		List<E> entities = new ArrayList<>();
 
@@ -83,13 +86,57 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 			AcceloFilter filter = new AcceloFilter();
 			filter.where(new Eq("id", id));
 
-			@SuppressWarnings({ "rawtypes", "unchecked" })
-			List<E> entities = (List<E>) AcceloCache.getInstance().get(new CacheKey(endpoint, filter, fields, getResponseListClass()));
+			@SuppressWarnings(
+			{ "rawtypes", "unchecked" })
+			List<E> entities = (List<E>) AcceloCache.getInstance()
+					.get(new CacheKey(endpoint, filter, fields, getResponseListClass()));
 			if (entities.size() > 0)
 				entity = entities.get(0);
 
 		}
 		return entity;
+	}
+
+	/**
+	 * Uses introspection to collect the set of fields that need to be sent to
+	 * Accelo when updating an entity.
+	 * 
+	 * @param ticket
+	 * @throws AcceloException
+	 */
+	public void update(AcceloEntity<E> entity) throws AcceloException
+	{
+
+		try
+		{
+			AcceloFieldValues fields = new AcceloFieldValues();
+
+			Field[] allFields = entity.getClass().getDeclaredFields();
+			for (Field field : allFields)
+			{
+				int modifiers = field.getModifiers();
+				if (Modifier.isPrivate(modifiers) && !Modifier.isTransient(modifiers) && !Modifier.isStatic(modifiers))
+				{
+
+					fields.add(field.getName(), field.get(entity).toString());
+				}
+			}
+
+			// Assign the Ticket to the owning aCompany.
+
+			TicketDao.Response response = AcceloApi.getInstance().update(this.getEndPoint(), entity.getId(), fields,
+					TicketDao.Response.class);
+			if (response == null || response.getEntity() == null)
+			{
+				throw new AcceloException("Failed to update " + entity.getClass().getSimpleName() + ":" + entity.getId()
+						+ " details:" + this.toString());
+			}
+		}
+		catch (IllegalAccessException | IOException e)
+		{
+			throw new AcceloException(e);
+		}
+
 	}
 
 }

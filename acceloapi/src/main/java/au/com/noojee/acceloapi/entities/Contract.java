@@ -2,7 +2,7 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.AcceloApi;
+import org.javamoney.moneta.Money;
 
 public class Contract extends AcceloEntity<Contract> 
 {
@@ -44,44 +44,47 @@ public class Contract extends AcceloEntity<Contract>
 	{
 		return title;
 	}
-
-	
-
-	
 	
 	/**
 	 * The dollar amount this contract includes in value
 	 * 
 	 * @return
 	 */
-	public double getValue()
+	public Money getValue()
 	{
-		return value;
+		return super.asMoney(value);
 	}
+	
+	public Money getRemainingValue()
+	{
+		// until we work out how to get this.
+		return super.asMoney(0);
+	}
+
 
 	public LocalDate getDateCreated()
 	{
-		return AcceloApi.toLocalDate(date_created);
+		return toLocalDate(date_created);
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return AcceloApi.toLocalDate(date_started);
+		return super.toLocalDate(date_started);
 	}
 
 	public LocalDate getDatePeriodExpires()
 	{
-		return AcceloApi.toLocalDate(date_period_expires);
+		return super.toLocalDate(date_period_expires);
 	}
 
 	public LocalDate getDateExpires()
 	{
-		return AcceloApi.toLocalDate(date_expires);
+		return super.toLocalDate(date_expires);
 	}
 
 	public LocalDate getDateLastInteracted()
 	{
-		return AcceloApi.toLocalDate(date_last_interacted);
+		return super.toLocalDate(date_last_interacted);
 	}
 
 	public int getRenewDays()
@@ -212,5 +215,6 @@ public class Contract extends AcceloEntity<Contract>
 	{
 		return this.getDateStarted().compareTo(o.getDateStarted());
 	}
+
 
 }

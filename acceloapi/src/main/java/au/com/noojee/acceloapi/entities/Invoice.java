@@ -2,8 +2,6 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.AcceloApi;
-
 public class Invoice extends AcceloEntity<Invoice>
 {
 	
@@ -116,17 +114,17 @@ public class Invoice extends AcceloEntity<Invoice>
 
 	public LocalDate getDateRaised()
 	{
-		return AcceloApi.toLocalDate(date_raised);
+		return toLocalDate(date_raised);
 	}
 
 	public LocalDate getDateDue()
 	{
-		return AcceloApi.toLocalDate(date_due);
+		return toLocalDate(date_due);
 	}
 
 	public LocalDate getDateModified()
 	{
-		return AcceloApi.toLocalDate(date_modified);
+		return toLocalDate(date_modified);
 	}
 
 	public int getContact()

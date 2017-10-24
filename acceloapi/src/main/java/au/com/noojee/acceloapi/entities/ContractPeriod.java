@@ -2,8 +2,6 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.AcceloApi;
-
 public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {
 	int id;
@@ -32,12 +30,12 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 
 	public LocalDate getDateCommenced()
 	{
-		return AcceloApi.toLocalDate(date_commenced);
+		return toLocalDate(date_commenced);
 	}
 
 	public LocalDate getDateExpires()
 	{
-		return AcceloApi.toLocalDate(date_expires);
+		return toLocalDate(date_expires);
 	}
 
 	public double getBudget()

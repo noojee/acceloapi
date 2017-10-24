@@ -2,8 +2,6 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.AcceloApi;
-
 public class Affiliation extends AcceloEntity<Affiliation>
 {
 	private int id;
@@ -110,22 +108,22 @@ public class Affiliation extends AcceloEntity<Affiliation>
 
 	public LocalDate getDateLastInteracted()
 	{
-		return AcceloApi.toLocalDate(date_last_interacted);
+		return toLocalDate(date_last_interacted);
 	}
 
 	public void setDateLastInteracted(LocalDate dateLastInteracted)
 	{
-		this.date_last_interacted = AcceloApi.toDateAsLong(dateLastInteracted);
+		this.date_last_interacted = toDateAsLong(dateLastInteracted);
 	}
 
 	public LocalDate getDateModified()
 	{
-		return AcceloApi.toLocalDate(date_modified);
+		return toLocalDate(date_modified);
 	}
 
 	public void setDateModified(LocalDate dateModified)
 	{
-		this.date_modified = AcceloApi.toDateAsLong(dateModified);
+		this.date_modified = toDateAsLong(dateModified);
 	}
 
 	public int getStaffBookmarked()

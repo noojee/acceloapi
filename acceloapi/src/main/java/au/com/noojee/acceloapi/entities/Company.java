@@ -101,12 +101,12 @@ public class Company extends AcceloEntity<Company>
 
 	public LocalDate getDateCreated()
 	{
-		return AcceloApi.toLocalDate(date_created);
+		return toLocalDate(date_created);
 	}
 
 	public LocalDate getDateModified()
 	{
-		return AcceloApi.toLocalDate(date_modified);
+		return toLocalDate(date_modified);
 	}
 
 	public String getComments()

@@ -161,16 +161,6 @@ public class TicketDao extends AcceloDao<Ticket>
 
 	}
 
-	/**
-	 * sends changes to the ticket to accelo.
-	 * 
-	 * @param ticket
-	 */
-	@Override
-	public void update(Ticket ticket)
-	{
-		super.update(ticket);
-	}
 
 	public Ticket insert(Ticket ticket, Contact contacts, Company company) throws IOException, AcceloException
 	{

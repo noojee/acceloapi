@@ -10,7 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javamoney.moneta.Money;
 
-import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.Formatters;
 import au.com.noojee.acceloapi.dao.AffiliationDao;
@@ -184,22 +183,22 @@ public class Activity extends AcceloEntity<Activity>
 
 	public void setDateStarted(LocalDate dateStarted)
 	{
-		this.date_started = AcceloApi.toDateAsLong(dateStarted);
+		this.date_started = toDateAsLong(dateStarted);
 	}
 
 	public void setDateEnded(LocalDate dateEnded)
 	{
-		this.date_ended = AcceloApi.toDateAsLong(dateEnded);
+		this.date_ended = toDateAsLong(dateEnded);
 	}
 
 	public void setDateCreated(LocalDate dateCreated)
 	{
-		this.date_created = AcceloApi.toDateAsLong(dateCreated);
+		this.date_created = toDateAsLong(dateCreated);
 	}
 
 	public void setDateModified(LocalDate dateModified)
 	{
-		this.date_modified = AcceloApi.toDateAsLong(dateModified);
+		this.date_modified = toDateAsLong(dateModified);
 	}
 
 	public void setStaffId(int staffId)
@@ -260,22 +259,22 @@ public class Activity extends AcceloEntity<Activity>
 
 	public LocalDate getDateCreated()
 	{
-		return AcceloApi.toLocalDate(date_created);
+		return toLocalDate(date_created);
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return AcceloApi.toLocalDate(date_started);
+		return toLocalDate(date_started);
 	}
 
 	public LocalDate getDateEnded()
 	{
-		return AcceloApi.toLocalDate(date_ended);
+		return toLocalDate(date_ended);
 	}
 
 	public LocalDate getDateModified()
 	{
-		return AcceloApi.toLocalDate(date_modified);
+		return toLocalDate(date_modified);
 	}
 
 	public int getStaff()

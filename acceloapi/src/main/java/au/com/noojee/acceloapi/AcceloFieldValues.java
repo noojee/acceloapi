@@ -1,7 +1,5 @@
 package au.com.noojee.acceloapi;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -57,6 +55,8 @@ public class AcceloFieldValues
 		return "\"_fields:\" {" + jsonFieldValues + "}";
 
 	}
+	
+	/*
 
 	public String buildUrlArgs() throws UnsupportedEncodingException
 	{
@@ -70,5 +70,6 @@ public class AcceloFieldValues
 		}
 		return args;
 	}
+	*/
 
 }
