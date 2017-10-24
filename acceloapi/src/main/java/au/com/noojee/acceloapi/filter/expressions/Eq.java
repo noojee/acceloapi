@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import au.com.noojee.acceloapi.AcceloException;
+
 public class Eq extends Expression
 {
 
@@ -31,10 +33,14 @@ public class Eq extends Expression
 
 	public Eq(String fieldName, LocalDate operand)
 	{
-		this.fieldName = fieldName;
+		// HACK Accelo Doesn't support comparison of a date against '0'. Using (\"date_before\", Expression.DATEZERO) is accelos recommended hack.;
+		if (operand == Expression.DATEZERO)
+			this.fieldName = fieldName + "_before";
+		else
+			this.fieldName = fieldName;
 		this.operands.add(formatDateAsFilterOperand(operand));
 	}
-	
+
 	public boolean isFieldName(String fieldName)
 	{
 		return this.fieldName.compareTo(fieldName) == 0;

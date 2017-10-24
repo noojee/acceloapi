@@ -9,6 +9,10 @@ import au.com.noojee.acceloapi.filter.Or;
 public abstract class Expression
 {
 	static public LocalDate DATE1970 = LocalDate.of(1970, 1, 1);
+	
+	// With LocalDate's there is no easy way of passing a date value of '0'
+	// 1/1/1970 gives the desired result.
+	static public LocalDate DATEZERO = DATE1970;
 
 	public abstract String toJson();
 
@@ -29,8 +33,7 @@ public abstract class Expression
 	public String formatDateAsFilterOperand(LocalDate date)
 	{
 		String formattedDate = "0";
-		if (date != DATE1970)
-
+		if (date != DATEZERO)
 		{
 			ZoneId zoneId = ZoneId.systemDefault();
 			long epoch = date.atStartOfDay(zoneId).toEpochSecond();
