@@ -162,7 +162,6 @@ public class TicketDao extends AcceloDao<Ticket>
 
 	}
 
-
 	public Ticket insert(Ticket ticket, Contact contacts, Company company) throws IOException, AcceloException
 	{
 		Ticket result = null;
@@ -242,8 +241,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		}
 		return contact;
 	}
-	
-	
+
 	public List<Activity> getActivities(Ticket ticket)
 	{
 		List<Activity> list = null;
@@ -257,7 +255,6 @@ public class TicketDao extends AcceloDao<Ticket>
 		}
 		return list;
 	}
-
 
 	@Override
 	protected EndPoint getEndPoint()
@@ -335,6 +332,45 @@ public class TicketDao extends AcceloDao<Ticket>
 			logger.error(e, e);
 		}
 		return lastMonthWork;
+	}
+
+	/**
+	 * Returns the total work on this ticket.
+	 * 
+	 * @return
+	 */
+	public Duration totalWork(Ticket ticket)
+	{
+
+		long work = getActivities(ticket).stream()
+				.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
+
+		return Duration.ofSeconds(work);
+	}
+
+	/**
+	 * Returns true if all Activities for this ticket have been approved or
+	 * invoiced.
+	 * 
+	 * @return
+	 * @throws AcceloException
+	 */
+	public boolean isFullyApproved(Ticket ticket) throws AcceloException
+	{
+		boolean isFullyApproved = getActivities(ticket).stream().allMatch(a -> a.isApproved());
+		return isFullyApproved;
+	}
+
+	public Duration getBillable(Ticket ticket)
+	{
+		return getActivities(ticket).stream().map(Activity::getBillable)
+					.reduce(Duration.ZERO, (a, b) -> a.plus(b));
+	}
+
+	public Duration getNonBillable(Ticket ticket)
+	{
+			return getActivities(ticket).stream().map(Activity::getNonBillable)
+					.reduce(Duration.ZERO, (a, b) -> a.plus(b));
 	}
 
 }

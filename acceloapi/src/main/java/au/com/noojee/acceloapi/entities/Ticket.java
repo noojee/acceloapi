@@ -1,14 +1,11 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.dao.TicketDao;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class Ticket extends AcceloEntity<Ticket>
@@ -54,22 +51,6 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int contract; // the contract id or 0 if this ticket is unassigned.
 	private String resolution_detail;
 
-	// these are related objects that we need to fetch separately and we then
-	// cache them here for fast access.
-	private Contact cacheContact;
-	private Company cacheCompany;
-
-	// Total non billable work for this ticket
-	private Duration nonBillable;
-	// Total billable work for this ticket
-	private Duration billable = null;
-
-	// Total time worked on this ticket MTD (billable and non billable)
-	private Duration mtdWork;
-
-	// Total time worked on this ticket last month (billable and non billable)
-	private Duration lastMonthWork = null;
-
 	
 	public int getAffiliation()
 	{
@@ -83,61 +64,13 @@ public class Ticket extends AcceloEntity<Ticket>
 	 */
 	public boolean isOpen()
 	{
-		return getDateClosed() == null || getDateClosed().equals(Expression.DATE1970)
+		return getDateClosed() == null || getDateClosed().equals(Expression.DATEZERO)
 				|| getDateClosed().isAfter(LocalDate.now()); // I don't think
 																// this is
 																// possible. but
 																// still.
 	}
 
-	public Duration sumMTDWork()
-	{
-		if (mtdWork == null)
-		{
-			mtdWork = new TicketDao().sumMTDWork(this);
-		}
-		return mtdWork;
-	}
-
-	public Duration sumLastMonthWork()
-	{
-		if (lastMonthWork == null)
-		{
-			
-			lastMonthWork = new TicketDao().sumLastMonthWork(this);
-
-			}
-		return lastMonthWork;
-
-	}
-
-
-	/**
-	 * Returns the total work on this ticket.
-	 * 
-	 * @return
-	 */
-	public Duration totalWork()
-	{
-
-		long work = new TicketDao().getActivities(this).stream().mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds())
-				.sum();
-
-		return Duration.ofSeconds(work);
-	}
-
-	/**
-	 * Returns true if all Activities for this ticket have been approved or
-	 * invoiced.
-	 * 
-	 * @return
-	 * @throws AcceloException
-	 */
-	public boolean isFullyApproved() throws AcceloException
-	{
-		boolean isFullyApproved = new TicketDao().getActivities(this).stream().allMatch(a -> a.isApproved());
-		return isFullyApproved;
-	}
 
 	@Override
 	public int getId()
@@ -286,23 +219,6 @@ public class Ticket extends AcceloEntity<Ticket>
 		return -1;
 	}
 
-	public Duration getBillable()
-	{
-		if (this.billable == null)
-			this.billable = new TicketDao().getActivities(this).stream().map(Activity::getBillable).reduce(Duration.ZERO,
-					(a, b) -> a.plus(b));
-
-		return this.billable; // Duration.ofSeconds(billable_seconds);
-	}
-
-	public Duration getNonBillable()
-	{
-		if (this.nonBillable == null)
-			this.nonBillable = new TicketDao().getActivities(this).stream().map(Activity::getNonBillable).reduce(Duration.ZERO,
-					(a, b) -> a.plus(b));
-
-		return this.nonBillable;
-	}
 
 	public LocalDate getDateLastInteracted()
 	{
@@ -491,7 +407,7 @@ public class Ticket extends AcceloEntity<Ticket>
 				+ resolved_by + ", company=" + company + ", object_budget=" + object_budget + ", assignee=" + assignee
 				+ ", billable_seconds=" + billable_seconds + ", date_last_interacted=" + date_last_interacted
 				+ ", breadcrumbs=" + breadcrumbs + ", contract=" + contract + ", resolution_detail=" + resolution_detail
-				+ ", contact=" + cacheContact + ", company=" + cacheCompany + ", description=" + description + "]";
+				+ ", description=" + description + "]";
 	}
 
 	@Override

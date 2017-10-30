@@ -55,7 +55,6 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 
 	private AcceloCache()
 	{
-		@SuppressWarnings("rawtypes")
 		LoadingCache<CacheKey, List> tmp = CacheBuilder.newBuilder()
 				.maximumSize(10000)
 				.expireAfterAccess(10, TimeUnit.MINUTES)
@@ -74,13 +73,13 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 		queryCache = tmp;
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected List<AcceloEntity> runAccelQuery(CacheKey key) throws AcceloException
 	{
 		
 		long startTime = System.nanoTime();
 		
 		
+		@SuppressWarnings("unchecked")
 		List<AcceloEntity> list = AcceloApi.getInstance().getAll(key.getEndPoint(), key.getFilter(), key.getFields(),
 				key.getResponseListClass());
 		
@@ -104,7 +103,7 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 	 * @param list
 	 * @throws AcceloException
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("unchecked")
 	private void populateIds(CacheKey originalKey, List<AcceloEntity> list) throws AcceloException
 	{
 		CacheKey idKey;
@@ -127,7 +126,6 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
 	public
 	List<? extends AcceloEntity> get(CacheKey cacheKey) throws AcceloException 
 	{
@@ -166,7 +164,6 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 		return list;
 	}
 
-	@SuppressWarnings("rawtypes")
 	void put(CacheKey key, List<AcceloEntity> list)
 	{
 		queryCache.put(key, list);
@@ -183,7 +180,7 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 	}
 
 	@Override
-	public void onRemoval(@SuppressWarnings("rawtypes") RemovalNotification<CacheKey, List> notification)
+	public void onRemoval(RemovalNotification<CacheKey, List> notification)
 	{
 		logger.error("Cache eviction of " + notification.getKey() + " because: " + notification.getCause());
 		
