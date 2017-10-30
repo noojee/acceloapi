@@ -290,9 +290,12 @@ public class AcceloApi
 		// the url.
 		// TODO: I don't think this is true actually.
 		// String urlArgs = fieldNameValues.buildUrlArgs();
+		
 
 		URL completeUrl = new URL(endPoint.getURL(entityId).toExternalForm()); //  + "?" + urlArgs);
-		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, fieldNameValues.formatAsJson());
+		String fields = fieldNameValues.formatAsJson();
+		logger.error("Updating: url=" + completeUrl + " fields=" + fields);
+		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, fields);
 
 		return response.parseBody(clazz);
 	}

@@ -29,7 +29,7 @@ import com.google.gson.Gson;
 public class AcceloSecret
 {
 
-	private static final String ACCELOSECRETS_JSON = "accelosecrets.json";
+	private static final String ACCELOSECRETS_JSON = "secrets/accelosecrets.json";
 	private String client_id;
 	private String client_secret;
 	private String fqdn;

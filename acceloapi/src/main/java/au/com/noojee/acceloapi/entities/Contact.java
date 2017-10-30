@@ -4,7 +4,6 @@ public class Contact extends AcceloEntity<Contact>
 {
 	public static final String FIELDS_ALL = "contact._ALL";
 	private int id;
-	private Company company;
 	private String firstname;
 	private String middlename;
 	private String surname;
@@ -22,7 +21,7 @@ public class Contact extends AcceloEntity<Contact>
 	private String phone;
 	private String fax;
 	private String email;
-	private int status_id;
+	private int default_affiliation; // id of the contacts affiliation. Will normally be the company they are primarily associated with.
 	private String communication;
 	private String invoice_method;
 
@@ -33,10 +32,6 @@ public class Contact extends AcceloEntity<Contact>
 		return id;
 	}
 
-	public Company getCompany()
-	{
-		return company;
-	}
 
 	public String getFirstname()
 	{
@@ -123,11 +118,6 @@ public class Contact extends AcceloEntity<Contact>
 		return email;
 	}
 
-	public int getStatus_id()
-	{
-		return status_id;
-	}
-
 	public String getCommunication()
 	{
 		return communication;
@@ -137,17 +127,23 @@ public class Contact extends AcceloEntity<Contact>
 	{
 		return invoice_method;
 	}
+	
+	public int getDefaultAffiliation()
+	{
+		return default_affiliation;
+	}
+
 
 
 	@Override
 	public String toString()
 	{
-		return "Contact [id=" + id + " company=" + company + ", firstname=" + firstname + ", middlename=" + middlename
+		return "Contact [id=" + id +  ", firstname=" + firstname + ", middlename=" + middlename
 				+ ", surname=" + surname + ", preferred_name=" + preferred_name + ", username=" + username
 				+ ", password=" + password + ", title=" + title + ", salutation=" + salutation + ", comments="
 				+ comments + ", status=" + status + ", standing=" + standing + ", country_id=" + country_id
 				+ ", physical_address_id=" + physical_address_id + ", postal_address_id=" + postal_address_id
-				+ ", phone=" + phone + ", fax=" + fax + ", email=" + email + ", status_id=" + status_id
+				+ ", phone=" + phone + ", fax=" + fax + ", email=" + email 
 				+ ", communication=" + communication + ", invoice_method=" + invoice_method + "]";
 	}
 
@@ -186,6 +182,9 @@ public class Contact extends AcceloEntity<Contact>
 	{
 		return this.getSurname().compareTo(o.getSurname());
 	}
+
+
+
 
 	
 }

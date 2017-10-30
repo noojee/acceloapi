@@ -1,6 +1,6 @@
 package au.com.noojee.acceloapi;
 
-public class AcceloException extends Exception
+public class AcceloException extends RuntimeException
 {
 	private static final long serialVersionUID = 1L;
 	

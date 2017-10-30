@@ -117,8 +117,10 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 				int modifiers = field.getModifiers();
 				if (Modifier.isPrivate(modifiers) && !Modifier.isTransient(modifiers) && !Modifier.isStatic(modifiers))
 				{
-
-					fields.add(field.getName(), field.get(entity).toString());
+					field.setAccessible(true);
+					Object value = field.get(entity);
+					
+					fields.add(field.getName(), (value == null ? "" : value.toString()));
 				}
 			}
 
@@ -126,6 +128,8 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 			TicketDao.Response response = AcceloApi.getInstance().update(this.getEndPoint(), entity.getId(), fields,
 					TicketDao.Response.class);
+			
+			logger.error(response);
 			if (response == null || response.getEntity() == null)
 			{
 				throw new AcceloException("Failed to update " + entity.getClass().getSimpleName() + ":" + entity.getId()

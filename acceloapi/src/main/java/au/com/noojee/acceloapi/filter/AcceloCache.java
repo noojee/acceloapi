@@ -34,7 +34,6 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 	// We cache queries and the set of entities that are returned.
 	// We also create extra entries for each id so that
 	// any subsequent queries by the entities id will find that entity.
-	@SuppressWarnings("rawtypes")
 	static private  LoadingCache<CacheKey, List> queryCache;
 
 	/*
@@ -78,13 +77,21 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected List<AcceloEntity> runAccelQuery(CacheKey key) throws AcceloException
 	{
-		logger.error("Cache miss for " + key.toString());
+		
+		long startTime = System.nanoTime();
+		
+		
 		List<AcceloEntity> list = AcceloApi.getInstance().getAll(key.getEndPoint(), key.getFilter(), key.getFields(),
 				key.getResponseListClass());
+		
+		long elapsedTime = System.nanoTime() - startTime;
 
+		logger.error("Cache miss for " + key.toString() + " Total Cache misses: " + this.missCounter + " elapsed time (ms):" + elapsedTime/1000000);
 		// We now insert the list of ids back into the cache to maximize hits
 		// when getById is called.
 		populateIds(key, list);
+		
+		
 
 		return list;
 	}
@@ -180,6 +187,12 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 	{
 		logger.error("Cache eviction of " + notification.getKey() + " because: " + notification.getCause());
 		
+	}
+
+	public void flushCache()
+	{
+		queryCache.invalidateAll();
+		this.missCounter = 0;
 	}
 
 

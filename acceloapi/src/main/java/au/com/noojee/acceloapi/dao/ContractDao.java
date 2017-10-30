@@ -15,6 +15,8 @@ import au.com.noojee.acceloapi.filter.expressions.After;
 import au.com.noojee.acceloapi.filter.expressions.Against;
 import au.com.noojee.acceloapi.filter.expressions.Before;
 import au.com.noojee.acceloapi.filter.expressions.Empty;
+import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class ContractDao extends AcceloDao<Contract>
 {
@@ -51,13 +53,13 @@ public class ContractDao extends AcceloDao<Contract>
 		{
 			Contact contact = contacts.get(0);
 
-			Company company = contact.getCompany();
+			Company company = new ContactDao().getDefaultCompany(contact);
 			List<Contract> contracts = this.getByCompany(company);
 
 			// find the first contract with a non-expired contract_period
 			for (Contract contract : contracts)
 			{
-				List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(contract);
+				List<ContractPeriod> periods = new ContractPeriodDao().getByContract(contract);
 				for (ContractPeriod period : periods)
 				{
 					LocalDate expires = period.getDateExpires();
@@ -99,7 +101,7 @@ public class ContractDao extends AcceloDao<Contract>
 		// find the first contract with a non-expired contract_period
 		for (Contract contract : contracts)
 		{
-			List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(contract);
+			List<ContractPeriod> periods = new ContractPeriodDao().getByContract(contract);
 			for (ContractPeriod period : periods)
 			{
 				LocalDate expires = period.getDateExpires();
@@ -132,7 +134,7 @@ public class ContractDao extends AcceloDao<Contract>
 		// start date is before today
 		AcceloFilter filter = new AcceloFilter();
 		filter.where(new Before("date_started", LocalDate.now())
-				.and(new After("date_expires", LocalDate.now()).or(new Empty("date_expires"))));
+				.and(new After("date_expires", LocalDate.now()).or(new Empty("date_expires")).or(new Eq("date_expires", Expression.DATEZERO))));
 
 		return getByFilter(filter);
 	}

@@ -29,7 +29,7 @@ public class Formatters
 	
 	public static String format(LocalDate date)
 	{
-		return date.format(dateFormat);
+		return (date == null ? "" : date.format(dateFormat));
 	}
 	public static String format(Duration duration)
 	{

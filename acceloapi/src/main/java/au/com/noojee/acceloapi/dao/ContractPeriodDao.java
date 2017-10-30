@@ -13,7 +13,7 @@ import au.com.noojee.acceloapi.entities.ContractPeriod;
 public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 {
 
-	public List<ContractPeriod> getContractPeriods(Contract contract) throws AcceloException
+	public List<ContractPeriod> getByContract(Contract contract) throws AcceloException
 	{
 
 		List<ContractPeriod> periods;
@@ -30,6 +30,7 @@ public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 		return periods;
 
 	}
+	
 
 	@Override
 	protected EndPoint getEndPoint()

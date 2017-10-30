@@ -30,10 +30,7 @@ public class CompanyDao extends AcceloDao<Company>
 
 		List<Company> companies = getByFilter(filter, fields);
 
-		Company company = null;
-		company = companies.size() > 0 ? companies.get(0) : null;
-
-		return company;
+		return companies.size() > 0 ? companies.get(0) : null;
 	}
 
 	public Company getCompanyByContactId(String contractId) throws AcceloException

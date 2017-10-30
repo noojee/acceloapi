@@ -22,6 +22,7 @@ import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.After;
 import au.com.noojee.acceloapi.filter.expressions.Against;
+import au.com.noojee.acceloapi.filter.expressions.Before;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
@@ -129,7 +130,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		// or with no close date.
 		AcceloFilter filter = new AcceloFilter();
 		filter.where(new Eq("contract", contract.getId())
-				.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATE1970))));
+				.and(new After("date_closed", dayBefore).or(new Before("date_closed", Expression.DATE1970))));
 
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add("_ALL");

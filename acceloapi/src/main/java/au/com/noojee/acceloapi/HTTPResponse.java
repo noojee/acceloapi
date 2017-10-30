@@ -4,7 +4,6 @@ import java.io.StringReader;
 
 import com.google.gson.Gson;
 
-
 public class HTTPResponse
 {
 	int responseCode;
@@ -26,8 +25,17 @@ public class HTTPResponse
 			entity = gson.fromJson(new StringReader(this.responseBody), clazz);
 		else
 		{
-			AcceloErrorResponse error = gson.fromJson(new StringReader(this.responseBody),
-					AcceloErrorResponse.class);
+			AcceloErrorResponse error;
+			try
+			{
+				error = gson.fromJson(new StringReader(this.responseBody), AcceloErrorResponse.class);
+			}
+			catch (@SuppressWarnings("unused") Exception e)
+			{
+				// response body wasn't json so just create an empty error
+				// object.
+				error = new AcceloErrorResponse();
+			}
 
 			error.setHttpResponse(this);
 			// oops something bad happened.
@@ -41,8 +49,8 @@ public class HTTPResponse
 	@Override
 	public String toString()
 	{
-		return "HttpResponse [responseCode=" + responseCode + ", responseMessage=" + responseMessage
-				+ ", responseBody=" + responseBody + "]";
+		return "HttpResponse [responseCode=" + responseCode + ", responseMessage=" + responseMessage + ", responseBody="
+				+ responseBody + "]";
 	}
 
 }

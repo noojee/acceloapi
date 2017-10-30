@@ -7,7 +7,7 @@ import org.javamoney.moneta.Money;
 public class Contract extends AcceloEntity<Contract> 
 {
 	int id;
-	String company;			// The owning company id.
+	int company;			// The owning company id.
 	String title;
 	long date_created;
 	long date_started;
@@ -18,8 +18,7 @@ public class Contract extends AcceloEntity<Contract>
 	String standing;
 	String auto_renew;
 	String deployment;
-	String against;
-
+	int against_id;
 	String against_type;
 	String manager;
 	String job;
@@ -29,9 +28,10 @@ public class Contract extends AcceloEntity<Contract>
 	String send_invoice;
 	String staff_bookmarked;
 	int type;
-	int against_id;
 	String notes;
 	int period_template_id;
+	int owner_affiliation;
+	int billable_affiliation;
 
 	
 	@Override
@@ -52,13 +52,13 @@ public class Contract extends AcceloEntity<Contract>
 	 */
 	public Money getValue()
 	{
-		return super.asMoney(value);
+		return asMoney(value);
 	}
 	
 	public Money getRemainingValue()
 	{
 		// until we work out how to get this.
-		return super.asMoney(0);
+		return asMoney(0);
 	}
 
 
@@ -74,7 +74,7 @@ public class Contract extends AcceloEntity<Contract>
 
 	public LocalDate getDatePeriodExpires()
 	{
-		return super.toLocalDate(date_period_expires);
+		return toLocalDate(date_period_expires);
 	}
 
 	public LocalDate getDateExpires()
@@ -107,9 +107,14 @@ public class Contract extends AcceloEntity<Contract>
 		return deployment;
 	}
 
-	public String getAgainst()
+	public int getOwnerAffiliation()
 	{
-		return against;
+		return owner_affiliation;
+	}
+
+	public int getBillableAffiliation()
+	{
+		return billable_affiliation;
 	}
 
 	public String getAgainstType()
@@ -178,8 +183,8 @@ public class Contract extends AcceloEntity<Contract>
 		return "Contract [id=" + id + ", company=" + company + ", title=" + title + ", date_created=" + date_created
 				+ ", date_started=" + date_started + ", date_period_expires=" + date_period_expires + ", date_expires="
 				+ date_expires + ", date_last_interacted=" + date_last_interacted + ", renew_days=" + renew_days
-				+ ", standing=" + standing + ", auto_renew=" + auto_renew + ", deployment=" + deployment + ", against="
-				+ against + ", against_type=" + against_type + ", manager=" + manager + ", job=" + job + ", value="
+				+ ", standing=" + standing + ", auto_renew=" + auto_renew + ", deployment=" + deployment + ", owner_affiliation="
+				+ owner_affiliation + ", against_type=" + against_type + ", manager=" + manager + ", job=" + job + ", value="
 				+ value + ", status=" + status + ", billable=" + billable + ", send_invoice=" + send_invoice
 				+ ", staff_bookmarked=" + staff_bookmarked + ", type=" + type + ", against_id=" + against_id
 				+ ", notes=" + notes + ", period_template_id=" + period_template_id + "]";

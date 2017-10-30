@@ -34,7 +34,7 @@ public abstract class AcceloEntity<E> implements Comparable<E>
 	{
 		LocalDate localDate = Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault()).toLocalDate();
 		
-		return (localDate.equals(Expression.DATE1970) ? null : localDate);
+		return (localDate.equals(Expression.DATEZERO) ? null : localDate);
 	}
 
 	public static long toDateAsLong(LocalDate localDate)

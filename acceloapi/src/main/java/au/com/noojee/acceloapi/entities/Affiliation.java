@@ -6,7 +6,7 @@ public class Affiliation extends AcceloEntity<Affiliation>
 {
 	private int id;
 
-	private String company;
+	private int company; // id of the affiliated company
 	private int postal_address; // id of an address
 	private int physical_address; // id of an address
 	private String phone; // phone no.
@@ -31,16 +31,11 @@ public class Affiliation extends AcceloEntity<Affiliation>
 		this.id = id;
 	}
 
-	@Override
-	public String toString()
-	{
-		return "Affiliation [id=" + id + ", company=" + company + ", postal_address=" + postal_address
-				+ ", physical_address=" + physical_address + ", phone=" + phone + ", contact=" + contact + ", mobile="
-				+ mobile + ", email=" + email + ", position=" + position + ", date_last_interacted="
-				+ date_last_interacted + ", date_modified=" + date_modified + ", staff_bookmarked=" + staff_bookmarked
-				+ ", standing=" + standing + "]";
-	}
 
+	public int getCompanyId()
+	{
+		return company;
+	}
 	public void setPhone(String phone)
 	{
 		this.phone = phone;
@@ -56,17 +51,7 @@ public class Affiliation extends AcceloEntity<Affiliation>
 		this.position = position;
 	}
 
-	public String getCompany()
-	{
-		return company;
-	}
-
-	public void setCompany(String company)
-	{
-		this.company = company;
-	}
-
-	public int getPostal_address()
+	public int getPostalAddress()
 	{
 		return postal_address;
 	}
@@ -76,12 +61,12 @@ public class Affiliation extends AcceloEntity<Affiliation>
 		this.postal_address = postal_address;
 	}
 
-	public int getPhysical_address()
+	public int getPhysicalAddress()
 	{
 		return physical_address;
 	}
 
-	public void setPhysical_address(int physical_address)
+	public void setPhysicalAddress(int physical_address)
 	{
 		this.physical_address = physical_address;
 	}
@@ -166,6 +151,19 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	{
 		return this.getDateLastInteracted().compareTo(o.getDateLastInteracted());
 	}
+
+	
+	@Override
+	public String toString()
+	{
+		return "Affiliation [id=" + id + ", company=" + company + ", postal_address=" + postal_address
+				+ ", physical_address=" + physical_address + ", phone=" + phone + ", contact=" + contact + ", mobile="
+				+ mobile + ", email=" + email + ", position=" + position + ", date_last_interacted="
+				+ date_last_interacted + ", date_modified=" + date_modified + ", staff_bookmarked=" + staff_bookmarked
+				+ ", standing=" + standing + "]";
+	}
+
+
 
 
 }

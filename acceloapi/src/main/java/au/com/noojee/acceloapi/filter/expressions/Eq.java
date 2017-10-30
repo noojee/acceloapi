@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import au.com.noojee.acceloapi.AcceloException;
-
 public class Eq extends Expression
 {
 

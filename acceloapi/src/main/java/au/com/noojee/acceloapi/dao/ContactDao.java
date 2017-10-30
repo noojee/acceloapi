@@ -6,6 +6,7 @@ import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.entities.Affiliation;
 import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
@@ -45,6 +46,33 @@ public class ContactDao extends AcceloDao<Contact>
 		return contacts;
 
 	}
+	
+	/**
+	 * Gets the default company the contact is attached to.
+	 * @param contact
+	 * @return
+	 */
+	public Company getDefaultCompany(Contact contact)
+	{
+		Affiliation affiliation = new AffiliationDao().getById(contact.getDefaultAffiliation());
+		
+		return new CompanyDao().getById(affiliation.getCompanyId());
+	}
+
+
+	
+	/**
+	 * Get the list of contacts attached to this company
+	 * @param id
+	 */
+	public List<Contact> getByCompany(int companyId)
+	{
+		AcceloFilter filter = new AcceloFilter();
+		filter.where(new Eq("company", companyId));
+		
+		return super.getByFilter(filter);
+	}
+
 
 	public class ResponseList extends AcceloResponseList<Contact>
 	{
@@ -62,4 +90,5 @@ public class ContactDao extends AcceloDao<Contact>
 		return EndPoint.contacts;
 	}
 
+	
 }

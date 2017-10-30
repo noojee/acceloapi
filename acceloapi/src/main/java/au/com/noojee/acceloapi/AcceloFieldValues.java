@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.gson.Gson;
+
 public class AcceloFieldValues
 {
 	Map<String, String> fields = new HashMap<>();
@@ -42,8 +44,14 @@ public class AcceloFieldValues
 	 */
 	public String formatAsJson()
 	{
-		String jsonFieldValues = "";
-
+		Fields jsonFields = new Fields(fields);
+		String json = new Gson().toJson(jsonFields);
+		
+		return json.substring(1, json.length()-2);
+		
+		/*
+		
+		
 		for (String name : this.keys())
 		{
 			if (jsonFieldValues.length() > 0)
@@ -53,8 +61,25 @@ public class AcceloFieldValues
 		}
 
 		return "\"_fields:\" {" + jsonFieldValues + "}";
+		*/
 
 	}
+	
+	
+	static class Fields
+	{
+		Map<String, String>  _fields;
+		
+		public Fields()
+		{
+			
+		}
+			Fields(Map<String, String> fields)
+			{
+				this._fields = fields;
+			}
+	}
+
 	
 	/*
 
