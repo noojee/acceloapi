@@ -96,6 +96,36 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		}
 		return entity;
 	}
+	
+	/**
+	 * This will return 'ALL" entities associated with the end point.
+	 * - USE WITH CARE!!!
+	 * @param endpoint
+	 * @param id
+	 * @param fields
+	 * @return
+	 * @throws AcceloException
+	 */
+	@SuppressWarnings("unchecked")
+	public List<E> getAll() throws AcceloException
+	{
+		List<E> entities = new ArrayList<>();
+		
+		AcceloFieldList fields = new AcceloFieldList();
+		fields.add(AcceloFieldList._ALL);
+
+		// pass in an empty filter
+		AcceloFilter filter = new AcceloFilter();
+
+
+		CacheKey<E> key = new CacheKey<>(getEndPoint(), filter, fields, getResponseListClass());
+		
+		entities = (List<E>) AcceloCache.getInstance().get(key);
+
+		return entities;
+	}
+
+
 
 	/**
 	 * Uses introspection to collect the set of fields that need to be sent to
