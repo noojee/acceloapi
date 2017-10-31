@@ -15,6 +15,13 @@ public class AcceloFilter
 
 	private boolean refreshCache = false;
 
+	/**
+	 * Limits the no. of rows returned during a query.
+	 * 
+	 * We default to 50 (a single page) unless the caller explicitly over-rides the default.
+	 */
+	private int limit = 50;
+
 	public void where(Search search) throws AcceloException
 	{
 		if (expression != null)
@@ -31,23 +38,21 @@ public class AcceloFilter
 
 		this.expression = expression;
 	}
-	
-	public AcceloFilter and(Expression child) //throws AcceloException
+
+	public AcceloFilter and(Expression child) // throws AcceloException
 	{
-		this.expression =  new And(this.expression, child);
-		
+		this.expression = new And(this.expression, child);
+
 		return this;
 	}
-	
-	
-	public AcceloFilter or(Expression child) 
+
+	public AcceloFilter or(Expression child)
 	{
-		this.expression =  new Or(this.expression, child);
-		
+		this.expression = new Or(this.expression, child);
+
 		return this;
 	}
-	
-	
+
 	/**
 	 * Use this method to invalid any cache data associated with this filter.
 	 * This will force the system to re-fetch the data from the accelo servers.
@@ -56,18 +61,17 @@ public class AcceloFilter
 	{
 		this.refreshCache = true;
 	}
-	
+
 	public boolean isRefreshCache()
 	{
 		return refreshCache;
 	}
 
-	
-	
 	/**
 	 * Returns the accelo json expression for this filter.
 	 * 
-	 * "_filters": { "_OR" : { "email": "pepper@test.com", "email" : "salt@test.com" } }
+	 * "_filters": { "_OR" : { "email": "pepper@test.com", "email" :
+	 * "salt@test.com" } }
 	 * 
 	 * @param filterMap
 	 * @return
@@ -99,7 +103,7 @@ public class AcceloFilter
 	public String toString()
 	{
 		return toJson().replaceAll("\n", " ");
-	} 
+	}
 
 	@Override
 	public int hashCode()
@@ -140,21 +144,31 @@ public class AcceloFilter
 
 	/**
 	 * Returns true if the filter is for a simple id match.
+	 * 
 	 * @return
 	 */
 	public boolean isIDFilter()
 	{
 		boolean isIDFilter = false;
-		
+
 		if (expression != null && expression instanceof Eq)
 		{
-			Eq simple = (Eq)expression;
+			Eq simple = (Eq) expression;
 			if (simple.isFieldName("id"))
 				isIDFilter = true;
 		}
-			
+
 		return isIDFilter;
 	}
 
+	public void limit(int limit)
+	{
+		this.limit = limit;
+	}
+
+	public int getLimit()
+	{
+		return this.limit;
+	}
 
 }
