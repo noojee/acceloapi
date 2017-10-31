@@ -111,6 +111,7 @@ public class AcceloFilter
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((expression == null) ? 0 : expression.hashCode());
+		result = prime * result + limit;
 		result = prime * result + ((search == null) ? 0 : search.hashCode());
 		return result;
 	}
@@ -131,6 +132,8 @@ public class AcceloFilter
 				return false;
 		}
 		else if (!expression.equals(other.expression))
+			return false;
+		if (limit != other.limit)
 			return false;
 		if (search == null)
 		{
