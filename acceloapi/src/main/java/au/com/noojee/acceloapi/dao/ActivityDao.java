@@ -76,4 +76,5 @@ public class ActivityDao extends AcceloDao<Activity>
 		return EndPoint.activities;
 	}
 
+
 }

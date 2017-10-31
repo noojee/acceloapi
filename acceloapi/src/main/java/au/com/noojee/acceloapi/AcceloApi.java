@@ -43,7 +43,7 @@ public class AcceloApi
 	
 	public enum HTTPMethod
 	{
-		GET, POST, PUT
+		GET, POST, PUT, DELETE
 	}
 
 	static synchronized public AcceloApi getInstance()
@@ -102,7 +102,7 @@ public class AcceloApi
 		List<E> entities = new ArrayList<>();
 		boolean more = true;
 		int page = 0;
-		while (more)
+		while (more && entities.size() < filterMap.getLimit())
 		{
 			L responseList = get(url, filterMap, fieldList, responseClass, page);
 
@@ -298,6 +298,27 @@ public class AcceloApi
 		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, fields);
 
 		return response.parseBody(clazz);
+	}
+	
+	public void delete(EndPoint endPoint, int id) 
+	{
+		URL completeUrl = buildURL(endPoint, id); 
+		logger.error("Deleting: url=" + completeUrl);
+		_request(HTTPMethod.DELETE, completeUrl, null);
+	}
+
+
+	private URL buildURL(EndPoint endPoint, int id)
+	{
+		try
+		{
+			return new URL(endPoint.getURL(id).toExternalForm());
+		}
+		catch (MalformedURLException e)
+		{
+			// should never happen
+			throw new AcceloException(e);
+		}
 	}
 
 	/**
@@ -544,6 +565,7 @@ public class AcceloApi
 
 		return out;
 	}
+
 
 
 

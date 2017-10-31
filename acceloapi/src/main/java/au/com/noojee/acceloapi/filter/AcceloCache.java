@@ -192,5 +192,31 @@ public class AcceloCache implements RemovalListener<CacheKey, List>
 		this.missCounter = 0;
 	}
 
+	/*
+	 * 	 Note this won't help if the entity was loaded via a query.
+	 */
+	public void flushEntities(List<? extends AcceloEntity> entities)
+	{
+		entities.stream().forEach(e -> queryCache.invalidate(e.getId()));
+	}
+
+	/**
+	 * Note this won't help if the entity was loaded via a query.
+	 * @param entity
+	 */
+	public void flushEntity(AcceloEntity entity)
+	{
+		queryCache.invalidate(entity.getId());
+		
+	}
+	
+	public void flushQuery(CacheKey key)
+	{
+		queryCache.invalidate(key);
+	}
+
+	
+	
+
 
 }

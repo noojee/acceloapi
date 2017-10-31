@@ -172,5 +172,12 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		}
 
 	}
+	
+	
+	public void delete(AcceloEntity<E> entity)
+	{
+		AcceloApi.getInstance().delete(getEndPoint(), entity.getId());
+	}
+
 
 }

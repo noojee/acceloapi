@@ -25,7 +25,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private String against;
 	private int against_id;
 	private String against_type;
-	private int company; // If against_type is company, the company the issue is
+	private int company; // If against_type is company, then this holds the id of the company the ticket is
 							// against.
 	private String priority;
 	private int classId;
@@ -76,6 +76,11 @@ public class Ticket extends AcceloEntity<Ticket>
 	public int getId()
 	{
 		return id;
+	}
+	
+	public int getCompanyId()
+	{
+		return company;
 	}
 
 	public String getTitle()
@@ -198,10 +203,6 @@ public class Ticket extends AcceloEntity<Ticket>
 		return resolved_by;
 	}
 
-	public int getCompanyName()
-	{
-		return company;
-	}
 
 	public String getObjectBudget()
 	{
