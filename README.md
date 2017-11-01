@@ -3,7 +3,13 @@
 
 As the name says, this is an Java API that makes it easier to talk to the Accelo REST API.
 
-You can access the full java docs at: https://bsutton.github.io/acceloapi/index.html
+You can see the documentation for the Accelo REST API here:
+
+https://api.accelo.com/docs/?_ga=2.216987606.191295230.1509320720-1689776969.1496361497
+
+You can access the full java for the Noojee Accelo API here:
+
+https://bsutton.github.io/acceloapi/index.html
 
 The java api provides a simply to use interface to the Accelo REST API.
 
@@ -61,6 +67,40 @@ You can control the no. of entities that are returned by using the limit clause.
 
 Be a good citizen and think before you increase the filter limit.
 
+### understanding DAO
+
+The Noojee Accelo API loosely uses the  Data Access Objects (DAO) programming pattern (my appologies to the Java gods for my mis-use).
+
+For each entity (Ticket, Company, Contact etc) there is a Dao class and an Entity class.
+
+For example:
+	
+	TicketDao
+	Ticket
+	
+To access a ticket you must go through the TicketDao class. All high level business logic for tickets is also contained in the TicketDao class.
+Its worth exploring each of the Daos as the tend to have a collection of useful funtions like:
+	Duration billable = new TicketDao.getBillable();
+	Duration billable = new TicketDao.getNonBillable();
+	
+### Standard Dao methods
+
+Each Dao class supports a standard set of common funtions.
+
+	new TicketDao().getById(ticket_id);
+	new TicketDao().getByFilter(filter);
+	new TicketDao().getAll(); // use with care!!!
+	new TicketDao().update(ticket);
+	new TicketDao().delete(ticket);
+		
+	
+### Missing entities
+
+At this point the API is not complete in that it does support all Accelo entities.
+You can however fairly easily extend the Noojee Accelo Api to support new entities.
+
+To add support for a new Entity you need to create a Dao class (e.g. ContributorDao) and an entity class (Contributor). S
+Copy one of the existing entities and dao classes to get started. The primary piece of work is populating the Entity class with a full set of fields returned from the Accelo REST API.
 ### Examples:
 
 Initialise the Accelo Api
