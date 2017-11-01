@@ -130,7 +130,7 @@ Once connected you are now ready to start making queries to the Accelo REST Api.
 
     Contract contract = new ContractDao().getActiveContract(company);
 
-#### Get a list of contratc periods for the retainer.
+#### Get a list of contract periods for the retainer.
 
     List<ContractPeriod> periods = new ContractPeriodDao().getContractPeriods(contract);
 
@@ -172,7 +172,7 @@ You will use getByFilter most of the time.
 	filter.where(new Eq("email", staffEmailAddress));
 	List<Staff> = new StaffDao().getByFilter(filter);
 
-Get a staff member by id
+#### Get a staff member by id
 
 	AcceloFilter filter = new AcceloFilter();
 	filter.where(new Eq("id", staff_id));
