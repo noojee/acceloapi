@@ -1,56 +1,58 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.entities.meta.AcceloField;
-import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
-import au.com.noojee.acceloapi.entities.meta.MetaSearchFields;
+import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
 
 public class Contact extends AcceloEntity<Contact>
 {
 	public static final String FIELDS_ALL = "contact._ALL";
 
-	@AcceloField
+	@BasicFilterField
 	private int id;
-	@AcceloField(Type.SEARCH)
+	@SearchFilterField
 	private String firstname;
 	private String middlename;
-	@AcceloField(Type.SEARCH)
+	@SearchFilterField
 	private String surname;
 	private String preferred_name;
-	@AcceloField
+	@BasicFilterField
 	private String username;
 	private String password;
-	@AcceloField
+	@BasicFilterField
 	private String title;
 	private String salutation;
 	private String comments;
-	@AcceloField
+	@BasicFilterField
 	private int status;
-	@AcceloField
+	@BasicFilterField
 	private String standing;
 	private int country_id;
 	private int physical_address_id;
 	private int postal_address_id;
 	private String phone;
 	private String fax;
-	@AcceloField(Type.BOTH)
+	@BasicFilterField
+	@SearchFilterField
 	private String email;
 	private int default_affiliation; // id of the contacts affiliation. Will normally be the company they are primarily associated with.
 	private String communication;
 	private String invoice_method;
 	
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private int date_created;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private int date_modified;
 
 	
 	@SuppressWarnings("unused")
-	private class Meta implements MetaSearchFields
+	private class Meta implements MetaBasicFilterFields
 	{
-		@AcceloField
+		@BasicFilterField
 		private transient String affiliation; // matches on the default_affiliation.
 		
-		@AcceloField
+		@BasicFilterField
 		private transient String contact_number;  // filters over phone, fax and mobile
 
 	}

@@ -1,7 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.entities.meta.AcceloField;
-import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
+import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
 
 public class AccountDetails
 {
@@ -23,7 +23,8 @@ public class AccountDetails
 
     private String username;
 
-	@AcceloField(Type.BOTH)
+	@BasicFilterField
+	@SearchFilterField
     private String title;
 
     private UserDefinedTitles user_defined_titles;

@@ -3,45 +3,45 @@ package au.com.noojee.acceloapi.entities;
 import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.Formatters;
-import au.com.noojee.acceloapi.entities.meta.AcceloField;
-import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
+import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.DateFilterField;
 
 public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {
-	@AcceloField
+	@BasicFilterField
 	int id;
-	@AcceloField(name="contract")
+	@BasicFilterField(name="contract")
 	int contract_id;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	long date_created;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	long date_commenced;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	long date_closed;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	long date_expires;
 
-	@AcceloField
+	@BasicFilterField
 	String budget_type; // pre-paid
-	@AcceloField
+	@BasicFilterField
 	String duration_type; // fixed
-	@AcceloField
+	@BasicFilterField
 	float contract_budget;
-	@AcceloField
+	@BasicFilterField
 	String rollover; // yes no
-	@AcceloField
+	@BasicFilterField
 	String standing; // open
 	
-	@AcceloField(name="rate")
+	@BasicFilterField(name="rate")
 	int rate_id; // -1
 	
-	@AcceloField
+	@BasicFilterField
 	String rate_type; // object
 	
-	@AcceloField
+	@BasicFilterField
 	String allowance_type; // fixed_value
 	
-	@AcceloField(name="service_item")
+	@BasicFilterField(name="service_item")
 	int service_item_id;
 	
 	

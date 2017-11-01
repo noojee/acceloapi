@@ -9,10 +9,12 @@ import au.com.noojee.acceloapi.entities.meta.FilterField;
 import au.com.noojee.acceloapi.filter.expressions.After;
 import au.com.noojee.acceloapi.filter.expressions.AfterOrEq;
 import au.com.noojee.acceloapi.filter.expressions.Against;
+import au.com.noojee.acceloapi.filter.expressions.And;
 import au.com.noojee.acceloapi.filter.expressions.Before;
 import au.com.noojee.acceloapi.filter.expressions.Empty;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
+import au.com.noojee.acceloapi.filter.expressions.Or;
 import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class AcceloFilter<E extends AcceloEntity<E>>

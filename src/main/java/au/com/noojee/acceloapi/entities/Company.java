@@ -12,56 +12,54 @@ import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.CustomField;
 import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.entities.meta.AcceloField;
-import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
-import au.com.noojee.acceloapi.entities.meta.MetaSearchFields;
+import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
 
 public class Company extends AcceloEntity<Company>
 {
 	public static final String FIELDS_ALL = "company._ALL";
 
-	@AcceloField
+	@BasicFilterField
 	private int id;
 	
-	@AcceloField(Type.SEARCH)
+	@SearchFilterField
 	private String name;
 	
-	@AcceloField(Type.SEARCH)
+	@SearchFilterField
 	private String website;
-	@AcceloField
+	@BasicFilterField
 	private String standing;
 	
-	@AcceloField
+	@BasicFilterField
 	private int status; 
 	
-	@AcceloField(Type.SEARCH)
+	@SearchFilterField
 	private String phone;
 	
-	@AcceloField(Type.SEARCH)
+	@SearchFilterField
 	private String fax;
-	@AcceloField
+	@BasicFilterField
 	private int postal_address;
 	
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private int date_created;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private int date_modified;
 	private String comments;
-	@AcceloField
+	@BasicFilterField
 	private int default_affiliation;
 	private Contact contact;
 	private List<CustomField> customFields = new ArrayList<>();
 	
 	@SuppressWarnings("unused")
-	private class Meta implements MetaSearchFields
+	private class Meta implements MetaBasicFilterFields
 	{
-		@AcceloField
-		private transient String status;
-		
-		@AcceloField
+		@BasicFilterField
 		private transient int manager_id;
 		
-		@AcceloField
+		@BasicFilterField
 		private transient String contact_number;  // filters over phone and fax
 
 	}

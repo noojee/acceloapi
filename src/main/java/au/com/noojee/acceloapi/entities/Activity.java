@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 import org.javamoney.moneta.Money;
 
 import au.com.noojee.acceloapi.Formatters;
-import au.com.noojee.acceloapi.entities.meta.AcceloField;
-import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
+import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.DateFilterField;
 
 public class Activity extends AcceloEntity<Activity>
 {
@@ -44,12 +44,12 @@ public class Activity extends AcceloEntity<Activity>
 		}
 	};
 
-	@AcceloField
+	@BasicFilterField
 	private int id;
 	private String subject;
 	private String parent;
 	
-	@AcceloField
+	@BasicFilterField
 	private String parent_id;
 
 	private String thread;
@@ -60,18 +60,18 @@ public class Activity extends AcceloEntity<Activity>
 	
 	private int against_id;
 
-	@AcceloField
+	@BasicFilterField
 	private int owner_id;
 	
-	@AcceloField
+	@BasicFilterField
 	private String owner_type;
 
-	@AcceloField
+	@BasicFilterField
 	private Medium medium;
 	
 	private String body;
 	
-	@AcceloField
+	@BasicFilterField
 	private Visibility visiblity;
 
 	private String details; // For meetings this is the location, for postals this is the address and for calls this is the number.
@@ -80,34 +80,34 @@ public class Activity extends AcceloEntity<Activity>
 	private int invoice_id;
 	private int contract_period_id;
 
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_created;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_started;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_ended;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_logged;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_modified;
 
 	private int billable; // amount of billable time logged for the activity in
 							// seconds.
 	private int nonbillable; // amount of non-billable seconds.
 
-	@AcceloField
+	@BasicFilterField
 	private int staff;
 	
-	@AcceloField
+	@BasicFilterField
 	private int priority;
 	
-	@AcceloField
+	@BasicFilterField
 	private int _class;
 	
-	@AcceloField
+	@BasicFilterField
 	private int task;
 
-	@AcceloField
+	@BasicFilterField
 	private int time_allocation; // The time allocation for the activity.
 	private int rate; // id of the rate object
 	private int rate_charged; // The rate at which the billable time was charged.

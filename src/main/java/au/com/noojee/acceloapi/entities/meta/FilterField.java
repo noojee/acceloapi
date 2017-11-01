@@ -37,6 +37,7 @@ public class FilterField<E extends AcceloEntity<E>, T>
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
+		@SuppressWarnings("unchecked")
 		FilterField<E, T> other = (FilterField<E, T>) obj;
 		if (fieldName == null)
 		{

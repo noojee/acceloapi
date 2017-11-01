@@ -2,48 +2,49 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.entities.meta.AcceloField;
-import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
-import au.com.noojee.acceloapi.entities.meta.MetaSearchFields;
+import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
 
 public class Affiliation extends AcceloEntity<Affiliation>
 {
-	@AcceloField
+	@BasicFilterField
 	private int id;
 
-	@AcceloField
+	@BasicFilterField
 	private int company; // id of the affiliated company
 	
-	@AcceloField
+	@BasicFilterField
 	private int postal_address; // id of an address
 	
-	@AcceloField
+	@BasicFilterField
 	private int physical_address; // id of an address
 	
 	
-	@AcceloField
+	@BasicFilterField
 	private int contact; // contact id
 
 
-	@AcceloField(Type.SEARCH)
+	@SearchFilterField
 	private String phone; // phone no.
 
-	@AcceloField(Type.SEARCH)
+	@SearchFilterField
 	private String mobile; // mobile no.
 	
-	@AcceloField(Type.SEARCH)
+	@SearchFilterField
 	private String email; // email address
 	
 	private String position; // ??
 	
 	private long date_last_interacted; // unix time
 	
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_modified; // unix time
 	
 	private int staff_bookmarked;
 	
-	@AcceloField
+	@BasicFilterField
 	private String standing;
 
 	/**
@@ -51,18 +52,18 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	 * @author bsutton
 	 *
 	 */
-	class Meta implements MetaSearchFields
+	class Meta implements MetaBasicFilterFields
 	{
-		@AcceloField
-		private transient int contact_number; 
+		@BasicFilterField
+		private transient String contact_number; 
 		
-		@AcceloField(Type.SEARCH)
+		@SearchFilterField
 		private transient String firstname;
 		
-		@AcceloField(Type.SEARCH)
+		@SearchFilterField
 		private transient String surname;
 		
-		@AcceloField
+		@BasicFilterField
 		private transient String status;
 	}
 

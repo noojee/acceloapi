@@ -12,7 +12,6 @@ import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 import au.com.noojee.acceloapi.entities.meta.Contact_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class ContactDao extends AcceloDao<Contact>

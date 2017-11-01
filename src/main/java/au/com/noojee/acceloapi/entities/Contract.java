@@ -4,48 +4,48 @@ import java.time.LocalDate;
 
 import org.javamoney.moneta.Money;
 
-import au.com.noojee.acceloapi.entities.meta.AcceloField;
-import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
+import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.DateFilterField;
 
 public class Contract extends AcceloEntity<Contract> 
 {
-	@AcceloField
+	@BasicFilterField
 	private int id;
 	private int company;			// The owning company id.
 	private String title;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_created;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_started;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_period_expires;
-	@AcceloField(Type.DATE)
+	@DateFilterField
 	private long date_expires;
 	private long date_last_interacted;
 	private int renew_days;
-	@AcceloField
+	@BasicFilterField
 	private String standing;
-	@AcceloField
+	@BasicFilterField
 	private String auto_renew;
 	private String deployment;
 	private int against_id;
 	private String against_type;
-	@AcceloField
+	@BasicFilterField
 	private int manager;  // the staff id of the staff member that manages this contract.
 	private String job;
 	private double value;
-	@AcceloField
+	@BasicFilterField
 	private String status;
 	private int billable;
 	private String send_invoice;
 	private String staff_bookmarked;
-	@AcceloField
+	@BasicFilterField
 	private int type;
 	private String notes;
 	private int period_template_id;
-	@AcceloField
+	@BasicFilterField
 	private int owner_affiliation;
-	@AcceloField
+	@BasicFilterField
 	private int billable_affiliation;
 	
 	@Override

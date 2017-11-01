@@ -29,7 +29,7 @@ public class AffiliationDao extends AcceloDao<Affiliation>
 	public List<Affiliation> getAffilicationsByPhone(String phone) throws AcceloException
 	{
 		AcceloFilter<Affiliation> filter = new AcceloFilter<>();
-		filter.where(filter.eq(Affiliation_.phone, phone));
+		filter.where(filter.eq(Affiliation_.contact_number, phone));
 		List<Affiliation> affiliations = getByFilter(filter);
 
 		return affiliations;

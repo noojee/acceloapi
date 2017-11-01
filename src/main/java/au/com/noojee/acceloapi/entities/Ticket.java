@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import au.com.noojee.acceloapi.entities.meta.AcceloField;
-import au.com.noojee.acceloapi.entities.meta.MetaSearchFields;
+import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class Ticket extends AcceloEntity<Ticket>
@@ -18,76 +19,76 @@ public class Ticket extends AcceloEntity<Ticket>
 	static public String PRIORITY_CRITICAL = "1";
 
 	@SuppressWarnings("unused")
-	private class Meta implements MetaSearchFields
+	private class Meta implements MetaBasicFilterFields
 	{
-		@AcceloField
+		@BasicFilterField
 		private transient String contact_number;  // filters over phone, fax and mobile
 
 	}
 
-	@AcceloField
+	@BasicFilterField
 	private int id;
 	private String title;
-	@AcceloField
+	@BasicFilterField
 	private String custom_id;
 	private String description;
-	@AcceloField
+	@BasicFilterField
 	private int issue_type;
 	
-	@AcceloField
+	@BasicFilterField
 	private int affiliation; // The affiliated with this ticket which links
 								// through to the contact
 	private int against_id;
 	private String against_type;
 	private int company; // If against_type is company, then this holds the id of the company the ticket is
 							// against.
-	@AcceloField
+	@BasicFilterField
 	private String priority;
-	@AcceloField(name="class")
+	@BasicFilterField(name="class")
 	private int class_id; // note this currently doesn't work as the real field name is 'class' need to create a json mapper.
 	
-	@AcceloField
+	@BasicFilterField
 	private int resolution;
-	@AcceloField
+	@BasicFilterField
 	private Status status; // Breaks our rules of using Ids but there is no
 							// other way to get the status.
 	
-	@AcceloField
+	@BasicFilterField
 	private String referrer_type;
-	@AcceloField
+	@BasicFilterField
 	private int referrer_id;
 	
-	@AcceloField
+	@BasicFilterField
 	private String standing;
-	@AcceloField
+	@BasicFilterField
 	private int submitted_by;
 	
-	@AcceloField(AcceloField.Type.DATE)
+	@DateFilterField
 	private long date_submitted;
-	@AcceloField(AcceloField.Type.DATE)
+	@DateFilterField
 	private long date_opened;
 	
 	private long date_resolved;
-	@AcceloField(AcceloField.Type.DATE)
+	@DateFilterField
 	private long date_closed;
-	@AcceloField(AcceloField.Type.DATE)
+	@DateFilterField
 	private long date_started;
-	@AcceloField(AcceloField.Type.DATE)
+	@DateFilterField
 	private long date_due;
-	@AcceloField
+	@BasicFilterField
 	private int opened_by;			// staff member
-	@AcceloField
+	@BasicFilterField
 	private int closed_by;			// staff member
-	@AcceloField
+	@BasicFilterField
 	private int resolved_by;		// staff member
 	private String object_budget;
-	@AcceloField
+	@BasicFilterField
 	private int  assignee;			// staff member
 	private int billable_seconds;
 	private long date_last_interacted;
 	private ArrayList<String> breadcrumbs;
 	
-	@AcceloField
+	@BasicFilterField
 	private int contract; // the contract id or 0 if this ticket is unassigned.
 	private String resolution_detail;
 

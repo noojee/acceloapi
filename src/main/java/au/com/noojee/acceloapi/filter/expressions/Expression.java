@@ -3,9 +3,6 @@ package au.com.noojee.acceloapi.filter.expressions;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-import au.com.noojee.acceloapi.filter.And;
-import au.com.noojee.acceloapi.filter.Or;
-
 public abstract class Expression
 {
 	static public LocalDate DATE1970 = LocalDate.of(1970, 1, 1);

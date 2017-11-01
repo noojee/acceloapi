@@ -1,6 +1,4 @@
-package au.com.noojee.acceloapi.filter;
-
-import au.com.noojee.acceloapi.filter.expressions.Expression;
+package au.com.noojee.acceloapi.filter.expressions;
 
 public class Not extends Expression
 {
