@@ -26,6 +26,7 @@ public class Contact_
 	public static FilterField<Contact, String> standing = new FilterField<>("standing"); 
 	public static FilterField<Contact, String> username = new FilterField<>("username"); 
 	public static FilterField<Contact, Integer> status = new FilterField<>("status"); 
-	public static FilterField<Contact, LocalDate> date_created = new FilterField<>("date_created"); 
+	public static FilterField<Contact, LocalDate> date_created = new FilterField<>("date_created");
+	public static FilterField<Contact, String> contact_number; 
 
 }
