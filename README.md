@@ -20,45 +20,6 @@ The following gets all of the tickets for a contract which are open or were clos
 		.and(new After("date_closed", lastMonth).or(new Eq("date_closed", Expression.DATEZERO))));
 	List<Ticket> tickets = new TicketDao().getByFilter(filter);
 
-Fetching data from the Accelo servers is rather slow so the library is heavily cached.
-By default the cache holds 10,000 queries which expire after 10 minutes.
-
-The Api automatically caches the results of each query (filter) so that if you run the same query again, the results will come back from the cache.
-
-When you run a query the individual entities are also added to the cache using their id as a key. Subsequent calls using the entities id will retrieve the results from the cache. 	
-
-### Cache Example
-
-Fetch all tickets for the given company:
-
-	Company company = new CompanyDao().getByName("Noojee Contact Solutions");
-	filter.where(new Eq("company", company.getId())
-		.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATEZERO))));
-	List<Ticket> tickets = new TicketDao().getByFilter(filter);
-
-All tickets returned are now cached.
-
-if we run the same query
-	List<Ticket> tickets = new TicketDao().getByFilter(filter);
-
-Then there will be no api calls to the accelo server.
-We can also get the individual ticket by id and again this will be returned from the cache:
-
-	Ticket ticketFromPriorQuery = tickets.get(0);
-	Ticket ticket = new TicketDao().getById(ticketFromPriorQuery.getId());
-
-### Bypass the cache
-Sometimes you need to bypass the cache to get the latest version from Accelo.
-To do this you need to use a filter and set it to refresh the cache by adding a call to 'refreshCache()'.
-
-	filter.where(new Eq("contract", contract.getId())
-		.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATEZERO))))
-		.refreshCache();
-
-The following query will now flush the cache (just for this query) and refetch the data from the accelo server.
-
-	List<Ticket> tickets = new TicketDao().getByFilter(filter);
-
 ### limiting results
 To protect the accelo servers from being overloaded, the filters by default are limited to returning 50 entities.
 You can control the no. of entities that are returned by using the limit clause.
@@ -103,7 +64,46 @@ To add support for a new Entity you need to create a Dao class (e.g. Contributor
 Copy one of the existing entities and dao classes to get started. The primary piece of work is populating the Entity class with a full set of fields returned from the Accelo REST API.
 ### Examples:
 
-Initialise the Accelo Api
+Fetching data from the Accelo servers is rather slow so the library is heavily cached.
+By default the cache holds 10,000 queries which expire after 10 minutes.
+
+The Api automatically caches the results of each query (filter) so that if you run the same query again, the results will come back from the cache.
+
+When you run a query the individual entities are also added to the cache using their id as a key. Subsequent calls using the entities id will retrieve the results from the cache. 	
+
+### Cache Example
+
+Fetch all tickets for the given company:
+
+	Company company = new CompanyDao().getByName("Noojee Contact Solutions");
+	filter.where(new Eq("company", company.getId())
+		.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATEZERO))));
+	List<Ticket> tickets = new TicketDao().getByFilter(filter);
+
+All tickets returned are now cached.
+
+if we run the same query
+	List<Ticket> tickets = new TicketDao().getByFilter(filter);
+
+Then there will be no api calls to the accelo server.
+We can also get the individual ticket by id and again this will be returned from the cache:
+
+	Ticket ticketFromPriorQuery = tickets.get(0);
+	Ticket ticket = new TicketDao().getById(ticketFromPriorQuery.getId());
+
+### Bypass the cache
+Sometimes you need to bypass the cache to get the latest version from Accelo.
+To do this you need to use a filter and set it to refresh the cache by adding a call to 'refreshCache()'.
+
+	filter.where(new Eq("contract", contract.getId())
+		.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATEZERO))))
+		.refreshCache();
+
+The following query will now flush the cache (just for this query) and refetch the data from the accelo server.
+
+	List<Ticket> tickets = new TicketDao().getByFilter(filter);
+
+# Initialise the Accelo Api
 
 You need to create a json file which contains the Accelo REST API auth details. The json file must be on the class path and be called:
 
@@ -118,6 +118,8 @@ The file must be formatted as:
 	{"fqdn":"yourdomain.api.accelo.com", "client_id":"your acccelo client id", "client_secret":"your accelo client secret"}
 
 	AcceloApi.getInstance().connect(AcceloSecret.load());
+	
+Once connected you are now ready to start making queries to the Accelo REST Api.
 
 #### Get a company by name
 
