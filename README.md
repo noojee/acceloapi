@@ -16,8 +16,8 @@ The java api provides a simply to use interface to the Accelo REST API.
 The following gets all of the tickets for a contract which are open or were closed after the start of last month.
 	
 	LocalDate lastMonth = now.minusMonths(1).withDayOfMonth(1);
-	filter.where(new Eq("contract", contract.getId())
-		.and(new After("date_closed", lastMonth).or(new Eq("date_closed", Expression.DATEZERO))));
+	filter.where(filter.eq(Ticket_.contract, contract.getId())
+		.and(filter.after(Ticket_.date_closed, lastMonth).or(filter.eq(Ticket_.date_closed, Expression.DATEZERO))));
 	List<Ticket> tickets = new TicketDao().getByFilter(filter);
 
 ### limiting results
@@ -76,8 +76,8 @@ When you run a query the individual entities are also added to the cache using t
 Fetch all tickets for the given company:
 
 	Company company = new CompanyDao().getByName("Noojee Contact Solutions");
-	filter.where(new Eq("company", company.getId())
-		.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATEZERO))));
+	filter.where(filter.against(Ticket_.company, company.getId())
+		.and(filter.after(Ticket_.date_closed, dayBefore).or(filter.eq(Ticket_.date_closed, Expression.DATEZERO))));
 	List<Ticket> tickets = new TicketDao().getByFilter(filter);
 
 All tickets returned are now cached.
@@ -95,8 +95,8 @@ We can also get the individual ticket by id and again this will be returned from
 Sometimes you need to bypass the cache to get the latest version from Accelo.
 To do this you need to use a filter and set it to refresh the cache by adding a call to 'refreshCache()'.
 
-	filter.where(new Eq("contract", contract.getId())
-		.and(new After("date_closed", dayBefore).or(new Eq("date_closed", Expression.DATEZERO))))
+	filter.where(filter.against(AgainstType_.contract, contract.getId())
+		.and(filter.after(Ticket.date_closed, dayBefore).or(filter.eq(Ticket_.date_closed, Expression.DATEZERO))))
 		.refreshCache();
 
 The following query will now flush the cache (just for this query) and refetch the data from the accelo server.
@@ -158,8 +158,8 @@ The Noojee Accelo API frees you up from dealing with json instead using a fluent
 
 #### Create a fitler to match on a Staff email address:
 
-	AcceloFilter filter = new AcceloFilter();
-	filter.where(new Eq("email", staffEmailAddress));
+	AcceloFilter<Staff> filter = new AcceloFilter<>();
+	filter.where(filter.eq(Staff_.email, staffEmailAddress));
 
 All filters start with a call to '.where' which then has a series of nested expresssions.
 The expression can be combined using '.and' and '.or' methods with any level of nesting.
@@ -168,14 +168,14 @@ Once you have built a filter you pass the filter to the Dao class that handles t
 
 You will use getByFilter most of the time.
 
-	AcceloFilter filter = new AcceloFilter();
-	filter.where(new Eq("email", staffEmailAddress));
+	AcceloFilter<Staff> filter = new AcceloFilter<>();
+	filter.where(filter.eq(Staff_.email, staffEmailAddress));
 	List<Staff> = new StaffDao().getByFilter(filter);
 
 #### Get a staff member by id
 
-	AcceloFilter filter = new AcceloFilter();
-	filter.where(new Eq("id", staff_id));
+	AcceloFilter<Staff> filter = new AcceloFilter<>();
+	filter.where(filter.eq(Staff_.id, staff_id));
 	List<Staff> = new StaffDao().getByFilter(filter);
 	
 of course in this simple case you should use the built in getById method that all Dao classes support.
@@ -191,7 +191,7 @@ can't be used in a normal filter.
 
 Use the accelo 'search' filter get a company by name:
 
-	AcceloFilter filter = new AcceloFilter();
+	AcceloFilter<Company> filter = new AcceloFilter<>();
 	filter.where(new Search(companyName));
 	List<Company> = new CompanyDao().getByFilter(filter);
 	
@@ -199,32 +199,32 @@ Search filters can't be combined with other expressions such as .and .or Eq etc.
 
 #### Filter using Against
 
-Accelos processing of the 'Against' field is just weird, so we have a special expression type called 'Against' to handle these.
+Accelo's processing of the 'Against' field is just weird, so we have a special expression type called 'Against' to handle these.
 
 Filter using Against expression field with a type of company and an company id.
 
-	AcceloFilter filters = new AcceloFilter();
-	filters.where(new Against("company", company.getId()));
+	AcceloFilter<Company> filters = new AcceloFilter<>();
+	filters.where(filters.against(AgainstType_.company, company.getId()));
 	List<Company> = new CompanyDao().getByFilter(filter);
 
 #### Additional examples
 Search for tickets by company and contact id
 
-	AcceloFilter filter = new AcceloFilter();
-	filter.where(new Eq("company_id", companyId))
-		.and(new Eq("contact_id", contactId));
+	AcceloFilter<Ticket> filter = new AcceloFilter<>();
+	filter.where(filter.against(AgainstType_.company, companyId))
+		.and(filter.eq(Ticket_.contact_id, contactId));
 	List<Ticket> = new TicketDao().getByFilter(filter);
 
 Search for for two companies 
 
-	AcceloFilter filter = new AcceloFilter();
-	filter.where(new Eq("company_id", 1))
-		.or(new Eq("company_id", 2));
+	AcceloFilter<Ticket> filter = new AcceloFilter<>();
+	filter.where(filter.against(AgainstType_.company, 1))
+		.or(filter.against(AgainstType_.company, 2));
 	List<Ticket> = new CompanyDao().getByFilter(filter);
 	
 	
 Fetch Tickets which are against (owned) by a company with id 1 or id 2.
 
-	AcceloFilter filter = new AcceloFilter();
-	filter.where(new Against("company", "company_id", 1, 2)));
+	AcceloFilter<Ticket> filter = new AcceloFilter<>();
+	filter.where(filter.against(AgainstType_.company, 1, 2)));
 	List<Ticket> = new TicketDao().getByFilter(filter);   
