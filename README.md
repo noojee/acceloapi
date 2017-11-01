@@ -3,6 +3,8 @@ Java api for the Accelo CRM
 
 As the name says, this is an Java API that makes it easier to talk to the Accelo REST API.
 
+You can access the full java docs at: https://bsutton.github.io/acceloapi/index.html
+
 Fetching data from the Accelo servers is rather slow so the library is heavily cached.
 
 The Api automatically caches the results of each query (filter) so that if you run the same query again, the results will come back from the cache.
