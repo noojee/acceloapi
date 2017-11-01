@@ -9,6 +9,8 @@ import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Affiliation;
 import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Contact;
+import au.com.noojee.acceloapi.entities.meta.AgainstType_;
+import au.com.noojee.acceloapi.entities.meta.Contact_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Search;
@@ -23,7 +25,7 @@ public class ContactDao extends AcceloDao<Contact>
 
 		if (contact_firstname != null && contact_lastname != null)
 		{
-			AcceloFilter filters = new AcceloFilter();
+			AcceloFilter<Contact> filters = new AcceloFilter<>();
 			filters.where(new Search(contact_firstname + " " + contact_lastname));
 			List<Contact> contacts = getByFilter(filters);
 			contact = contacts.size() > 0 ? contacts.get(0) : null;
@@ -38,8 +40,8 @@ public class ContactDao extends AcceloDao<Contact>
 		fields.add(AcceloFieldList._ALL);
 		fields.add(Company.FIELDS_ALL);
 
-		AcceloFilter filters = new AcceloFilter();
-		filters.where(new Eq("contact_number", phone));
+		AcceloFilter<Contact> filters = new AcceloFilter<>();
+		filters.where(filters.eq(Contact_.contact_number, phone));
 
 		List<Contact> contacts = getByFilter(filters, fields);
 
@@ -67,8 +69,8 @@ public class ContactDao extends AcceloDao<Contact>
 	 */
 	public List<Contact> getByCompany(int companyId)
 	{
-		AcceloFilter filter = new AcceloFilter();
-		filter.where(new Eq("company", companyId));
+		AcceloFilter<Contact> filter = new AcceloFilter<>();
+		filter.where(filter.against(AgainstType_.company, companyId));
 		
 		return super.getByFilter(filter);
 	}

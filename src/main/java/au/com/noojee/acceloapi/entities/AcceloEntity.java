@@ -11,9 +11,10 @@ import javax.money.Monetary;
 
 import org.javamoney.moneta.Money;
 
+import au.com.noojee.acceloapi.entities.meta.FilterField;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
-public abstract class AcceloEntity<E> implements Comparable<E>
+public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Comparable<E>
 {
 	static protected CurrencyUnit currencyUnit = Monetary.getCurrency(Locale.getDefault());
 
@@ -45,5 +46,14 @@ public abstract class AcceloEntity<E> implements Comparable<E>
 	public static Date toDate(LocalDate localDate)
 	{
 		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	}
+
+	/**
+	 * Special - used by the AcceloCache. Don't go there.
+	 * @return
+	 */
+	public FilterField<E, Integer> getIdFilterField()
+	{
+		return new FilterField<>("id");
 	}
 }

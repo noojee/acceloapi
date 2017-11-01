@@ -2,22 +2,25 @@ package au.com.noojee.acceloapi.filter.expressions;
 
 import java.time.LocalDate;
 
-public class AfterOrEq extends Expression
+import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.entities.meta.FilterField;
+
+public class AfterOrEq<E extends AcceloEntity<E>> extends Expression
 {
 
-	private String fieldName;
+	private FilterField<E, LocalDate> field;
 	private LocalDate operand;
 
-	public AfterOrEq(String fieldName, LocalDate localDate)
+	public AfterOrEq(FilterField<E, LocalDate> field, LocalDate localDate)
 	{
-		this.fieldName = fieldName;
+		this.field = field;
 		this.operand = localDate;
 	}
 
 	@Override
 	public String toJson()
 	{
-		return (new After(fieldName, operand).or(new Eq(fieldName, operand))).toJson();
+		return (new After<E>(field, operand).or(new Eq<E>(field, operand))).toJson();
 	}
 
 	@Override
@@ -25,7 +28,7 @@ public class AfterOrEq extends Expression
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
+		result = prime * result + ((field == null) ? 0 : field.hashCode());
 		result = prime * result + ((operand == null) ? 0 : operand.hashCode());
 		return result;
 	}
@@ -39,13 +42,14 @@ public class AfterOrEq extends Expression
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AfterOrEq other = (AfterOrEq) obj;
-		if (fieldName == null)
+		@SuppressWarnings("unchecked")
+		AfterOrEq<E> other = (AfterOrEq<E>) obj;
+		if (field == null)
 		{
-			if (other.fieldName != null)
+			if (other.field != null)
 				return false;
 		}
-		else if (!fieldName.equals(other.fieldName))
+		else if (!field.equals(other.field))
 			return false;
 		if (operand == null)
 		{
@@ -57,5 +61,5 @@ public class AfterOrEq extends Expression
 		return true;
 	}
 
-
+	
 }

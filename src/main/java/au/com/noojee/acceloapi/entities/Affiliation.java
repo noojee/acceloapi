@@ -2,22 +2,69 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
+import au.com.noojee.acceloapi.entities.meta.AcceloField;
+import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
+import au.com.noojee.acceloapi.entities.meta.MetaSearchFields;
+
 public class Affiliation extends AcceloEntity<Affiliation>
 {
+	@AcceloField
 	private int id;
 
+	@AcceloField
 	private int company; // id of the affiliated company
+	
+	@AcceloField
 	private int postal_address; // id of an address
+	
+	@AcceloField
 	private int physical_address; // id of an address
-	private String phone; // phone no.
+	
+	
+	@AcceloField
 	private int contact; // contact id
+
+
+	@AcceloField(Type.SEARCH)
+	private String phone; // phone no.
+
+	@AcceloField(Type.SEARCH)
 	private String mobile; // mobile no.
+	
+	@AcceloField(Type.SEARCH)
 	private String email; // email address
+	
 	private String position; // ??
+	
 	private long date_last_interacted; // unix time
+	
+	@AcceloField(Type.DATE)
 	private long date_modified; // unix time
+	
 	private int staff_bookmarked;
+	
+	@AcceloField
 	private String standing;
+
+	/**
+	 * You can search by these but they aren't returned when you query the entity.
+	 * @author bsutton
+	 *
+	 */
+	class Meta implements MetaSearchFields
+	{
+		@AcceloField
+		private transient int contact_number; 
+		
+		@AcceloField(Type.SEARCH)
+		private transient String firstname;
+		
+		@AcceloField(Type.SEARCH)
+		private transient String surname;
+		
+		@AcceloField
+		private transient String status;
+	}
 
 
 	@Override

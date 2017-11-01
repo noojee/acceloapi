@@ -7,8 +7,8 @@ import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Staff;
+import au.com.noojee.acceloapi.entities.meta.Staff_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public class StaffDao extends AcceloDao<Staff>
 {
@@ -18,8 +18,8 @@ public class StaffDao extends AcceloDao<Staff>
 		Staff staffMember = null;
 		if (staffEmailAddress != null)
 		{
-			AcceloFilter filter = new AcceloFilter();
-			filter.where(new Eq("email", staffEmailAddress));
+			AcceloFilter<Staff> filter = new AcceloFilter<>();
+			filter.where(filter.eq(Staff_.email, staffEmailAddress));
 
 			List<Staff> staff = this.getByFilter(filter);
 

@@ -10,9 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javamoney.moneta.Money;
 
-import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.Formatters;
-import au.com.noojee.acceloapi.dao.AffiliationDao;
+import au.com.noojee.acceloapi.entities.meta.AcceloField;
+import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
 
 public class Activity extends AcceloEntity<Activity>
 {
@@ -44,67 +44,76 @@ public class Activity extends AcceloEntity<Activity>
 		}
 	};
 
+	@AcceloField
 	private int id;
 	private String subject;
 	private String parent;
+	
+	@AcceloField
 	private String parent_id;
 
 	private String thread;
 	private String thread_id;
 
 	private String against_type;
+
+	
 	private int against_id;
 
+	@AcceloField
 	private int owner_id;
+	
+	@AcceloField
 	private String owner_type;
 
+	@AcceloField
 	private Medium medium;
+	
 	private String body;
+	
+	@AcceloField
 	private Visibility visiblity;
 
-	private String details; // For meetings this is the location, for postals
-	// this is the address and for calls this is the
-	// number.
+	private String details; // For meetings this is the location, for postals this is the address and for calls this is the number.
 
-	private String standing; // The standing of the activity, may be one of
-								// “unapproved”, “approved”, “invoiced”,
-								// “locked”, or empty.
+	private String standing; // The standing of the activity, may be one of “unapproved”, “approved”, “invoiced”, “locked”, or empty.
 	private int invoice_id;
 	private int contract_period_id;
 
+	@AcceloField(Type.DATE)
 	private long date_created;
+	@AcceloField(Type.DATE)
 	private long date_started;
+	@AcceloField(Type.DATE)
 	private long date_ended;
+	@AcceloField(Type.DATE)
 	private long date_logged;
+	@AcceloField(Type.DATE)
 	private long date_modified;
 
 	private int billable; // amount of billable time logged for the activity in
 							// seconds.
 	private int nonbillable; // amount of non-billable seconds.
 
+	@AcceloField
 	private int staff;
+	
+	@AcceloField
 	private int priority;
+	
+	@AcceloField
 	private int _class;
+	
+	@AcceloField
 	private int task;
 
+	@AcceloField
 	private int time_allocation; // The time allocation for the activity.
 	private int rate; // id of the rate object
-	private int rate_charged; // The rate at which the billable time was
-								// charged.
+	private int rate_charged; // The rate at which the billable time was charged.
 
 	List<Tag> tag; // A list of tags associated with the activity
 
-	// private String from_addr;
-	// private String from_name;
-	// private String to_addr;
-	// private String to_name;
-	//
-
-	
-	public List<Affiliation> getAffiliation() throws AcceloException
-	{
-		return new AffiliationDao().getByActivity(this);
-	}
 
 	public void setId(int id)
 	{

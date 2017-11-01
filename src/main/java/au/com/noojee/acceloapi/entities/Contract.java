@@ -4,35 +4,49 @@ import java.time.LocalDate;
 
 import org.javamoney.moneta.Money;
 
+import au.com.noojee.acceloapi.entities.meta.AcceloField;
+import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
+
 public class Contract extends AcceloEntity<Contract> 
 {
-	int id;
-	int company;			// The owning company id.
-	String title;
-	long date_created;
-	long date_started;
-	long date_period_expires;
-	long date_expires;
-	long date_last_interacted;
-	int renew_days;
-	String standing;
-	String auto_renew;
-	String deployment;
-	int against_id;
-	String against_type;
-	String manager;
-	String job;
-	double value;
-	String status;
-	int billable;
-	String send_invoice;
-	String staff_bookmarked;
-	int type;
-	String notes;
-	int period_template_id;
-	int owner_affiliation;
-	int billable_affiliation;
-
+	@AcceloField
+	private int id;
+	private int company;			// The owning company id.
+	private String title;
+	@AcceloField(Type.DATE)
+	private long date_created;
+	@AcceloField(Type.DATE)
+	private long date_started;
+	@AcceloField(Type.DATE)
+	private long date_period_expires;
+	@AcceloField(Type.DATE)
+	private long date_expires;
+	private long date_last_interacted;
+	private int renew_days;
+	@AcceloField
+	private String standing;
+	@AcceloField
+	private String auto_renew;
+	private String deployment;
+	private int against_id;
+	private String against_type;
+	@AcceloField
+	private int manager;  // the staff id of the staff member that manages this contract.
+	private String job;
+	private double value;
+	@AcceloField
+	private String status;
+	private int billable;
+	private String send_invoice;
+	private String staff_bookmarked;
+	@AcceloField
+	private int type;
+	private String notes;
+	private int period_template_id;
+	@AcceloField
+	private int owner_affiliation;
+	@AcceloField
+	private int billable_affiliation;
 	
 	@Override
 	public int getId()
@@ -122,7 +136,7 @@ public class Contract extends AcceloEntity<Contract>
 		return against_type;
 	}
 
-	public String getManager()
+	public int getManager()
 	{
 		return manager;
 	}

@@ -4,25 +4,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import au.com.noojee.acceloapi.entities.meta.AgainstType_;
+
 public class Against extends Expression
 {
 
-	private String type;
+	private AgainstType_ type;
 	private List<Integer> matchIds = new ArrayList<>();
 
-	public Against(String type)
+	public Against(AgainstType_ type)
 	{
 		this.type = type;
 	}
 
-	public Against(String type, Integer matchId)
+	public Against(AgainstType_ type, Integer matchId)
 	{
 		this.type = type;
 		this.matchIds.add(matchId);
 	}
 
 	
-	public Against(String type, Integer... matches)
+	public Against(AgainstType_ type, Integer... matches)
 	{
 		this.type = type;
 		this.matchIds.addAll(Arrays.asList(matches));

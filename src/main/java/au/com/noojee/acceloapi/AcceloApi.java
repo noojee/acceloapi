@@ -25,6 +25,7 @@ import org.apache.logging.log4j.Logger;
 import com.google.gson.Gson;
 
 import au.com.noojee.acceloapi.dao.AcceloList;
+import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 public class AcceloApi
@@ -80,7 +81,7 @@ public class AcceloApi
 	 * @param clazz
 	 * @return
 	 */
-	public <E> List<E> getAll(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList,
+	public <E extends AcceloEntity<E>> List<E> getAll(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList,
 			Class<? extends AcceloList<E>> clazz) throws AcceloException
 	{
 		List<E> list;
@@ -97,7 +98,7 @@ public class AcceloApi
 	}
 
 	
-	public <E, L extends AcceloList<E>> List<E> getAll(URL url, AcceloFilter filterMap, AcceloFieldList fieldList, Class<L> responseClass) throws AcceloException
+	public <E extends AcceloEntity<E>, L extends AcceloList<E>> List<E> getAll(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<L> responseClass) throws AcceloException
 	{
 		List<E> entities = new ArrayList<>();
 		boolean more = true;
@@ -141,7 +142,7 @@ public class AcceloApi
 	 * @throws AcceloException
 	 */
 
-	public <R> R get(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList, Class<R> clazz, int pageNo)
+	public <E extends AcceloEntity<E>, R> R get(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<R> clazz, int pageNo)
 			throws IOException, AcceloException
 	{
 		HTTPResponse response = get(endPoint.getURL(), filterMap, fieldList, pageNo);
@@ -163,7 +164,7 @@ public class AcceloApi
 	 * @throws IOException
 	 * @throws AcceloException
 	 */
-	public <R> R get(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList, Class<R> clazz)
+	public <E extends AcceloEntity<E>, R> R get(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<R> clazz)
 			throws IOException, AcceloException
 	{
 		return get(endPoint, filterMap, fieldList, clazz, 0);
@@ -185,7 +186,7 @@ public class AcceloApi
 	 * @throws AcceloException
 	 */
 
-	public HTTPResponse get(EndPoint endPoint, AcceloFilter filterMap, AcceloFieldList fieldList, int pageNo)
+	public <E extends AcceloEntity<E>> HTTPResponse get(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList, int pageNo)
 			throws IOException, AcceloException
 	{
 		HTTPResponse response = get(endPoint.getURL(), filterMap, fieldList, pageNo);
@@ -208,7 +209,7 @@ public class AcceloApi
 	 * @throws AcceloException
 	 */
 
-	public <R> R get(URL url, AcceloFilter filterMap, AcceloFieldList fieldList, Class<R> clazz, int pageNo)
+	public <E extends AcceloEntity<E>, R> R get(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<R> clazz, int pageNo)
 			throws AcceloException
 	{
 		HTTPResponse response = get(url, filterMap, fieldList, pageNo);
@@ -231,7 +232,7 @@ public class AcceloApi
 	 * @throws AcceloException
 	 */
 
-	private HTTPResponse get(URL url, AcceloFilter filterMap, AcceloFieldList fieldList, int pageNo)
+	private <E extends AcceloEntity<E>> HTTPResponse get(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, int pageNo)
 			throws AcceloException
 	{
 		String fields = fieldList.formatAsJson();

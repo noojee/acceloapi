@@ -4,10 +4,12 @@ import java.time.LocalDate;
 
 import org.junit.Test;
 
+import au.com.noojee.acceloapi.entities.Company;
+import au.com.noojee.acceloapi.entities.Contract;
+import au.com.noojee.acceloapi.entities.meta.AgainstType_;
+import au.com.noojee.acceloapi.entities.meta.Company_;
+import au.com.noojee.acceloapi.entities.meta.Contract_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.After;
-import au.com.noojee.acceloapi.filter.expressions.Against;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class AcceloFilterTest
@@ -16,50 +18,47 @@ public class AcceloFilterTest
 	@Test
 	public void test() throws AcceloException
 	{
-		AcceloFilter filter = new AcceloFilter();
+		AcceloFilter<Company> filter = new AcceloFilter<>();
 
-		// Compound against = filter.set(new Compound("against"));
-
-		filter.where(new Against("company", 1));
+		filter.where(filter.against(AgainstType_.company, 1));
 
 		System.out.println(filter.toJson());
 
-		filter.where(new Against("company", 1));
+		filter.where(filter.against(AgainstType_.company, 1));
 
 		System.out.println(filter.toJson());
 
-		filter.where(new Eq("company", "1").or(new Eq("company", "2")));
+		filter.where(filter.eq(Company_.id, 1).or(filter.eq(Company_.id, 2)));
 
 		System.out.println(filter.toJson());
 
-		filter.where(new Against("company", 1, 2));
+		filter.where(filter.against(AgainstType_.company, 1, 2));
 
 		System.out.println(filter.toJson());
 
-		filter.where(new Against("company", 1).and(new Eq("contract", "3")));
+		AcceloFilter<Contract> cf = new AcceloFilter<>();
+
+		cf.where(cf.against(AgainstType_.company, 1).and(cf.eq(Contract_.id, 3)));
+
+		System.out.println(cf.toJson());
+
+		filter.where(cf.against(AgainstType_.company, 1, 2).and(cf.eq(Contract_.id, 3)));
+
+		System.out.println(cf.toJson());
+
+		filter.where(cf.against(AgainstType_.company, 1, 2)
+				.and(cf.eq(Contract_.id, 3))
+				.and(cf.after(Contract_.date_expires, LocalDate.now())));
 
 		System.out.println(filter.toJson());
 
-		filter.where(new Against("company", 1, 2).and(new Eq("contract", "3")));
+		filter.where(cf.against(AgainstType_.company, 1, 2)
+				.and(cf.eq(Contract_.id, 3))
+				.and(cf.after(Contract_.date_expires, LocalDate.now())));
 
-		System.out.println(filter.toJson());
+		System.out.println(cf.toJson());
 
-		filter.where(new Against("company", 1, 2)
-				.and(new Eq("contract", "3"))
-				.and(new After("date_expried", LocalDate.now()))
-				);
-
-		System.out.println(filter.toJson());
-		
-		filter.where(new Against("company", 1, 2)
-				.and(new Eq("contract", "3"))
-				.and(new After("date_expried", LocalDate.now()))
-				);
-
-System.out.println(filter.toJson());
-
-
-		filter = new AcceloFilter();
+		cf = new AcceloFilter<>();
 		filter.where(new Search("911"));
 
 		System.out.println(filter.toJson());

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import au.com.noojee.acceloapi.entities.meta.AcceloField;
+import au.com.noojee.acceloapi.entities.meta.MetaSearchFields;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class Ticket extends AcceloEntity<Ticket>
@@ -15,39 +17,77 @@ public class Ticket extends AcceloEntity<Ticket>
 	// private Logger logger = LogManager.getLogger(Ticket.class);
 	static public String PRIORITY_CRITICAL = "1";
 
+	@SuppressWarnings("unused")
+	private class Meta implements MetaSearchFields
+	{
+		@AcceloField
+		private transient String contact_number;  // filters over phone, fax and mobile
+
+	}
+
+	@AcceloField
 	private int id;
 	private String title;
+	@AcceloField
 	private String custom_id;
 	private String description;
-	private String type;
+	@AcceloField
+	private int issue_type;
+	
+	@AcceloField
 	private int affiliation; // The affiliated with this ticket which links
 								// through to the contact
-	private String against;
 	private int against_id;
 	private String against_type;
 	private int company; // If against_type is company, then this holds the id of the company the ticket is
 							// against.
+	@AcceloField
 	private String priority;
-	private int classId;
+	@AcceloField(name="class")
+	private int class_id; // note this currently doesn't work as the real field name is 'class' need to create a json mapper.
+	
+	@AcceloField
 	private int resolution;
+	@AcceloField
 	private Status status; // Breaks our rules of using Ids but there is no
 							// other way to get the status.
+	
+	@AcceloField
+	private String referrer_type;
+	@AcceloField
+	private int referrer_id;
+	
+	@AcceloField
 	private String standing;
-	private String submitted_by;
+	@AcceloField
+	private int submitted_by;
+	
+	@AcceloField(AcceloField.Type.DATE)
 	private long date_submitted;
+	@AcceloField(AcceloField.Type.DATE)
 	private long date_opened;
+	
 	private long date_resolved;
+	@AcceloField(AcceloField.Type.DATE)
 	private long date_closed;
+	@AcceloField(AcceloField.Type.DATE)
 	private long date_started;
+	@AcceloField(AcceloField.Type.DATE)
 	private long date_due;
-	private String closed_by;
-	private String opened_by;
-	private String resolved_by;
+	@AcceloField
+	private int opened_by;			// staff member
+	@AcceloField
+	private int closed_by;			// staff member
+	@AcceloField
+	private int resolved_by;		// staff member
 	private String object_budget;
-	private String assignee;
+	@AcceloField
+	private int  assignee;			// staff member
 	private int billable_seconds;
 	private long date_last_interacted;
 	private ArrayList<String> breadcrumbs;
+	
+	@AcceloField
 	private int contract; // the contract id or 0 if this ticket is unassigned.
 	private String resolution_detail;
 
@@ -103,14 +143,9 @@ public class Ticket extends AcceloEntity<Ticket>
 		return trim(description);
 	}
 
-	public String getType()
+	public int getIssueType()
 	{
-		return type;
-	}
-
-	public String getAgainst()
-	{
-		return against;
+		return issue_type;
 	}
 
 	public int getAgainstId()
@@ -131,7 +166,7 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public int getClassId()
 	{
-		return classId;
+		return class_id;
 	}
 
 	public int getResolution()
@@ -149,7 +184,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		return standing;
 	}
 
-	public String getSubmittedBy()
+	public int getSubmittedBy()
 	{
 		return submitted_by;
 	}
@@ -188,17 +223,17 @@ public class Ticket extends AcceloEntity<Ticket>
 		return toLocalDate(date_due);
 	}
 
-	public String getClosedBy()
+	public int getClosedBy()
 	{
 		return closed_by;
 	}
 
-	public String getOpenedBy()
+	public int getOpenedBy()
 	{
 		return opened_by;
 	}
 
-	public String getResolvedBy()
+	public int getResolvedBy()
 	{
 		return resolved_by;
 	}
@@ -214,10 +249,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	 */
 	public int getAssignee()
 	{
-		if (assignee != null)
-			return Integer.valueOf(assignee);
-
-		return -1;
+		return assignee;
 	}
 
 
@@ -271,14 +303,9 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.description = description;
 	}
 
-	public void setType(String type)
+	public void setIssueType(int issueTypeId)
 	{
-		this.type = type;
-	}
-
-	public void setAgainst(String against)
-	{
-		this.against = against;
+		this.issue_type = issueTypeId;
 	}
 
 	public void setAgainstId(int against_id)
@@ -296,9 +323,9 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.priority = priority;
 	}
 
-	public void setClass(int classId)
+	public void setClass(int class_id)
 	{
-		this.classId = classId;
+		this.class_id = class_id;
 	}
 
 	public void setResolution(int resolution)
@@ -311,7 +338,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.standing = standing;
 	}
 
-	public void setSubmittedBy(String submitted_by)
+	public void setSubmittedBy(int submitted_by)
 	{
 		this.submitted_by = submitted_by;
 	}
@@ -346,17 +373,17 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.date_due = date_due;
 	}
 
-	public void setClosedBy(String closed_by)
+	public void setClosedBy(int closed_by)
 	{
 		this.closed_by = closed_by;
 	}
 
-	public void setOpenedBy(String opened_by)
+	public void setOpenedBy(int opened_by)
 	{
 		this.opened_by = opened_by;
 	}
 
-	public void setResolvedBy(String resolved_by)
+	public void setResolvedBy(int resolved_by)
 	{
 		this.resolved_by = resolved_by;
 	}
@@ -399,8 +426,8 @@ public class Ticket extends AcceloEntity<Ticket>
 	@Override
 	public String toString()
 	{
-		return "Ticket [id=" + id + ", title=" + title + ", custom_id=" + custom_id + ", type=" + type + ", against="
-				+ against + ", against_id=" + against_id + ", against_type=" + against_type + ", priority=" + priority
+		return "Ticket [id=" + id + ", title=" + title + ", custom_id=" + custom_id + ", type=" + issue_type 
+				+ ", against_id=" + against_id + ", against_type=" + against_type + ", priority=" + priority
 				+ ", resolution=" + resolution + ", status=" + status + ", standing=" + standing + ", submitted_by="
 				+ submitted_by + ", date_submitted=" + date_submitted + ", date_opened=" + date_opened
 				+ ", date_resolved=" + date_resolved + ", date_closed=" + date_closed + ", date_started=" + date_started

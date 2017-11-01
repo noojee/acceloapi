@@ -4,9 +4,13 @@ public class Search
 {
 	private String operand;
 
-	public Search(String operand)
+	/**
+	 * Sets up a full text search over the fields defined for this entity. 
+	 * @param seachValue
+	 */
+	public Search(String seachValue)
 	{
-		this.operand = operand;
+		this.operand = seachValue;
 	}
 
 	public String toJson()

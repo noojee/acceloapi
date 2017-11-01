@@ -12,24 +12,59 @@ import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.CustomField;
 import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.entities.meta.AcceloField;
+import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
+import au.com.noojee.acceloapi.entities.meta.MetaSearchFields;
 
 public class Company extends AcceloEntity<Company>
 {
 	public static final String FIELDS_ALL = "company._ALL";
 
+	@AcceloField
 	private int id;
+	
+	@AcceloField(Type.SEARCH)
 	private String name;
+	
+	@AcceloField(Type.SEARCH)
 	private String website;
+	@AcceloField
 	private String standing;
+	
+	@AcceloField
 	private int status; 
+	
+	@AcceloField(Type.SEARCH)
 	private String phone;
+	
+	@AcceloField(Type.SEARCH)
 	private String fax;
+	@AcceloField
+	private int postal_address;
+	
+	@AcceloField(Type.DATE)
 	private int date_created;
+	@AcceloField(Type.DATE)
 	private int date_modified;
 	private String comments;
+	@AcceloField
 	private int default_affiliation;
 	private Contact contact;
 	private List<CustomField> customFields = new ArrayList<>();
+	
+	@SuppressWarnings("unused")
+	private class Meta implements MetaSearchFields
+	{
+		@AcceloField
+		private transient String status;
+		
+		@AcceloField
+		private transient int manager_id;
+		
+		@AcceloField
+		private transient String contact_number;  // filters over phone and fax
+
+	}
 
 	static public class CustomFieldsResponse extends AcceloResponseList<CustomField>
 	{

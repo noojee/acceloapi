@@ -1,11 +1,21 @@
 package au.com.noojee.acceloapi.filter;
 
+import java.time.LocalDate;
+
 import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.entities.meta.AgainstType_;
+import au.com.noojee.acceloapi.entities.meta.FilterField;
+import au.com.noojee.acceloapi.filter.expressions.After;
+import au.com.noojee.acceloapi.filter.expressions.AfterOrEq;
+import au.com.noojee.acceloapi.filter.expressions.Against;
+import au.com.noojee.acceloapi.filter.expressions.Before;
+import au.com.noojee.acceloapi.filter.expressions.Empty;
 import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 import au.com.noojee.acceloapi.filter.expressions.Search;
 
-public class AcceloFilter
+public class AcceloFilter<E extends AcceloEntity<E>>
 {
 	public static final String ALL = "_ALL";
 
@@ -39,20 +49,74 @@ public class AcceloFilter
 		this.expression = expression;
 	}
 
-	public AcceloFilter and(Expression child) // throws AcceloException
+	public AcceloFilter<E> and(Expression child) // throws AcceloException
 	{
 		this.expression = new And(this.expression, child);
 
 		return this;
 	}
 
-	public AcceloFilter or(Expression child)
+	public AcceloFilter<E> or(Expression child)
 	{
 		this.expression = new Or(this.expression, child);
 
 		return this;
 	}
+	
+	
+	public Expression eq(FilterField<E, Integer> field, int operand)
+	{
+		return new Eq<E>(field, operand);
+	}
+	
+	public Expression eq(FilterField<E, String> field, String operand)
+	{
+		return new Eq<E>(field, operand);
+	}
+	
+	public Expression eq(FilterField<E, String[]> field, String[] operand)
+	{
+		return new Eq<E>(field, operand);
+	}
+	
+	public Expression eq(FilterField<E, LocalDate> field, LocalDate operand)
+	{
+		return new Eq<E>(field, operand);
+	}
+	
+	public Expression before(FilterField<E, LocalDate> field, LocalDate operand)
+	{
+		return new Before<E>(field, operand);
+	}
+	
+	public Expression after(FilterField<E, LocalDate> field, LocalDate operand)
+	{
+		return new After<E>(field, operand);
+	}
 
+	
+	public Expression afterOrEq(FilterField<E, LocalDate> field, LocalDate operand)
+	{
+		return new AfterOrEq<E>(field, operand);
+	}
+	
+	public Expression against(AgainstType_ type, Integer operand)
+	{
+		return new Against(type, operand);
+	}
+	
+	public Expression against(AgainstType_ type, Integer... operand)
+	{
+		return new Against(type, operand);
+	}
+	
+	
+	public Expression empty(FilterField<E, LocalDate> dateField)
+	{
+		return new Empty<E>(dateField);
+	}
+
+	
 	/**
 	 * Use this method to invalid any cache data associated with this filter.
 	 * This will force the system to re-fetch the data from the accelo servers.
@@ -125,7 +189,8 @@ public class AcceloFilter
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		AcceloFilter other = (AcceloFilter) obj;
+		@SuppressWarnings("unchecked")
+		AcceloFilter<E> other = (AcceloFilter<E>) obj;
 		if (expression == null)
 		{
 			if (other.expression != null)
@@ -156,7 +221,8 @@ public class AcceloFilter
 
 		if (expression != null && expression instanceof Eq)
 		{
-			Eq simple = (Eq) expression;
+			@SuppressWarnings("unchecked")
+			Eq<E> simple = (Eq<E>) expression;
 			if (simple.isFieldName("id"))
 				isIDFilter = true;
 		}
@@ -174,4 +240,6 @@ public class AcceloFilter
 		return this.limit;
 	}
 
+
+	
 }

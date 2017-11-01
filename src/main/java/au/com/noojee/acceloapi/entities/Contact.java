@@ -1,30 +1,59 @@
 package au.com.noojee.acceloapi.entities;
 
+import au.com.noojee.acceloapi.entities.meta.AcceloField;
+import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
+import au.com.noojee.acceloapi.entities.meta.MetaSearchFields;
+
 public class Contact extends AcceloEntity<Contact>
 {
 	public static final String FIELDS_ALL = "contact._ALL";
+
+	@AcceloField
 	private int id;
+	@AcceloField(Type.SEARCH)
 	private String firstname;
 	private String middlename;
+	@AcceloField(Type.SEARCH)
 	private String surname;
 	private String preferred_name;
+	@AcceloField
 	private String username;
 	private String password;
+	@AcceloField
 	private String title;
 	private String salutation;
 	private String comments;
+	@AcceloField
 	private int status;
+	@AcceloField
 	private String standing;
 	private int country_id;
 	private int physical_address_id;
 	private int postal_address_id;
 	private String phone;
 	private String fax;
+	@AcceloField(Type.BOTH)
 	private String email;
 	private int default_affiliation; // id of the contacts affiliation. Will normally be the company they are primarily associated with.
 	private String communication;
 	private String invoice_method;
+	
+	@AcceloField(Type.DATE)
+	private int date_created;
+	@AcceloField(Type.DATE)
+	private int date_modified;
 
+	
+	@SuppressWarnings("unused")
+	private class Meta implements MetaSearchFields
+	{
+		@AcceloField
+		private transient String affiliation; // matches on the default_affiliation.
+		
+		@AcceloField
+		private transient String contact_number;  // filters over phone, fax and mobile
+
+	}
 
 	@Override
 	public int getId()

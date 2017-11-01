@@ -5,37 +5,42 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Eq extends Expression
+import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.entities.meta.FilterField;
+
+public class Eq<E extends AcceloEntity<E>> extends Expression
 {
 
 	private String fieldName;
 	private List<String> operands = new ArrayList<>();
 
-	public Eq(String fieldName, int operand)
+	
+	public Eq(FilterField<E, Integer> field, int operand)
 	{
-		this.fieldName = fieldName;
+		this.fieldName = field.getFieldName();
 		this.operands.add("" + operand);
 	}
 
-	public Eq(String fieldName, String operand)
+	public Eq(FilterField<E, String> field, String operand)
 	{
-		this.fieldName = fieldName;
+		this.fieldName = field.getFieldName();
 		this.operands.add(operand);
 	}
 
-	public Eq(String fieldName, String[] operand)
+	public Eq(FilterField<E, String[]> field, String[] operand)
 	{
-		this.fieldName = fieldName;
+		this.fieldName = field.getFieldName();
 		this.operands.addAll(Arrays.asList(operand));
 	}
 
-	public Eq(String fieldName, LocalDate operand)
+	public Eq(FilterField<E, LocalDate> field, LocalDate operand)
 	{
+		this.fieldName = field.getFieldName();
+		
 		// HACK Accelo Doesn't support comparison of a date against '0'. Using (\"date_before\", Expression.DATEZERO) is accelos recommended hack.;
 		if (operand == Expression.DATEZERO)
 			this.fieldName = fieldName + "_before";
-		else
-			this.fieldName = fieldName;
+
 		this.operands.add(formatDateAsFilterOperand(operand));
 	}
 
@@ -83,7 +88,8 @@ public class Eq extends Expression
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Eq other = (Eq) obj;
+		@SuppressWarnings("unchecked")
+		Eq<E> other = (Eq<E>) obj;
 		if (fieldName == null)
 		{
 			if (other.fieldName != null)

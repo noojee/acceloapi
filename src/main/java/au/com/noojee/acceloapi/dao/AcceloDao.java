@@ -16,10 +16,10 @@ import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.entities.meta.FilterField;
 import au.com.noojee.acceloapi.filter.AcceloCache;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.CacheKey;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
 
 public abstract class AcceloDao<E extends AcceloEntity<E>>
 {
@@ -38,7 +38,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 * @return
 	 * @throws AcceloException
 	 */
-	public List<E> getByFilter(AcceloFilter filter) throws AcceloException
+	public List<E> getByFilter(AcceloFilter<E> filter) throws AcceloException
 	{
 
 		AcceloFieldList fields = new AcceloFieldList();
@@ -60,7 +60,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 * @throws ExecutionException
 	 */
 	@SuppressWarnings("unchecked")
-	public List<E> getByFilter(AcceloFilter filter, AcceloFieldList fields) throws AcceloException
+	public List<E> getByFilter(AcceloFilter<E> filter, AcceloFieldList fields) throws AcceloException
 	{
 		List<E> entities = new ArrayList<>();
 
@@ -83,13 +83,13 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		E entity = null;
 		if (id != 0)
 		{
-			AcceloFilter filter = new AcceloFilter();
-			filter.where(new Eq("id", id));
+			AcceloFilter<E> filter = new AcceloFilter<>();
+			FilterField<E, Integer> idField = new FilterField<E, Integer>("id");
+			filter.where(filter.eq(idField, id));
 
-			@SuppressWarnings(
-			{ "rawtypes", "unchecked" })
+			@SuppressWarnings("unchecked")
 			List<E> entities = (List<E>) AcceloCache.getInstance()
-					.get(new CacheKey(endpoint, filter, fields, getResponseListClass()));
+					.get(new CacheKey<E>(endpoint, filter, fields, getResponseListClass()));
 			if (entities.size() > 0)
 				entity = entities.get(0);
 
@@ -115,7 +115,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		fields.add(AcceloFieldList._ALL);
 
 		// pass in an empty filter
-		AcceloFilter filter = new AcceloFilter();
+		AcceloFilter<E> filter = new AcceloFilter<>();
 
 
 		CacheKey<E> key = new CacheKey<>(getEndPoint(), filter, fields, getResponseListClass());

@@ -8,8 +8,8 @@ import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Contact;
+import au.com.noojee.acceloapi.entities.meta.Company_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class CompanyDao extends AcceloDao<Company>
@@ -25,7 +25,7 @@ public class CompanyDao extends AcceloDao<Company>
 		fields.add(AcceloFieldList._ALL);
 		fields.add(Contact.FIELDS_ALL);
 
-		AcceloFilter filter = new AcceloFilter();
+		AcceloFilter<Company> filter = new AcceloFilter<>();
 		filter.where(new Search(companyName));
 
 		List<Company> companies = getByFilter(filter, fields);
@@ -33,12 +33,12 @@ public class CompanyDao extends AcceloDao<Company>
 		return companies.size() > 0 ? companies.get(0) : null;
 	}
 
-	public Company getCompanyByContactId(String contractId) throws AcceloException
+	public Company getCompanyByContactId(int contractId) throws AcceloException
 	{
 
-		AcceloFilter filters = new AcceloFilter();
-		filters.where(new Eq("id", contractId));
-		List<Company> companies = getByFilter(filters);
+		AcceloFilter<Company> filter = new AcceloFilter<>();
+		filter.where(filter.eq(Company_.id, contractId));
+		List<Company> companies = getByFilter(filter);
 
 		Company company = null;
 		company = companies.size() > 0 ? companies.get(0) : null;

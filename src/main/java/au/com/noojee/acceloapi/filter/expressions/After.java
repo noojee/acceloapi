@@ -2,15 +2,18 @@ package au.com.noojee.acceloapi.filter.expressions;
 
 import java.time.LocalDate;
 
-public class After extends Expression
+import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.entities.meta.FilterField;
+
+public class After<E extends AcceloEntity<E>> extends Expression
 {
 
 	private String fieldName;
 	private LocalDate operand;
 
-	public After(String fieldName, LocalDate localDate)
+	public After(FilterField<E, LocalDate> field, LocalDate localDate)
 	{
-		this.fieldName = fieldName;
+		this.fieldName = field.getFieldName();
 		this.operand = localDate;
 	}
 
@@ -47,7 +50,8 @@ public class After extends Expression
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		After other = (After) obj;
+		@SuppressWarnings("unchecked")
+		After<E> other = (After<E>) obj;
 		if (fieldName == null)
 		{
 			if (other.fieldName != null)

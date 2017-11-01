@@ -10,12 +10,9 @@ import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.entities.Contract;
 import au.com.noojee.acceloapi.entities.ContractPeriod;
+import au.com.noojee.acceloapi.entities.meta.AgainstType_;
+import au.com.noojee.acceloapi.entities.meta.Contract_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.After;
-import au.com.noojee.acceloapi.filter.expressions.Against;
-import au.com.noojee.acceloapi.filter.expressions.Before;
-import au.com.noojee.acceloapi.filter.expressions.Empty;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class ContractDao extends AcceloDao<Contract>
@@ -86,7 +83,7 @@ public class ContractDao extends AcceloDao<Contract>
 	 * Find an Active Contract for the given company.
 	 * 
 	 * This will return a random contract if the company has more than one activie contract.
-	 * @param Company
+	 * @param Company_
 	 *            - we only us the Id of the company.
 	 * 
 	 * @return
@@ -132,9 +129,10 @@ public class ContractDao extends AcceloDao<Contract>
 	{
 		// Get all contracts where the expiry date is after today or null and the
 		// start date is before today
-		AcceloFilter filter = new AcceloFilter();
-		filter.where(new Before("date_started", LocalDate.now())
-				.and(new After("date_expires", LocalDate.now()).or(new Empty("date_expires")).or(new Eq("date_expires", Expression.DATEZERO))));
+		AcceloFilter<Contract> filter = new AcceloFilter<>();
+		filter.where(filter.before(Contract_.date_started, LocalDate.now())
+				.and(filter.after(Contract_.date_expires, LocalDate.now())
+						.or(filter.empty(Contract_.date_expires)).or(filter.eq(Contract_.date_expires, Expression.DATEZERO))));
 
 		return getByFilter(filter);
 	}
@@ -142,9 +140,9 @@ public class ContractDao extends AcceloDao<Contract>
 	public List<Contract> getByCompany(Company company) throws AcceloException
 	{
 		List<Contract> contracts;
-		AcceloFilter filters = new AcceloFilter();
-		filters.where(new Against("company", company.getId()));
-		contracts = getByFilter(filters);
+		AcceloFilter<Contract> filter = new AcceloFilter<>();
+		filter.where(filter.against(AgainstType_.company, company.getId()));
+		contracts = getByFilter(filter);
 		return contracts;
 	}
 

@@ -1,30 +1,24 @@
-package au.com.noojee.acceloapi.filter.expressions;
-
-import java.time.LocalDate;
+package au.com.noojee.acceloapi.entities.meta;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.entities.meta.FilterField;
 
-public class Empty<E extends AcceloEntity<E>> extends Expression
+public class FilterField<E extends AcceloEntity<E>, T>
 {
+
 	private String fieldName;
 
-	public Empty(FilterField<E, LocalDate> field)
+	public FilterField(String fieldName)
 	{
-		this.fieldName = field.getFieldName();
+		this.fieldName = fieldName;
 	}
 
-	@Override
-	public String toJson()
+	public String getFieldName()
 	{
-		String json = "\"empty\": [";
-		json += "\"" + fieldName + "\"";
-
-		json += "]";
-
-		return json;
+		return this.fieldName;
 	}
 
+	
+	
 	@Override
 	public int hashCode()
 	{
@@ -43,8 +37,7 @@ public class Empty<E extends AcceloEntity<E>> extends Expression
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		Empty<E> other = (Empty<E>) obj;
+		FilterField<E, T> other = (FilterField<E, T>) obj;
 		if (fieldName == null)
 		{
 			if (other.fieldName != null)

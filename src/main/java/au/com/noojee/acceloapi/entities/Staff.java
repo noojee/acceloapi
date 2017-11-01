@@ -1,11 +1,26 @@
 package au.com.noojee.acceloapi.entities;
 
+import au.com.noojee.acceloapi.entities.meta.AcceloField;
+import au.com.noojee.acceloapi.entities.meta.MetaSearchFields;
+
 public class Staff extends AcceloEntity<Staff>
 {
+	
+	@SuppressWarnings("unused")
+	private class Meta implements MetaSearchFields
+	{
+		@AcceloField
+		private transient String standing;  
+
+	}
+
+	@AcceloField
 	private int id;
 	private String firstname;
 	private String surname;
+	@AcceloField
 	private String username;
+	@AcceloField
 	private String email;
 	private String phone;
 	private String mobile;

@@ -1,5 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
+import au.com.noojee.acceloapi.entities.meta.AcceloField;
+import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
 
 public class AccountDetails
 {
@@ -14,13 +16,14 @@ public class AccountDetails
     // private Locale locale;
 
     private String surname;
-
+	
     private String firstname;
 
     private String id;
 
     private String username;
 
+	@AcceloField(Type.BOTH)
     private String title;
 
     private UserDefinedTitles user_defined_titles;

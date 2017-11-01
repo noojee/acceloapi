@@ -3,25 +3,48 @@ package au.com.noojee.acceloapi.entities;
 import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.Formatters;
+import au.com.noojee.acceloapi.entities.meta.AcceloField;
+import au.com.noojee.acceloapi.entities.meta.AcceloField.Type;
 
 public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {
+	@AcceloField
 	int id;
+	@AcceloField(name="contract")
 	int contract_id;
+	@AcceloField(Type.DATE)
 	long date_created;
+	@AcceloField(Type.DATE)
 	long date_commenced;
+	@AcceloField(Type.DATE)
 	long date_closed;
+	@AcceloField(Type.DATE)
 	long date_expires;
 
+	@AcceloField
 	String budget_type; // pre-paid
+	@AcceloField
 	String duration_type; // fixed
+	@AcceloField
 	float contract_budget;
+	@AcceloField
 	String rollover; // yes no
+	@AcceloField
 	String standing; // open
+	
+	@AcceloField(name="rate")
 	int rate_id; // -1
+	
+	@AcceloField
 	String rate_type; // object
+	
+	@AcceloField
 	String allowance_type; // fixed_value
+	
+	@AcceloField(name="service_item")
 	int service_item_id;
+	
+	
 
 	@Override
 	public int getId()
