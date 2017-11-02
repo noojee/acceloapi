@@ -41,6 +41,7 @@ For example:
 	
 To access a ticket you must go through the TicketDao class. All high level business logic for tickets is also contained in the TicketDao class.
 Its worth exploring each of the Daos as the tend to have a collection of useful funtions like:
+
 	Duration billable = new TicketDao.getBillable();
 	Duration billable = new TicketDao.getNonBillable();
 	
