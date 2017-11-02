@@ -32,12 +32,13 @@ Be a good citizen and think before you increase the filter limit.
 
 The Noojee Accelo API loosely uses the  Data Access Objects (DAO) programming pattern (my appologies to the Java gods for my mis-use).
 
-For each entity (Ticket, Company, Contact etc) there is a Dao class and an Entity class.
+For each entity (Ticket, Company, Contact etc) there is a Dao class, an Entity and a Meta data class class.
 
 For example:
 	
 	TicketDao
 	Ticket
+	Ticket_
 	
 To access a ticket you must go through the TicketDao class. All high level business logic for tickets is also contained in the TicketDao class.
 Its worth exploring each of the Daos as the tend to have a collection of useful funtions like:
@@ -55,7 +56,20 @@ Each Dao class supports a standard set of common funtions.
 	new TicketDao().update(ticket);
 	new TicketDao().delete(ticket);
 		
+### Meta data for field access
+
+To make certain you are always trying to access a valid field the Entity Meta data class has a complete list of valid fields:
+
+You start by creating a filter for a specific entity. In this case the Staff entity.
+	AcceloFilter<Staff> filter = new AcceloFilter<>();
+
+You then can reference any of the filterable Staff fields using the meta data class Staff_.
+		
+	AcceloFilter<Staff> filter = new AcceloFilter<>();
+	filter.where(filter.eq(Staff_.email, staffEmailAddress));
 	
+I should note that Accelo has a fairly restrictive set of fields you can search via. Look at the meta data class (Staff_ in this case) to see what you can search by.
+
 ### Missing entities
 
 At this point the API is not complete in that it does support all Accelo entities.
