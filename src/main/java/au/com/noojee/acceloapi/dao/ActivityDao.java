@@ -1,6 +1,5 @@
 package au.com.noojee.acceloapi.dao;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +29,7 @@ public class ActivityDao extends AcceloDao<Activity>
 		return getByFilter(filter);
 	}
 
-	public void insert(Activity activity) throws IOException, AcceloException
+	public void insert(Activity activity) 
 	{
 		AcceloFieldValues values = marshallArgs(activity);
 
@@ -57,6 +56,22 @@ public class ActivityDao extends AcceloDao<Activity>
 		return args;
 	}
 
+	
+	/**
+	 * As we can't update a lot of the attributes of an activity we resort
+	 * to deleting it and recreating it.
+	 * 
+	 * To use this method, retrieve an activity from accelo.
+	 * Adjust the details of the activity object and then call replace
+	 * This method will delete the original activity using its id and then
+	 * insert an new replacement activity based on the activity you pass in.
+	 * @param activity
+	 */
+	public void replace(Activity activity)
+	{
+		delete(activity);
+		insert(activity);
+	}
 
 
 

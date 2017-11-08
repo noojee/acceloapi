@@ -82,7 +82,7 @@ public class AcceloApi
 	 * @return all entities for the given endpoint subject to the filters limit.
 	 */
 	public <E extends AcceloEntity<E>> List<E> getAll(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList,
-			Class<? extends AcceloList<E>> clazz) throws AcceloException
+			Class<? extends AcceloList<E>> clazz)
 	{
 		List<E> list;
 		try
@@ -98,7 +98,7 @@ public class AcceloApi
 	}
 
 	
-	public <E extends AcceloEntity<E>, L extends AcceloList<E>> List<E> getAll(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<L> responseClass) throws AcceloException
+	public <E extends AcceloEntity<E>, L extends AcceloList<E>> List<E> getAll(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<L> responseClass)
 	{
 		List<E> entities = new ArrayList<>();
 		boolean more = true;
@@ -139,12 +139,9 @@ public class AcceloApi
 	 * @param pageNo
 	 *            the Page to return
 	 * @return
-	 * @throws IOException
-	 * @throws AcceloException
 	 */
 
 	public <E extends AcceloEntity<E>, R> R get(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<R> clazz, int pageNo)
-			throws AcceloException
 	{
 		HTTPResponse response = get(url, filterMap, fieldList, pageNo);
 		return response.parseBody(clazz);
@@ -162,12 +159,9 @@ public class AcceloApi
 	 * @param pageNo
 	 *            the Page to return
 	 * @return
-	 * @throws IOException
-	 * @throws AcceloException
 	 */
 
 	private <E extends AcceloEntity<E>> HTTPResponse get(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, int pageNo)
-			throws AcceloException
 	{
 		String fields = fieldList.formatAsJson();
 		String filters = (filterMap == null) ? null : filterMap.toJson();
@@ -197,7 +191,6 @@ public class AcceloApi
 	 * constitute the entity that we are pushing.
 	 */
 	public <T> T insert(EndPoint endPoint, AcceloFieldValues fieldNameValues, Class<T> clazz)
-			throws IOException, AcceloException
 	{
 		// String json = buildJsonBody(method, fieldNameValues);
 
@@ -206,7 +199,15 @@ public class AcceloApi
 
 		//String urlArgs = fieldNameValues.buildUrlArgs();
 
-		URL completeUrl = new URL(endPoint.getURL().toExternalForm()); // + "?" + urlArgs);
+		URL completeUrl;
+		try
+		{
+			completeUrl = new URL(endPoint.getURL().toExternalForm());
+		}
+		catch (MalformedURLException e)
+		{
+			throw new AcceloException(e);
+		} 
 		HTTPResponse response = _request(HTTPMethod.POST, completeUrl, fieldNameValues.formatAsJson());
 
 		return response.parseBody(clazz);
@@ -219,9 +220,16 @@ public class AcceloApi
 	 * @entityId - the accelo id of the entityt to be updated.
 	 */
 	public <T> T update(EndPoint endPoint, int entityId, AcceloFieldValues fieldNameValues, Class<T> clazz)
-			throws IOException, AcceloException
 	{
-		URL completeUrl = new URL(endPoint.getURL(entityId).toExternalForm()); //  + "?" + urlArgs);
+		URL completeUrl;
+		try
+		{
+			completeUrl = new URL(endPoint.getURL(entityId).toExternalForm());
+		}
+		catch (MalformedURLException e)
+		{
+			throw new AcceloException(e);
+		} 
 		String fields = fieldNameValues.formatAsJson();
 		logger.error("Updating: url=" + completeUrl + " fields=" + fields);
 		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, fields);
@@ -256,9 +264,8 @@ public class AcceloApi
 	/**
 	 * Returns a raw response string.
 	 * 
-	 * @throws AcceloException
 	 */
-	private HTTPResponse _request(HTTPMethod method, URL url, String jsonArgs) throws AcceloException
+	private HTTPResponse _request(HTTPMethod method, URL url, String jsonArgs)
 	{
 		HTTPResponse response = null;
 
@@ -332,19 +339,27 @@ public class AcceloApi
 
 	}
 
-	String fastStreamReader(InputStream inputStream) throws IOException
+	String fastStreamReader(InputStream inputStream) 
 	{
 		if (inputStream != null)
 		{
 			ByteArrayOutputStream result = new ByteArrayOutputStream();
 			byte[] buffer = new byte[4000];
 			int length;
-			while ((length = inputStream.read(buffer)) != -1)
+			try
 			{
-				result.write(buffer, 0, length);
+				while ((length = inputStream.read(buffer)) != -1)
+				{
+					result.write(buffer, 0, length);
+				}
+				return result.toString(StandardCharsets.UTF_8.name());
+
+			}
+			catch (IOException e)
+			{
+				throw new AcceloException(e);
 			}
 
-			return result.toString(StandardCharsets.UTF_8.name());
 		}
 		return "";
 	}
@@ -353,9 +368,8 @@ public class AcceloApi
 	/**
 	 * @param secret - use AcceloSecret.load
 	 * 
-	 * @throws AcceloException 
 	 */
-	public void connect(AcceloSecret secret) throws AcceloException
+	public void connect(AcceloSecret secret)
 	{
 		this.baseURL = "https://" + secret.getFQDN() + "/api/v0/";
 

@@ -1,6 +1,5 @@
 package au.com.noojee.acceloapi.dao;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -178,7 +177,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 						+ " details:" + this.toString());
 			}
 		}
-		catch (IllegalAccessException | IOException e)
+		catch (IllegalAccessException  e)
 		{
 			throw new AcceloException(e);
 		}
