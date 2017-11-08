@@ -19,6 +19,7 @@ import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.HTTPResponse;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.meta.FilterField;
 import au.com.noojee.acceloapi.filter.AcceloCache;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
@@ -29,20 +30,18 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	static Logger logger = LogManager.getLogger();
 
 	protected abstract Class<? extends AcceloResponseList<E>> getResponseListClass();
-	
+
 	protected abstract Class<? extends AcceloResponse<E>> getResponseClass();
 
 	protected abstract EndPoint getEndPoint();
-	
-	protected abstract Class<E> getEntityClass();
 
+	protected abstract Class<E> getEntityClass();
 
 	/**
 	 * Returns the list of tickets that match the pass in filter.
 	 * 
 	 * @param acceloApi
-	 * @param filter
-	 *            the filter defining the tickets to be returned.
+	 * @param filter the filter defining the tickets to be returned.
 	 * @return
 	 * @throws AcceloException
 	 */
@@ -59,10 +58,8 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 * Returns the list of tickets that match the pass in filter.
 	 * 
 	 * @param acceloApi
-	 * @param filter
-	 *            the filter defining the tickets to be returned.
-	 * @param fileds
-	 *            - the set of fields to return
+	 * @param filter the filter defining the tickets to be returned.
+	 * @param fileds - the set of fields to return
 	 * @return
 	 * @throws AcceloException
 	 * @throws ExecutionException
@@ -78,7 +75,6 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		return entities;
 	}
 
-	
 	public E getById(int id) throws AcceloException
 	{
 		AcceloFieldList fields = new AcceloFieldList();
@@ -105,10 +101,10 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		}
 		return entity;
 	}
-	
+
 	/**
-	 * This will return 'ALL" entities associated with the end point.
-	 * - USE WITH CARE!!!
+	 * This will return 'ALL" entities associated with the end point. - USE WITH CARE!!!
+	 * 
 	 * @param endpoint
 	 * @param id
 	 * @param fields
@@ -119,36 +115,65 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	public List<E> getAll() throws AcceloException
 	{
 		List<E> entities = new ArrayList<>();
-		
+
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add(AcceloFieldList._ALL);
 
 		// pass in an empty filter
 		AcceloFilter<E> filter = new AcceloFilter<>();
 
-
 		CacheKey<E> key = new CacheKey<>(getEndPoint(), filter, fields, getResponseListClass(), this.getEntityClass());
-		
+
 		entities = (List<E>) AcceloCache.getInstance().get(key);
 
 		return entities;
 	}
 
+	public void insert(AcceloEntity<E> entity)
+	{
+		AcceloFieldValues fields = marshalFields(entity);
 
+		AcceloResponse<E> response = AcceloApi.getInstance().insert(this.getEndPoint(), fields,
+				this.getResponseClass());
+
+		logger.debug(response);
+	}
 
 	/**
-	 * Uses introspection to collect the set of fields that need to be sent to
-	 * Accelo when updating an entity.
+	 * Uses introspection to collect the set of fields that need to be sent to Accelo when updating an entity.
 	 * 
 	 * @param ticket
 	 * @throws AcceloException
 	 */
-	public void update(AcceloEntity<E> entity) throws AcceloException
+	public void update(AcceloEntity<E> entity)
 	{
+		AcceloFieldValues fields = marshalFields(entity);
+
+		AcceloResponse<E> response = AcceloApi.getInstance().update(this.getEndPoint(), entity.getId(), fields,
+				this.getResponseClass());
+
+		logger.error(response);
+		if (response == null || response.getEntity() == null)
+		{
+			throw new AcceloException("Failed to update " + entity.getClass().getSimpleName() + ":" + entity.getId()
+					+ " details:" + this.toString());
+		}
+	}
+
+	/**
+	 * Uses reflection to build the AcceloFieldValues. We only marshal private fields that are not transient and not
+	 * static.
+	 * 
+	 * @param entity
+	 * @return
+	 * @throws IllegalAccessException
+	 */
+	private AcceloFieldValues marshalFields(AcceloEntity<E> entity)
+	{
+		AcceloFieldValues fields = new AcceloFieldValues();
+
 		try
 		{
-			AcceloFieldValues fields = new AcceloFieldValues();
-
 			Field[] entityFields = entity.getClass().getDeclaredFields();
 			Field[] inheritedFields = entity.getClass().getSuperclass().getDeclaredFields();
 			List<Field> fieldList = new ArrayList<>(Arrays.asList(entityFields));
@@ -159,42 +184,32 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 				if (Modifier.isPrivate(modifiers) && !Modifier.isTransient(modifiers) && !Modifier.isStatic(modifiers))
 				{
 					field.setAccessible(true);
-					Object value = field.get(entity);
-					
+					Object value;
+					value = field.get(entity);
+
 					fields.add(field.getName(), (value == null ? "" : value.toString()));
 				}
 			}
-
-			// Assign the Ticket to the owning aCompany.
-
-			AcceloResponse<E> response = AcceloApi.getInstance().update(this.getEndPoint(), entity.getId(), fields,
-					this.getResponseClass());
-			
-			logger.error(response);
-			if (response == null || response.getEntity() == null)
-			{
-				throw new AcceloException("Failed to update " + entity.getClass().getSimpleName() + ":" + entity.getId()
-						+ " details:" + this.toString());
-			}
 		}
-		catch (IllegalAccessException  e)
+		catch (IllegalArgumentException | IllegalAccessException e)
 		{
 			throw new AcceloException(e);
 		}
+
+		return fields;
 	}
-	
-	
 
 	public void delete(AcceloEntity<E> entity)
 	{
 		HTTPResponse response = AcceloApi.getInstance().delete(getEndPoint(), entity.getId());
-		
+
 		if (response.getResponseCode() != 200 && response.getResponseCode() != 400)
-			throw new AcceloException("Delete failed with error code: " + response.getResponseCode() + " Message:" + response.getResponseMessage());
+			throw new AcceloException("Delete failed with error code: " + response.getResponseCode() + " Message:"
+					+ response.getResponseMessage());
 		else
 			// We remove the entity from the cache. Of course it may also be attached to a query.
-			AcceloCache.getInstance().flushEntity(entity); 
-			
+			AcceloCache.getInstance().flushEntity(entity);
+
 	}
 
 }

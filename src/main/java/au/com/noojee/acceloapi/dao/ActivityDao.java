@@ -5,9 +5,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
@@ -28,34 +26,7 @@ public class ActivityDao extends AcceloDao<Activity>
 		
 		return getByFilter(filter);
 	}
-
-	public void insert(Activity activity) 
-	{
-		AcceloFieldValues values = marshallArgs(activity);
-
-		ActivityDao.Response response = AcceloApi.getInstance().insert(EndPoint.activities, values, ActivityDao.Response.class);
-		logger.debug(response);
-	}
-
-	private AcceloFieldValues marshallArgs(Activity activity)
-	{
-		AcceloFieldValues args = new AcceloFieldValues();
-
-		args.add("subject", activity.getSubject());
-		args.add("body", activity.getBody());
-		args.add("against_id", "" + activity.getAgainstId());
-		args.add("against_type", activity.getAgainstType());
-		args.add("owner_id", "" + activity.getOwnerId());
-		args.add("owner_type", activity.getOwnerType());
-		args.add("medium", activity.getMedium().toString());
-		args.add("visibility", activity.getVisiblity().toString());
-		args.add("details", activity.getDetails());
-		args.add("date_started", "" + activity.getDateStarted());
-		args.add("date_created", "" + activity.getDateCreated());
-
-		return args;
-	}
-
+	
 	
 	/**
 	 * As we can't update a lot of the attributes of an activity we resort
@@ -69,8 +40,10 @@ public class ActivityDao extends AcceloDao<Activity>
 	 */
 	public void replace(Activity activity)
 	{
-		delete(activity);
+		// we do the insert first so if anything goes wrong we don't loose data.
 		insert(activity);
+
+		delete(activity);
 	}
 
 
