@@ -16,6 +16,10 @@ public abstract class Expression
 	@Override
 	public abstract int hashCode();
 	
+	@Override
+	public abstract boolean equals(Object e);
+
+	
 	public Expression and(Expression child) // throws AcceloException
 	{
 		return new And(this, child);

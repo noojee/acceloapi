@@ -32,9 +32,15 @@ public class AcceloCacheTest
 	{
 		int id;
 
-		public MockEntity(int id)
+		
+		private MockEntity(int id)
 		{
 			this.id = id;
+		}
+
+		private MockEntity(MockEntity mockEntity)
+		{
+			this.id = mockEntity.id;
 		}
 
 		@Override
@@ -55,6 +61,7 @@ public class AcceloCacheTest
 			return "MockEntity [id=" + id + "]";
 		}
 
+	
 	}
 
 }

@@ -8,17 +8,16 @@ package au.com.noojee.acceloapi.entities.meta;
  * each of the 'meta' fields which can be searched on. 
  * 
  * <pre>
- * 	@SuppressWarnings("unused")
+ * <code>
 	private class Meta implements MetaBasicFilterFields
 	{
-		@BasicFilterField
+		{@literal @}BasicFilterField
 		private transient String affiliation; // matches on the default_affiliation.
 		
-		@BasicFilterField
+		{@literal @}BasicFilterField
 		private transient String contact_number;  // filters over phone, fax and mobile
-
 	}
-
+	</code>
  * </pre>
  * 
  * @author bsutton

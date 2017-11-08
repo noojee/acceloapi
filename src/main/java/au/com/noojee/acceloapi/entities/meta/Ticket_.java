@@ -1,5 +1,7 @@
 package au.com.noojee.acceloapi.entities.meta;
 
+import java.time.LocalDate;
+
 /** 
  *
  *          DO NOT MODIFY 
@@ -12,35 +14,34 @@ package au.com.noojee.acceloapi.entities.meta;
  *
  */
 import au.com.noojee.acceloapi.entities.Status;
-import java.time.LocalDate;
 import au.com.noojee.acceloapi.entities.Ticket;
 
 
 public class Ticket_ 
 {
 
-	public static FilterField<Ticket, String> contact_number = new FilterField<>("contact_number"); 
+	public static FilterField<Ticket, Integer> affiliation = new FilterField<>("affiliation"); 
+	public static FilterField<Ticket, Integer> assignee = new FilterField<>("assignee"); 
+	public static FilterField<Ticket, Integer> class_id = new FilterField<>("class"); 
 	public static FilterField<Ticket, Integer> closed_by = new FilterField<>("closed_by"); 
+	public static FilterField<Ticket, String> contact_number = new FilterField<>("contact_number"); 
+	public static FilterField<Ticket, Integer> contract = new FilterField<>("contract"); 
+	public static FilterField<Ticket, String> custom_id = new FilterField<>("custom_id"); 
+	public static FilterField<Ticket, LocalDate> date_closed = new FilterField<>("date_closed"); 
+	public static FilterField<Ticket, LocalDate> date_due = new FilterField<>("date_due"); 
+	public static FilterField<Ticket, LocalDate> date_opened = new FilterField<>("date_opened"); 
+	public static FilterField<Ticket, LocalDate> date_started = new FilterField<>("date_started"); 
+	public static FilterField<Ticket, LocalDate> date_submitted = new FilterField<>("date_submitted"); 
+	public static FilterField<Ticket, Integer> id = new FilterField<>("id"); 
+	public static FilterField<Ticket, Integer> issue_type = new FilterField<>("issue_type"); 
+	public static FilterField<Ticket, Integer> opened_by = new FilterField<>("opened_by"); 
+	public static FilterField<Ticket, String> priority = new FilterField<>("priority"); 
+	public static FilterField<Ticket, Integer> referrer_id = new FilterField<>("referrer_id"); 
 	public static FilterField<Ticket, String> referrer_type = new FilterField<>("referrer_type"); 
 	public static FilterField<Ticket, Integer> resolution = new FilterField<>("resolution"); 
-	public static FilterField<Ticket, LocalDate> date_due = new FilterField<>("date_due"); 
-	public static FilterField<Ticket, Integer> class_id = new FilterField<>("class_id"); 
-	public static FilterField<Ticket, Integer> referrer_id = new FilterField<>("referrer_id"); 
-	public static FilterField<Ticket, Integer> id = new FilterField<>("id"); 
 	public static FilterField<Ticket, Integer> resolved_by = new FilterField<>("resolved_by"); 
-	public static FilterField<Ticket, Integer> affiliation = new FilterField<>("affiliation"); 
-	public static FilterField<Ticket, LocalDate> date_closed = new FilterField<>("date_closed"); 
-	public static FilterField<Ticket, Integer> opened_by = new FilterField<>("opened_by"); 
-	public static FilterField<Ticket, Integer> issue_type = new FilterField<>("issue_type"); 
-	public static FilterField<Ticket, Integer> submitted_by = new FilterField<>("submitted_by"); 
-	public static FilterField<Ticket, String> priority = new FilterField<>("priority"); 
-	public static FilterField<Ticket, LocalDate> date_opened = new FilterField<>("date_opened"); 
-	public static FilterField<Ticket, LocalDate> date_submitted = new FilterField<>("date_submitted"); 
-	public static FilterField<Ticket, String> custom_id = new FilterField<>("custom_id"); 
-	public static FilterField<Ticket, Integer> contract = new FilterField<>("contract"); 
-	public static FilterField<Ticket, Integer> assignee = new FilterField<>("assignee"); 
-	public static FilterField<Ticket, LocalDate> date_started = new FilterField<>("date_started"); 
-	public static FilterField<Ticket, Status> status = new FilterField<>("status"); 
 	public static FilterField<Ticket, String> standing = new FilterField<>("standing"); 
+	public static FilterField<Ticket, Status> status = new FilterField<>("status"); 
+	public static FilterField<Ticket, Integer> submitted_by = new FilterField<>("submitted_by"); 
 
 }

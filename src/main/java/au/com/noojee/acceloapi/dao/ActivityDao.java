@@ -21,13 +21,6 @@ public class ActivityDao extends AcceloDao<Activity>
 {
 	static private Logger logger = LogManager.getLogger(Activity.class);
 
-	public class Response extends AcceloResponse<Activity>
-	{
-	}
-
-	public class ResponseList extends AcceloResponseList<Activity>
-	{
-	}
 
 	public List<Activity> getByTicket(Ticket ticket) throws AcceloException
 	{
@@ -64,17 +57,41 @@ public class ActivityDao extends AcceloDao<Activity>
 		return args;
 	}
 
-	@Override
-	protected Class<ResponseList> getResponseListClass()
-	{
-		return ActivityDao.ResponseList.class;
-	}
+
+
 
 	@Override
 	protected EndPoint getEndPoint()
 	{
 		return EndPoint.activities;
 	}
+
+	@Override
+	protected Class<Activity> getEntityClass()
+	{
+		return Activity.class;
+	}
+	
+	public class Response extends AcceloResponse<Activity>
+	{
+	}
+
+	public class ResponseList extends AcceloResponseList<Activity>
+	{
+	}
+
+	@Override
+	protected Class<? extends AcceloResponseList<Activity>> getResponseListClass()
+	{
+		return ResponseList.class;
+	}
+	
+	@Override
+	protected Class<? extends AcceloResponse<Activity>> getResponseClass()
+	{
+		return Response.class;
+	}
+
 
 
 }

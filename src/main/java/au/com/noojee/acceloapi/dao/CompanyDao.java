@@ -4,6 +4,7 @@ import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
+import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Company;
@@ -14,10 +15,7 @@ import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class CompanyDao extends AcceloDao<Company>
 {
-	public class ResponseList extends AcceloResponseList<Company>
-	{
 
-	}
 
 	public Company getByName(String companyName) throws AcceloException
 	{
@@ -52,11 +50,35 @@ public class CompanyDao extends AcceloDao<Company>
 	{
 		return EndPoint.companies;
 	}
+	
+	@Override
+	protected Class<Company> getEntityClass()
+	{
+		return Company.class;
+	}
+
+	
+	public class ResponseList extends AcceloResponseList<Company>
+	{
+
+	}
+	
+	public class Response extends AcceloResponse<Company>
+	{
+
+	}
 
 	@Override
 	protected Class<CompanyDao.ResponseList> getResponseListClass()
 	{
 		return CompanyDao.ResponseList.class;
 	}
+	
+	@Override
+	protected Class<? extends AcceloResponse<Company>> getResponseClass()
+	{
+		return CompanyDao.Response.class;
+	}
+
 
 }

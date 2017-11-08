@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"au.com.noojee.acceloapi"},{"l":"au.com.noojee.acceloapi.dao"},{"l":"au.com.noojee.acceloapi.entities"},{"l":"au.com.noojee.acceloapi.entities.meta"},{"l":"au.com.noojee.acceloapi.filter"},{"l":"au.com.noojee.acceloapi.filter.expressions"}]

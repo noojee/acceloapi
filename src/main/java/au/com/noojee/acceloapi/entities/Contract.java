@@ -9,8 +9,6 @@ import au.com.noojee.acceloapi.entities.meta.DateFilterField;
 
 public class Contract extends AcceloEntity<Contract> 
 {
-	@BasicFilterField
-	private int id;
 	private int company;			// The owning company id.
 	private String title;
 	@DateFilterField
@@ -48,12 +46,7 @@ public class Contract extends AcceloEntity<Contract>
 	@BasicFilterField
 	private int billable_affiliation;
 	
-	@Override
-	public int getId()
-	{
-		return id;
-	}
-
+	
 	public String getTitle()
 	{
 		return title;
@@ -194,7 +187,7 @@ public class Contract extends AcceloEntity<Contract>
 	@Override
 	public String toString()
 	{
-		return "Contract [id=" + id + ", company=" + company + ", title=" + title + ", date_created=" + date_created
+		return "Contract [id=" + getId() + ", company=" + company + ", title=" + title + ", date_created=" + date_created
 				+ ", date_started=" + date_started + ", date_period_expires=" + date_period_expires + ", date_expires="
 				+ date_expires + ", date_last_interacted=" + date_last_interacted + ", renew_days=" + renew_days
 				+ ", standing=" + standing + ", auto_renew=" + auto_renew + ", deployment=" + deployment + ", owner_affiliation="
@@ -204,30 +197,6 @@ public class Contract extends AcceloEntity<Contract>
 				+ ", notes=" + notes + ", period_template_id=" + period_template_id + "]";
 	}
 
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Contract other = (Contract) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
-	
 	
 	@Override
 	public int compareTo(Contract o)

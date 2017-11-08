@@ -79,7 +79,7 @@ public class AcceloApi
 	 * @param filterMap
 	 * @param fieldList
 	 * @param clazz
-	 * @return
+	 * @return all entities for the given endpoint subject to the filters limit.
 	 */
 	public <E extends AcceloEntity<E>> List<E> getAll(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList,
 			Class<? extends AcceloList<E>> clazz) throws AcceloException
@@ -126,72 +126,6 @@ public class AcceloApi
 
 
 
-	/**
-	 * Send a request to get a single entity or the 'nth' page of entities. The
-	 * first page is page 0.
-	 * 
-	 * @param method
-	 * @param url
-	 * @param filterMap
-	 * @param fieldList
-	 * @param clazz
-	 * @param pageNo
-	 *            the Page to return
-	 * @return
-	 * @throws IOException
-	 * @throws AcceloException
-	 */
-
-	public <E extends AcceloEntity<E>, R> R get(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<R> clazz, int pageNo)
-			throws IOException, AcceloException
-	{
-		HTTPResponse response = get(endPoint.getURL(), filterMap, fieldList, pageNo);
-		return response.parseBody(clazz);
-	}
-
-	/**
-	 * Send a request to get a single entity or the first page of entities.
-	 * 
-	 * @param method
-	 * @param url
-	 * @param filterMap
-	 * @param fieldList
-	 * @param clazz
-	 * @param page
-	 *            if true then will pull a full list of matching entities by
-	 *            paging through the list.
-	 * @return
-	 * @throws IOException
-	 * @throws AcceloException
-	 */
-	public <E extends AcceloEntity<E>, R> R get(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<R> clazz)
-			throws IOException, AcceloException
-	{
-		return get(endPoint, filterMap, fieldList, clazz, 0);
-	}
-
-	/**
-	 * Send a request to get a single entity or the 'nth' page of entities. The
-	 * first page is page 0.
-	 * 
-	 * @param method
-	 * @param url
-	 * @param filterMap
-	 * @param fieldList
-	 * @param clazz
-	 * @param pageNo
-	 *            the Page to return
-	 * @return
-	 * @throws IOException
-	 * @throws AcceloException
-	 */
-
-	public <E extends AcceloEntity<E>> HTTPResponse get(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList, int pageNo)
-			throws IOException, AcceloException
-	{
-		HTTPResponse response = get(endPoint.getURL(), filterMap, fieldList, pageNo);
-		return response;
-	}
 
 	/**
 	 * Send a request to get a single entity or the 'nth' page of entities. The
@@ -287,12 +221,6 @@ public class AcceloApi
 	public <T> T update(EndPoint endPoint, int entityId, AcceloFieldValues fieldNameValues, Class<T> clazz)
 			throws IOException, AcceloException
 	{
-		// looks like you can't post fields via json so we need to add data to
-		// the url.
-		// TODO: I don't think this is true actually.
-		// String urlArgs = fieldNameValues.buildUrlArgs();
-		
-
 		URL completeUrl = new URL(endPoint.getURL(entityId).toExternalForm()); //  + "?" + urlArgs);
 		String fields = fieldNameValues.formatAsJson();
 		logger.error("Updating: url=" + completeUrl + " fields=" + fields);
@@ -301,11 +229,14 @@ public class AcceloApi
 		return response.parseBody(clazz);
 	}
 	
-	public void delete(EndPoint endPoint, int id) 
+	public HTTPResponse delete(EndPoint endPoint, int id) 
 	{
 		URL completeUrl = buildURL(endPoint, id); 
 		logger.error("Deleting: url=" + completeUrl);
-		_request(HTTPMethod.DELETE, completeUrl, null);
+		HTTPResponse response = _request(HTTPMethod.DELETE, completeUrl, null);
+		logger.error("Deleted: url=" + completeUrl);
+		
+		return response;
 	}
 
 

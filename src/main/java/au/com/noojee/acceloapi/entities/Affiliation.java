@@ -10,9 +10,6 @@ import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
 public class Affiliation extends AcceloEntity<Affiliation>
 {
 	@BasicFilterField
-	private int id;
-
-	@BasicFilterField
 	private int company; // id of the affiliated company
 	
 	@BasicFilterField
@@ -65,18 +62,6 @@ public class Affiliation extends AcceloEntity<Affiliation>
 		
 		@BasicFilterField
 		private transient String status;
-	}
-
-
-	@Override
-	public int getId()
-	{
-		return id;
-	}
-
-	public void setId(int id)
-	{
-		this.id = id;
 	}
 
 
@@ -146,7 +131,7 @@ public class Affiliation extends AcceloEntity<Affiliation>
 
 	public void setDateLastInteracted(LocalDate dateLastInteracted)
 	{
-		this.date_last_interacted = toDateAsLong(dateLastInteracted);
+		this.date_last_interacted = toLong(dateLastInteracted);
 	}
 
 	public LocalDate getDateModified()
@@ -156,7 +141,7 @@ public class Affiliation extends AcceloEntity<Affiliation>
 
 	public void setDateModified(LocalDate dateModified)
 	{
-		this.date_modified = toDateAsLong(dateModified);
+		this.date_modified = toLong(dateModified);
 	}
 
 	public int getStaffBookmarked()
@@ -204,7 +189,7 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	@Override
 	public String toString()
 	{
-		return "Affiliation [id=" + id + ", company=" + company + ", postal_address=" + postal_address
+		return "Affiliation [id=" + getId() + ", company=" + company + ", postal_address=" + postal_address
 				+ ", physical_address=" + physical_address + ", phone=" + phone + ", contact=" + contact + ", mobile="
 				+ mobile + ", email=" + email + ", position=" + position + ", date_last_interacted="
 				+ date_last_interacted + ", date_modified=" + date_modified + ", staff_bookmarked=" + staff_bookmarked

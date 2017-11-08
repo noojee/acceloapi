@@ -51,6 +51,17 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 		this.expression = expression;
 	}
 
+
+	public Search search(String searchValue)
+	{
+		if (expression != null)
+			throw new AcceloException("You may not combine filters and searches");
+
+		this.search = new Search(searchValue);
+
+		return this.search;
+	}
+
 	public AcceloFilter<E> and(Expression child) // throws AcceloException
 	{
 		this.expression = new And(this.expression, child);
@@ -75,6 +86,12 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	{
 		return new Eq<E>(field, operand);
 	}
+	
+	public Expression eq(FilterField<E, String> field, AgainstType_ operand)
+	{
+		return new Eq<E>(field, operand.getName());
+	}
+
 	
 	public Expression eq(FilterField<E, String[]> field, String[] operand)
 	{

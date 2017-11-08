@@ -10,7 +10,6 @@ import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponseList;
-import au.com.noojee.acceloapi.CustomField;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.DateFilterField;
@@ -20,9 +19,6 @@ import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
 public class Company extends AcceloEntity<Company>
 {
 	public static final String FIELDS_ALL = "company._ALL";
-
-	@BasicFilterField
-	private int id;
 	
 	@SearchFilterField
 	private String name;
@@ -75,7 +71,7 @@ public class Company extends AcceloEntity<Company>
 		try
 		{
 
-			String path = "/" + this.id + "/profiles/values";
+			String path = "/" + this.getId() + "/profiles/values";
 
 			response = AcceloApi.getInstance().get(new URL(EndPoint.companies.getURL(), path), null, AcceloFieldList.ALL,
 					CustomFieldsResponse.class, 0);
@@ -86,21 +82,8 @@ public class Company extends AcceloEntity<Company>
 		}
 
 		this.customFields = response.getList();
-
-		// return company;
-
 	}
 
-	@Override
-	public int getId()
-	{
-		return id;
-	}
-
-	public void setId(int companyId)
-	{
-		this.id = companyId;
-	}
 
 	public String getName()
 	{
@@ -155,7 +138,7 @@ public class Company extends AcceloEntity<Company>
 	@Override
 	public String toString()
 	{
-		return "Company [id=" + id + ", name=" + name + ", website=" + website + ", standing=" + standing + ", status="
+		return "Company [id=" + getId() + ", name=" + name + ", website=" + website + ", standing=" + standing + ", status="
 				+ status + ", phone=" + phone + ", fax=" + fax + ", date_created=" + date_created + ", date_modified="
 				+ date_modified + ", comments=" + comments + ", contact=" + contact + "]";
 	}
@@ -184,30 +167,6 @@ public class Company extends AcceloEntity<Company>
 		return PIN;
 	}
 
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Company other = (Company) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
-	
 	@Override
 	public int compareTo(Company o)
 	{

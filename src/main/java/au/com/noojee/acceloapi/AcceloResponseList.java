@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import au.com.noojee.acceloapi.dao.AcceloList;
+import au.com.noojee.acceloapi.entities.AcceloEntity;
 
-public abstract class AcceloResponseList<T>  implements AcceloList<T>
+public abstract class AcceloResponseList<E extends AcceloEntity<E>>  implements AcceloList<E>
 {
 	private Meta meta;
-	private List<T> response;
+	
+	// Stores a list of AcceloEntities. 
+	private List<E> response;
 	
 	
 	@Override
-	public List<T> getList()
+	public List<E> getList()
 	{
 		// Guaranteed to return a list.
 		if (response == null)

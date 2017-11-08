@@ -8,9 +8,7 @@ public class AcceloFieldList
 	public static String _ALL = "_ALL";
 	public static final AcceloFieldList ALL = new AcceloFieldList(_ALL);
 
-	
-
-	List<String> fields = new ArrayList<>();
+	private List<String> fields = new ArrayList<>();
 
 	public AcceloFieldList(String field)
 	{

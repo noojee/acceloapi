@@ -12,16 +12,23 @@ public class CacheKey<E extends AcceloEntity>
 	AcceloFilter filter;
 	private AcceloFieldList fields;
 	private Class<? extends AcceloList<E>> responseListClass;
+	Class<E> entityClass;
 
 	
 	public CacheKey(EndPoint endPoint, AcceloFilter filter, AcceloFieldList fields,
-			Class<? extends AcceloList<E>> responseListClass)
+			Class<? extends AcceloList<E>> responseListClass, Class<E> entityClass)
 	{
 		this.endPoint = endPoint;
 		this.filter = filter;
 		this.fields = fields;
 		this.responseListClass = responseListClass;
+		this.entityClass = entityClass;
 
+	}
+	
+	public Class<E> getEntityClass()
+	{
+		return this.entityClass;
 	}
 
 	public AcceloFilter getFilter()
@@ -91,7 +98,7 @@ public class CacheKey<E extends AcceloEntity>
 	@Override
 	public String toString()
 	{
-		return "CacheKey [endPoint=" + endPoint + ", filter=" + filter + "]";
+		return "CacheKey [endPoint=" + endPoint + ", filter=" + filter + " hashCode:" + hashCode() + "]";
 	}
 
 }

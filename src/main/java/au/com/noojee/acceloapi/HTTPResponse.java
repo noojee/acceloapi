@@ -6,9 +6,9 @@ import com.google.gson.Gson;
 
 public class HTTPResponse
 {
-	int responseCode;
-	String responseMessage;
-	String responseBody;
+	private int responseCode;
+	private String responseMessage;
+	private String responseBody;
 
 	public HTTPResponse(int responseCode, String responseMessage, String responseBody)
 	{
@@ -16,6 +16,17 @@ public class HTTPResponse
 		this.responseMessage = responseMessage;
 		this.responseBody = responseBody;
 	}
+	
+	public int getResponseCode()
+	{
+		return responseCode;
+	}
+
+	public String getResponseMessage()
+	{
+		return responseMessage;
+	}
+
 
 	public <T> T parseBody(Class<T> clazz) throws AcceloException
 	{
@@ -52,5 +63,6 @@ public class HTTPResponse
 		return "HttpResponse [responseCode=" + responseCode + ", responseMessage=" + responseMessage + ", responseBody="
 				+ responseBody + "]";
 	}
+
 
 }

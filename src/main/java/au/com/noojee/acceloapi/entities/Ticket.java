@@ -26,8 +26,6 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	}
 
-	@BasicFilterField
-	private int id;
 	private String title;
 	@BasicFilterField
 	private String custom_id;
@@ -112,13 +110,6 @@ public class Ticket extends AcceloEntity<Ticket>
 																// still.
 	}
 
-
-	@Override
-	public int getId()
-	{
-		return id;
-	}
-	
 	public int getCompanyId()
 	{
 		return company;
@@ -283,12 +274,6 @@ public class Ticket extends AcceloEntity<Ticket>
 		return contract != 0;
 	}
 
-
-	public void setId(int id)
-	{
-		this.id = id;
-	}
-
 	public void setTitle(String title)
 	{
 		this.title = title;
@@ -427,7 +412,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	@Override
 	public String toString()
 	{
-		return "Ticket [id=" + id + ", title=" + title + ", custom_id=" + custom_id + ", type=" + issue_type 
+		return "Ticket [id=" + getId() + ", title=" + title + ", custom_id=" + custom_id + ", type=" + issue_type 
 				+ ", against_id=" + against_id + ", against_type=" + against_type + ", priority=" + priority
 				+ ", resolution=" + resolution + ", status=" + status + ", standing=" + standing + ", submitted_by="
 				+ submitted_by + ", date_submitted=" + date_submitted + ", date_opened=" + date_opened

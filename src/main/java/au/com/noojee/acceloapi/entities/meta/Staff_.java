@@ -17,9 +17,9 @@ import au.com.noojee.acceloapi.entities.Staff;
 public class Staff_ 
 {
 
+	public static FilterField<Staff, String> email = new FilterField<>("email"); 
 	public static FilterField<Staff, Integer> id = new FilterField<>("id"); 
 	public static FilterField<Staff, String> standing = new FilterField<>("standing"); 
 	public static FilterField<Staff, String> username = new FilterField<>("username"); 
-	public static FilterField<Staff, String> email = new FilterField<>("email"); 
 
 }

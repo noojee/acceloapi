@@ -30,17 +30,20 @@ public class StaffDao extends AcceloDao<Staff>
 
 	}
 
+	
 	@Override
 	protected EndPoint getEndPoint()
 	{
 		return EndPoint.staff;
 	}
-
+	
 	@Override
-	protected Class<ResponseList> getResponseListClass()
+	protected Class<Staff> getEntityClass()
 	{
-		return ResponseList.class;
+		return Staff.class;
 	}
+	
+	
 
 	public class Response extends AcceloResponse<Staff>
 	{
@@ -49,5 +52,21 @@ public class StaffDao extends AcceloDao<Staff>
 	public class ResponseList extends AcceloResponseList<Staff>
 	{
 	}
+
+
+	@Override
+	protected Class<ResponseList> getResponseListClass()
+	{
+		return ResponseList.class;
+	}
+
+	@Override
+	protected Class<Response> getResponseClass()
+	{
+		return Response.class;
+	}
+
+
+
 
 }

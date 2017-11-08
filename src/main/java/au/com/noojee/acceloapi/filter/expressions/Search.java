@@ -1,6 +1,6 @@
 package au.com.noojee.acceloapi.filter.expressions;
 
-public class Search 
+public class Search extends Expression
 {
 	private String operand;
 
@@ -28,5 +28,39 @@ public class Search
 	{
 		return operand;
 	}
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((operand == null) ? 0 : operand.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Search other = (Search) obj;
+		if (operand == null)
+		{
+			if (other.operand != null)
+				return false;
+		}
+		else if (!operand.equals(other.operand))
+			return false;
+		return true;
+	}
+
+
+
+	
+
 	
 }

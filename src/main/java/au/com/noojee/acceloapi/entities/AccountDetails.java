@@ -3,7 +3,7 @@ package au.com.noojee.acceloapi.entities;
 import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
 
-public class AccountDetails
+public class AccountDetails extends AcceloEntity<AccountDetails>
 {
     private String position;
 
@@ -19,9 +19,7 @@ public class AccountDetails
 	
     private String firstname;
 
-    private String id;
-
-    private String username;
+     private String username;
 
 	@BasicFilterField
 	@SearchFilterField
@@ -37,7 +35,8 @@ public class AccountDetails
 
     private String mobile;
 
-    public String getPosition ()
+ 
+	public String getPosition ()
     {
         return position;
     }
@@ -77,16 +76,6 @@ public class AccountDetails
         this.access_level = access_level;
     }
 
-//    public Locale getLocale ()
-//    {
-//        return locale;
-//    }
-//
-//    public void setLocale (Locale locale)
-//    {
-//        this.locale = locale;
-//    }
-
     public String getSurname ()
     {
         return surname;
@@ -107,16 +96,7 @@ public class AccountDetails
         this.firstname = firstname;
     }
 
-    public String getId ()
-    {
-        return id;
-    }
-
-    public void setId (String id)
-    {
-        this.id = id;
-    }
-
+  
     public String getUsername ()
     {
         return username;
@@ -192,8 +172,9 @@ public class AccountDetails
     {
         return "ClassPojo [position = "+position+", phone = "+phone+", fax = "+fax+", access_level = "+access_level 
         		// +", locale = "+locale+"
-        		+ "surname = "+surname+", firstname = "+firstname+", id = "+id+", username = "+username+", title = "+title+", user_defined_titles = "+user_defined_titles+", initials = "+initials+", email = "+email+", user_access = "+user_access+", mobile = "+mobile+"]";
+        		+ "surname = "+surname+", firstname = "+firstname+", id = "+getId()+", username = "+username+", title = "+title+", user_defined_titles = "+user_defined_titles+", initials = "+initials+", email = "+email+", user_access = "+user_access+", mobile = "+mobile+"]";
     }
+
 }
 			
 			

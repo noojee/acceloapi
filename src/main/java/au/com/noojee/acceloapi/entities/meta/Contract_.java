@@ -1,5 +1,7 @@
 package au.com.noojee.acceloapi.entities.meta;
 
+import java.time.LocalDate;
+
 /** 
  *
  *          DO NOT MODIFY 
@@ -12,23 +14,22 @@ package au.com.noojee.acceloapi.entities.meta;
  *
  */
 import au.com.noojee.acceloapi.entities.Contract;
-import java.time.LocalDate;
 
 
 public class Contract_ 
 {
 
+	public static FilterField<Contract, String> auto_renew = new FilterField<>("auto_renew"); 
+	public static FilterField<Contract, Integer> billable_affiliation = new FilterField<>("billable_affiliation"); 
+	public static FilterField<Contract, LocalDate> date_created = new FilterField<>("date_created"); 
+	public static FilterField<Contract, LocalDate> date_expires = new FilterField<>("date_expires"); 
+	public static FilterField<Contract, LocalDate> date_period_expires = new FilterField<>("date_period_expires"); 
+	public static FilterField<Contract, LocalDate> date_started = new FilterField<>("date_started"); 
 	public static FilterField<Contract, Integer> id = new FilterField<>("id"); 
-	public static FilterField<Contract, Integer> type = new FilterField<>("type"); 
+	public static FilterField<Contract, Integer> manager = new FilterField<>("manager"); 
 	public static FilterField<Contract, Integer> owner_affiliation = new FilterField<>("owner_affiliation"); 
 	public static FilterField<Contract, String> standing = new FilterField<>("standing"); 
-	public static FilterField<Contract, Integer> billable_affiliation = new FilterField<>("billable_affiliation"); 
-	public static FilterField<Contract, String> auto_renew = new FilterField<>("auto_renew"); 
-	public static FilterField<Contract, LocalDate> date_expires = new FilterField<>("date_expires"); 
-	public static FilterField<Contract, LocalDate> date_started = new FilterField<>("date_started"); 
 	public static FilterField<Contract, String> status = new FilterField<>("status"); 
-	public static FilterField<Contract, LocalDate> date_created = new FilterField<>("date_created"); 
-	public static FilterField<Contract, Integer> manager = new FilterField<>("manager"); 
-	public static FilterField<Contract, LocalDate> date_period_expires = new FilterField<>("date_period_expires"); 
+	public static FilterField<Contract, Integer> type = new FilterField<>("type"); 
 
 }

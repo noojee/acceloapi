@@ -10,6 +10,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javamoney.moneta.Money;
 
+import com.google.gson.annotations.SerializedName;
+
 import au.com.noojee.acceloapi.Formatters;
 import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.DateFilterField;
@@ -18,7 +20,6 @@ public class Activity extends AcceloEntity<Activity>
 {
 
 	static private Logger logger = LogManager.getLogger(Activity.class);
-	
 
 	public enum Medium
 	{
@@ -44,39 +45,42 @@ public class Activity extends AcceloEntity<Activity>
 		}
 	};
 
-	@BasicFilterField
-	private int id;
 	private String subject;
 	private String parent;
-	
+
 	@BasicFilterField
 	private String parent_id;
 
 	private String thread;
+	
+	@BasicFilterField
 	private String thread_id;
 
+	@BasicFilterField
 	private String against_type;
 
-	
+	@BasicFilterField
 	private int against_id;
 
 	@BasicFilterField
 	private int owner_id;
-	
+
 	@BasicFilterField
 	private String owner_type;
 
 	@BasicFilterField
 	private Medium medium;
-	
+
 	private String body;
-	
+
 	@BasicFilterField
 	private Visibility visiblity;
 
-	private String details; // For meetings this is the location, for postals this is the address and for calls this is the number.
+	private String details; // For meetings this is the location, for postals this is the address and for calls this is
+							// the number.
 
-	private String standing; // The standing of the activity, may be one of “unapproved”, “approved”, “invoiced”, “locked”, or empty.
+	private String standing; // The standing of the activity, may be one of “unapproved”, “approved”, “invoiced”,
+								// “locked”, or empty.
 	private int invoice_id;
 	private int contract_period_id;
 
@@ -91,34 +95,31 @@ public class Activity extends AcceloEntity<Activity>
 	@DateFilterField
 	private long date_modified;
 
-	private int billable; // amount of billable time logged for the activity in
+	private long billable; // amount of billable time logged for the activity in
 							// seconds.
-	private int nonbillable; // amount of non-billable seconds.
+	private long nonbillable; // amount of non-billable seconds.
 
 	@BasicFilterField
 	private int staff;
-	
+
 	@BasicFilterField
 	private int priority;
-	
-	@BasicFilterField
+
+	@BasicFilterField(name="class")
+	@SerializedName("class")
 	private int _class;
-	
+
 	@BasicFilterField
 	private int task;
 
 	@BasicFilterField
 	private int time_allocation; // The time allocation for the activity.
+	
 	private int rate; // id of the rate object
 	private int rate_charged; // The rate at which the billable time was charged.
 
 	List<Tag> tag; // A list of tags associated with the activity
-
-
-	public void setId(int id)
-	{
-		this.id = id;
-	}
+	
 
 	public void setSubject(String subject)
 	{
@@ -192,22 +193,22 @@ public class Activity extends AcceloEntity<Activity>
 
 	public void setDateStarted(LocalDate dateStarted)
 	{
-		this.date_started = toDateAsLong(dateStarted);
+		this.date_started = toLong(dateStarted);
 	}
 
 	public void setDateEnded(LocalDate dateEnded)
 	{
-		this.date_ended = toDateAsLong(dateEnded);
+		this.date_ended = toLong(dateEnded);
 	}
 
 	public void setDateCreated(LocalDate dateCreated)
 	{
-		this.date_created = toDateAsLong(dateCreated);
+		this.date_created = toLong(dateCreated);
 	}
 
 	public void setDateModified(LocalDate dateModified)
 	{
-		this.date_modified = toDateAsLong(dateModified);
+		this.date_modified = toLong(dateModified);
 	}
 
 	public void setStaffId(int staffId)
@@ -215,11 +216,6 @@ public class Activity extends AcceloEntity<Activity>
 		this.staff = staffId;
 	}
 
-	@Override
-	public int getId()
-	{
-		return id;
-	}
 
 	public String getSubject()
 	{
@@ -311,34 +307,6 @@ public class Activity extends AcceloEntity<Activity>
 		return this.owner_type;
 	}
 
-	// public void setFrom(String fromAddr, String from_name)
-	// {
-	// this.fromAddr = fromAddr;
-	// this.from_name = from_name;
-	//
-	// }
-	//
-	//
-	// public void setTo(String toAddr, String to_name)
-	// {
-	// this.toAddr = toAddr;
-	// this.to_name = to_name;
-	// }
-	//
-	@Override
-	public String toString()
-	{
-		return "Activity [id=" + id + ", subject=" + subject + ", parent=" + parent + ", parent_id=" + parent_id
-				+ ", thread=" + thread + ", thread_id=" + thread_id + ", against_type=" + against_type + ", against_id="
-				+ against_id + ", owner_id=" + owner_id + ", owner_type=" + owner_type + ", medium=" + medium
-				+ ", body=" + body + ", visiblity=" + visiblity + ", details=" + details + ", date_created="
-				+ date_created + ", date_started=" + date_started + ", date_ended=" + date_ended + ", date_logged="
-				+ date_logged + ", date_modified=" + date_modified + ", billable=" + billable + ", nonbillable="
-				+ nonbillable + ", staff=" + staff + ", priority=" + priority + ", _class=" + _class + ", task=" + task
-				+ ", time_allocation=" + time_allocation + ", rate=" + rate + ", rate_charged=" + rate_charged
-				+ ", tag=" + tag + "]";
-	}
-
 	public String getStanding()
 	{
 		return standing;
@@ -367,11 +335,6 @@ public class Activity extends AcceloEntity<Activity>
 	public void setContractPeriodId(int contractPeriodId)
 	{
 		this.contract_period_id = contractPeriodId;
-	}
-
-	public static Logger getLogger()
-	{
-		return logger;
 	}
 
 	public String getParentId()
@@ -419,6 +382,16 @@ public class Activity extends AcceloEntity<Activity>
 		return Duration.ofSeconds(nonbillable);
 	}
 
+	public void setBillable(Duration duration)
+	{
+		this.billable = duration.getSeconds();
+	}
+
+	public void setNonBillable(Duration duration)
+	{
+		nonbillable = duration.getSeconds();
+	}
+
 	public Duration getTimeAllocation()
 	{
 		return Duration.ofSeconds(time_allocation);
@@ -438,7 +411,7 @@ public class Activity extends AcceloEntity<Activity>
 	{
 		return tag;
 	}
-	
+
 	public boolean isApproved()
 	{
 		return standing != null && (standing.equals("approved") || standing.equals("invoiced"));
@@ -450,4 +423,19 @@ public class Activity extends AcceloEntity<Activity>
 		return this.getDateCreated().compareTo(o.getDateCreated());
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Activity [id=" + getId() + ", subject=" + subject + ", parent=" + parent + ", parent_id=" + parent_id
+				+ ", thread=" + thread + ", thread_id=" + thread_id + ", against_type=" + against_type + ", against_id="
+				+ against_id + ", owner_id=" + owner_id + ", owner_type=" + owner_type + ", medium=" + medium
+				+ ", body=" + body + ", visiblity=" + visiblity + ", details=" + details + ", date_created="
+				+ date_created + ", date_started=" + date_started + ", date_ended=" + date_ended + ", date_logged="
+				+ date_logged + ", date_modified=" + date_modified + ", billable=" + billable + ", nonbillable="
+				+ nonbillable + ", staff=" + staff + ", priority=" + priority + ", _class=" + _class + ", task=" + task
+				+ ", time_allocation=" + time_allocation + ", rate=" + rate + ", rate_charged=" + rate_charged
+				+ ", tag=" + tag + "]";
+	}
+
+	
 }

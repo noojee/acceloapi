@@ -11,15 +11,40 @@ import javax.money.Monetary;
 
 import org.javamoney.moneta.Money;
 
+import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.FilterField;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
-public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Comparable<E>
+public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Comparable<E>, Cloneable
 {
 	static protected CurrencyUnit currencyUnit = Monetary.getCurrency(Locale.getDefault());
 
-	public abstract int getId();
+	/**
+	 * Each AcceloEntity must implement a copy method to clone itself.
+	 * 
+	 * This required to support cache operations that need to return an immutable list and immutable AcceloEnitities in that list.
+	 * 
+	 * @return a new instance of the entity. Returning 'this' will cause an exception to be thrown.
+	 * 
+	 */
+	// abstract public E copy();
 	
+	@BasicFilterField
+	private int id;
+
+	public int getId()
+	{
+		return id;
+	}
+
+	
+	@Override
+	public int compareTo(E rhs)
+	{
+		return this.id - rhs.getId();
+	}
+
+
 	public static Money asMoney(double value)
 	{
 		return Money.of(value, currencyUnit);
@@ -38,7 +63,7 @@ public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Compara
 		return (localDate.equals(Expression.DATEZERO) ? null : localDate);
 	}
 
-	public static long toDateAsLong(LocalDate localDate)
+	public static long toLong(LocalDate localDate)
 	{
 		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
 	}
@@ -56,4 +81,38 @@ public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Compara
 	{
 		return new FilterField<>("id");
 	}
+	
+	
+
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		@SuppressWarnings("rawtypes")
+		AcceloEntity other = (AcceloEntity) obj;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+
+
+	
+
+
+
+	
 }

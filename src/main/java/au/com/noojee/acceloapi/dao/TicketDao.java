@@ -26,14 +26,6 @@ import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class TicketDao extends AcceloDao<Ticket>
 {
-	public class Response extends AcceloResponse<Ticket>
-	{
-	}
-
-	public class ResponseList extends AcceloResponseList<Ticket>
-	{
-	}
-
 	/**
 	 * TicketNo is the id.
 	 * 
@@ -254,18 +246,6 @@ public class TicketDao extends AcceloDao<Ticket>
 		return list;
 	}
 
-	@Override
-	protected EndPoint getEndPoint()
-	{
-		return EndPoint.tickets;
-	}
-
-	@Override
-	protected Class<ResponseList> getResponseListClass()
-	{
-		return TicketDao.ResponseList.class;
-	}
-
 	public Duration sumMTDWork(Ticket ticket)
 	{
 		Duration mtdWork = null;
@@ -370,5 +350,43 @@ public class TicketDao extends AcceloDao<Ticket>
 			return getActivities(ticket).stream().map(Activity::getNonBillable)
 					.reduce(Duration.ZERO, (a, b) -> a.plus(b));
 	}
+	
+	
+
+	@Override
+	protected EndPoint getEndPoint()
+	{
+		return EndPoint.tickets;
+	}
+
+
+	
+	@Override
+	protected Class<Ticket> getEntityClass()
+	{
+		return Ticket.class;
+	}
+	
+	public class Response extends AcceloResponse<Ticket>
+	{
+	}
+
+	public class ResponseList extends AcceloResponseList<Ticket>
+	{
+	}
+
+	@Override
+	protected Class<ResponseList> getResponseListClass()
+	{
+		return TicketDao.ResponseList.class;
+	}
+
+	@Override
+	protected Class<? extends AcceloResponse<Ticket>> getResponseClass()
+	{
+		return TicketDao.Response.class;
+	}
+
+
 
 }

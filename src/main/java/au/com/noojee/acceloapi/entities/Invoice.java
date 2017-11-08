@@ -7,9 +7,6 @@ import au.com.noojee.acceloapi.entities.meta.DateFilterField;
 
 public class Invoice extends AcceloEntity<Invoice>
 {
-
-	@BasicFilterField
-	private int id; // A unique identifier for the invoice.
 	private float amount; // The value of the invoice, less any tax.
 	private String subject; // The title of the invoice
 	private String against_type; // The object the invoice was created against (usually the company)
@@ -39,11 +36,6 @@ public class Invoice extends AcceloEntity<Invoice>
 	private int creator_id; // unsigned The unique identifier for the staff member who created the deployment.
 	private int created_by; // unsigned or object The staff member who created the invoice.
 
-	@Override
-	public int getId()
-	{
-		return id;
-	}
 
 	public float getAmount()
 	{
@@ -143,16 +135,10 @@ public class Invoice extends AcceloEntity<Invoice>
 	@Override
 	public String toString()
 	{
-		return "Invoice [id=" + id + ", amount=" + amount + ", subject=" + subject + ", against_type=" + against_type + ", against_id=" + against_id + ", notes=" + notes + ", invoice_number="
+		return "Invoice [id=" + getId() + ", amount=" + amount + ", subject=" + subject + ", against_type=" + against_type + ", against_id=" + against_id + ", notes=" + notes + ", invoice_number="
 				+ invoice_number + ", currency_id=" + currency_id + ", owner_id=" + owner_id + ", tax=" + tax + ", outstanding=" + outstanding + ", modified_by=" + modified_by + ", date_raised="
 				+ date_raised + ", date_due=" + date_due + ", date_modified=" + date_modified + ", contact=" + contact + ", affiliation_id=" + affiliation_id + ", affiliation=" + affiliation
 				+ ", creator_id=" + creator_id + ", created_by=" + created_by + "]";
-	}
-
-	@Override
-	public int compareTo(Invoice o)
-	{
-		return this.getInvoice_number() - o.getInvoice_number();
 	}
 
 }

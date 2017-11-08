@@ -8,8 +8,6 @@ import au.com.noojee.acceloapi.entities.meta.DateFilterField;
 
 public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {
-	@BasicFilterField
-	int id;
 	@BasicFilterField(name="contract")
 	int contract_id;
 	@DateFilterField
@@ -44,13 +42,6 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 	@BasicFilterField(name="service_item")
 	int service_item_id;
 	
-	
-
-	@Override
-	public int getId()
-	{
-		return id;
-	}
 	
 	public String getPeriodRange()
 	{
@@ -136,7 +127,7 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 	@Override
 	public String toString()
 	{
-		return "Contract_period [id=" + id + ", contract_id=" + contract_id + ", date_created=" + date_created
+		return "Contract_period [id=" + getId() + ", contract_id=" + contract_id + ", date_created=" + date_created
 				+ ", date_commenced=" + date_commenced + ", date_closed=" + date_closed + ", date_expires="
 				+ date_expires + ", budget_type=" + budget_type + ", duration_type=" + duration_type
 				+ ", contract_budget=" + contract_budget + ", rollover=" + rollover + ", standing=" + standing

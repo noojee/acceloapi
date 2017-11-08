@@ -31,12 +31,6 @@ public class Against extends Expression
 	}
 
 
-//	public Against add(Expression match)
-//	{
-//		this.expressions.add(match);
-//		return this;
-//	}
-//
 	@Override
 	public String toJson()
 	{

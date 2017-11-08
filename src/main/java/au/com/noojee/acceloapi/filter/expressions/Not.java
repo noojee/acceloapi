@@ -10,6 +10,12 @@ public class Not extends Expression
 	}
 	
 	@Override
+	public boolean equals(Object e)
+	{
+		return true;
+	}
+
+	@Override
 	public int hashCode()
 	{
 		return 0;

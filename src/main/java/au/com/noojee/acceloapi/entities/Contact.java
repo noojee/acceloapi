@@ -9,8 +9,6 @@ public class Contact extends AcceloEntity<Contact>
 {
 	public static final String FIELDS_ALL = "contact._ALL";
 
-	@BasicFilterField
-	private int id;
 	@SearchFilterField
 	private String firstname;
 	private String middlename;
@@ -56,13 +54,6 @@ public class Contact extends AcceloEntity<Contact>
 		private transient String contact_number;  // filters over phone, fax and mobile
 
 	}
-
-	@Override
-	public int getId()
-	{
-		return id;
-	}
-
 
 	public String getFirstname()
 	{
@@ -169,7 +160,7 @@ public class Contact extends AcceloEntity<Contact>
 	@Override
 	public String toString()
 	{
-		return "Contact [id=" + id +  ", firstname=" + firstname + ", middlename=" + middlename
+		return "Contact [id=" + getId() +  ", firstname=" + firstname + ", middlename=" + middlename
 				+ ", surname=" + surname + ", preferred_name=" + preferred_name + ", username=" + username
 				+ ", password=" + password + ", title=" + title + ", salutation=" + salutation + ", comments="
 				+ comments + ", status=" + status + ", standing=" + standing + ", country_id=" + country_id
@@ -183,29 +174,6 @@ public class Contact extends AcceloEntity<Contact>
 		return firstname + " " + surname;
 	}
 
-	@Override
-	public int hashCode()
-	{
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj)
-	{
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Contact other = (Contact) obj;
-		if (id != other.id)
-			return false;
-		return true;
-	}
 	
 	
 	@Override

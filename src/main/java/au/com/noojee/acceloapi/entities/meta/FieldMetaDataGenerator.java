@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -116,24 +117,39 @@ public class FieldMetaDataGenerator
 
 	private static void writeFields(Set<Field> fields, PrintWriter pf, String className)
 	{
+		
+		
 		/**
 		 * Now out put a line per annotated filed.
 		 */
-		for (Field field : fields)
+		for (Field field : fields.stream().sorted(Comparator.comparing(Field::getName)).collect(Collectors.toList()))
 		{
 			Class<?> type = field.getType();
 			Class<?> objectType = toObjectType(type);
-			String fieldName = field.getName();
+			String javaFieldName = field.getName();
+			
 
 			if (field.isAnnotationPresent(BasicFilterField.class))
 			{
+				BasicFilterField annotation = field.getAnnotation(BasicFilterField.class);
+				
+				String acceloFieldName = annotation.name();
+				if (annotation.name().length() == 0)
+					acceloFieldName = javaFieldName;
+				
 				pf.println("\tpublic static FilterField<" + className + ", " + objectType.getSimpleName() + "> "
-						+ fieldName + " = new FilterField<>(\"" + fieldName + "\"); ");
+						+ javaFieldName + " = new FilterField<>(\"" + acceloFieldName + "\"); ");
 			}
 			else if (field.isAnnotationPresent(DateFilterField.class))
 			{
+				DateFilterField annotation = field.getAnnotation(DateFilterField.class);
+				
+				String acceloFieldName = annotation.name();
+				if (annotation.name().length() == 0)
+					acceloFieldName = javaFieldName;
+	
 				pf.println("\tpublic static FilterField<" + className + ", LocalDate> "
-						+ fieldName + " = new FilterField<>(\"" + fieldName + "\"); ");
+						+ javaFieldName + " = new FilterField<>(\"" + acceloFieldName + "\"); ");
 			}
 
 		}

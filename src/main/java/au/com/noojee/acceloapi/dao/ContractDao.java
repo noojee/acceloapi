@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Company;
@@ -17,6 +18,7 @@ import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class ContractDao extends AcceloDao<Contract>
 {
+	
 
 	/**
 	 * Find an active Contract Period for the given phone no. We also trying
@@ -146,7 +148,24 @@ public class ContractDao extends AcceloDao<Contract>
 		return contracts;
 	}
 
+	@Override
+	protected EndPoint getEndPoint()
+	{
+		return EndPoint.contracts;
+	}
+
+	
+	@Override
+	protected Class<Contract> getEntityClass()
+	{
+		return Contract.class;
+	}
+	
 	public class ResponseList extends AcceloResponseList<Contract>
+	{
+	}
+
+	public class Response extends AcceloResponse<Contract>
 	{
 	}
 
@@ -158,9 +177,9 @@ public class ContractDao extends AcceloDao<Contract>
 	}
 
 	@Override
-	protected EndPoint getEndPoint()
+	protected Class<? extends AcceloResponse<Contract>> getResponseClass()
 	{
-		return EndPoint.contracts;
+		return ContractDao.Response.class;
 	}
 
 }

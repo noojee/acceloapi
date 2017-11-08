@@ -14,8 +14,6 @@ public class Staff extends AcceloEntity<Staff>
 
 	}
 
-	@BasicFilterField
-	private int id;
 	private String firstname;
 	private String surname;
 	@BasicFilterField
@@ -30,12 +28,6 @@ public class Staff extends AcceloEntity<Staff>
 	private String access_level;
 	private String financial_level;
 
-
-	@Override
-	public int getId()
-	{
-		return id;
-	}
 
 	public String getSurname()
 	{
@@ -100,7 +92,7 @@ public class Staff extends AcceloEntity<Staff>
 	@Override
 	public String toString()
 	{
-		return "Staff [id=" + id + ", firstname=" + firstname + ", surname=" + surname + ", username=" + username
+		return "Staff [id=" + getId() + ", firstname=" + firstname + ", surname=" + surname + ", username=" + username
 				+ ", email=" + email + ", phone=" + phone + ", mobile=" + mobile + ", title=" + title + ", timezone="
 				+ timezone + ", position=" + position + ", access_level=" + access_level + ", financial_level="
 				+ financial_level + "]";
