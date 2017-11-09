@@ -19,6 +19,7 @@ import au.com.noojee.acceloapi.entities.meta.DateFilterField;
 public class Activity extends AcceloEntity<Activity>
 {
 
+	@SuppressWarnings("unused")
 	static private Logger logger = LogManager.getLogger(Activity.class);
 
 	public enum Medium
@@ -113,7 +114,7 @@ public class Activity extends AcceloEntity<Activity>
 	private int task;
 
 	@BasicFilterField
-	private int time_allocation; // The time allocation for the activity.
+	private int time_allocation; // The id of the time allocation object for the activity.
 	
 	private int rate; // id of the rate object
 	private int rate_charged; // The rate at which the billable time was charged.
@@ -392,10 +393,17 @@ public class Activity extends AcceloEntity<Activity>
 		nonbillable = duration.getSeconds();
 	}
 
-	public Duration getTimeAllocation()
+	public int getTimeAllocationId()
 	{
-		return Duration.ofSeconds(time_allocation);
+		return time_allocation;
 	}
+	
+
+	public void setTimeAllocation(int timeAllocationId)
+	{
+		time_allocation = timeAllocationId;
+	}
+
 
 	public int getRateId()
 	{
