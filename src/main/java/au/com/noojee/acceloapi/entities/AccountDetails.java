@@ -1,7 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.SearchFilterField;
 
 public class AccountDetails extends AcceloEntity<AccountDetails>
 {

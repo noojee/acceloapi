@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.DateFilterField;
-import au.com.noojee.acceloapi.entities.meta.MetaBasicFilterFields;
+import com.google.gson.annotations.SerializedName;
+
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public class Ticket extends AcceloEntity<Ticket>
@@ -43,7 +45,8 @@ public class Ticket extends AcceloEntity<Ticket>
 	@BasicFilterField
 	private String priority;
 	@BasicFilterField(name="class")
-	private int class_id; // note this currently doesn't work as the real field name is 'class' need to create a json mapper.
+	@SerializedName("class")
+	private int _class;
 	
 	@BasicFilterField
 	private int resolution;
@@ -84,12 +87,18 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int  assignee;			// staff member
 	private int billable_seconds;
 	private long date_last_interacted;
-	private ArrayList<String> breadcrumbs;
 	
 	@BasicFilterField
 	private int contract; // the contract id or 0 if this ticket is unassigned.
 	private String resolution_detail;
-
+	
+	private String against;
+	private String type;
+	private int issue_object_budget;
+	private int contact;
+	
+	private String staff_bookmarked;
+	
 	
 	public int getAffiliation()
 	{
@@ -158,7 +167,7 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public int getClassId()
 	{
-		return class_id;
+		return _class;
 	}
 
 	public int getResolution()
@@ -250,11 +259,6 @@ public class Ticket extends AcceloEntity<Ticket>
 		return toLocalDate(date_last_interacted);
 	}
 
-	public ArrayList<String> getBreadcrumbs()
-	{
-		return breadcrumbs;
-	}
-
 	public int getContractId()
 	{
 		return contract;
@@ -311,7 +315,7 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public void setClass(int class_id)
 	{
-		this.class_id = class_id;
+		this._class = class_id;
 	}
 
 	public void setResolution(int resolution)
@@ -394,11 +398,6 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.date_last_interacted = date_last_interacted;
 	}
 
-	public void setBreadcrumbs(ArrayList<String> breadcrumbs)
-	{
-		this.breadcrumbs = breadcrumbs;
-	}
-
 	public void setContractId(int contract)
 	{
 		this.contract = contract;
@@ -420,7 +419,7 @@ public class Ticket extends AcceloEntity<Ticket>
 				+ ", date_due=" + date_due + ", closed_by=" + closed_by + ", opened_by=" + opened_by + ", resolved_by="
 				+ resolved_by + ", company=" + company + ", object_budget=" + object_budget + ", assignee=" + assignee
 				+ ", billable_seconds=" + billable_seconds + ", date_last_interacted=" + date_last_interacted
-				+ ", breadcrumbs=" + breadcrumbs + ", contract=" + contract + ", resolution_detail=" + resolution_detail
+				+ ", contract=" + contract + ", resolution_detail=" + resolution_detail
 				+ ", description=" + description + "]";
 	}
 
@@ -434,3 +433,4 @@ public class Ticket extends AcceloEntity<Ticket>
 	
 
 }
+

@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.entities.generator.FilterField;
 import au.com.noojee.acceloapi.entities.meta.AgainstType_;
-import au.com.noojee.acceloapi.entities.meta.FilterField;
 import au.com.noojee.acceloapi.filter.expressions.After;
 import au.com.noojee.acceloapi.filter.expressions.AfterOrEq;
 import au.com.noojee.acceloapi.filter.expressions.Against;

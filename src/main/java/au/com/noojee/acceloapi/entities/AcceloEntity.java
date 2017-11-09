@@ -11,24 +11,14 @@ import javax.money.Monetary;
 
 import org.javamoney.moneta.Money;
 
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.FilterField;
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.FilterField;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Comparable<E>, Cloneable
 {
 	static protected CurrencyUnit currencyUnit = Monetary.getCurrency(Locale.getDefault());
 
-	/**
-	 * Each AcceloEntity must implement a copy method to clone itself.
-	 * 
-	 * This required to support cache operations that need to return an immutable list and immutable AcceloEnitities in that list.
-	 * 
-	 * @return a new instance of the entity. Returning 'this' will cause an exception to be thrown.
-	 * 
-	 */
-	// abstract public E copy();
-	
 	@BasicFilterField
 	private int id;
 
@@ -37,20 +27,17 @@ public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Compara
 		return id;
 	}
 
-	
 	@Override
 	public int compareTo(E rhs)
 	{
 		return this.id - rhs.getId();
 	}
 
-
 	public static Money asMoney(double value)
 	{
 		return Money.of(value, currencyUnit);
 	}
 
-	
 	public static double asDouble(Money value)
 	{
 		return value.getNumber().doubleValue();
@@ -59,7 +46,7 @@ public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Compara
 	public static LocalDate toLocalDate(long dateToSeconds)
 	{
 		LocalDate localDate = Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault()).toLocalDate();
-		
+
 		return (localDate.equals(Expression.DATEZERO) ? null : localDate);
 	}
 
@@ -75,14 +62,13 @@ public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Compara
 
 	/**
 	 * Special - used by the AcceloCache. Don't go there.
+	 * 
 	 * @return
 	 */
 	public FilterField<E, Integer> getIdFilterField()
 	{
 		return new FilterField<>("id");
 	}
-	
-	
 
 	@Override
 	public int hashCode()
@@ -109,10 +95,4 @@ public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Compara
 		return true;
 	}
 
-
-	
-
-
-
-	
 }

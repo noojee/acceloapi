@@ -14,6 +14,7 @@ package au.com.noojee.acceloapi.entities.meta;
 import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.entities.Affiliation;
+import au.com.noojee.acceloapi.entities.generator.FilterField;
 
 
 public class Affiliation_ 

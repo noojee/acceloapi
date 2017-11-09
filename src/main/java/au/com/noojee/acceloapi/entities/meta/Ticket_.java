@@ -15,6 +15,7 @@ import java.time.LocalDate;
  */
 import au.com.noojee.acceloapi.entities.Status;
 import au.com.noojee.acceloapi.entities.Ticket;
+import au.com.noojee.acceloapi.entities.generator.FilterField;
 
 
 public class Ticket_ 

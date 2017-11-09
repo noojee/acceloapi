@@ -1,9 +1,9 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.DateFilterField;
-import au.com.noojee.acceloapi.entities.meta.MetaBasicFilterFields;
-import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.generator.SearchFilterField;
 
 public class Contact extends AcceloEntity<Contact>
 {

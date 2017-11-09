@@ -12,6 +12,7 @@ package au.com.noojee.acceloapi.entities.meta;
  *
  */
 import au.com.noojee.acceloapi.entities.Staff;
+import au.com.noojee.acceloapi.entities.generator.FilterField;
 
 
 public class Staff_ 

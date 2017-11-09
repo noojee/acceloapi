@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi.entities.meta;
+package au.com.noojee.acceloapi.entities.generator;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

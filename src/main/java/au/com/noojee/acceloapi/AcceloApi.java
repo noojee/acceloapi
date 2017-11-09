@@ -146,6 +146,23 @@ public class AcceloApi
 		HTTPResponse response = get(url, filterMap, fieldList, pageNo);
 		return response.parseBody(clazz);
 	}
+	
+	public <E extends AcceloEntity<E>, R> String getRaw(EndPoint endPoint, AcceloFilter<E> filter, AcceloFieldList fieldList,  Class<R> clazz)
+	{
+		HTTPResponse response;
+		try
+		{
+			String json = buildJsonBody(HTTPMethod.GET, fieldList.formatAsJson(), filter.toJson());
+			
+			response = _request(HTTPMethod.POST, endPoint.getURL(), json);
+		}
+		catch (MalformedURLException e)
+		{
+			throw new AcceloException(e);
+		}
+		return response.getResponseBody();
+	}
+
 
 	/**
 	 * Send a request to get a single entity or the 'nth' page of entities. The
@@ -325,8 +342,10 @@ public class AcceloApi
 
 		// Read the response.
 		if (responseCode < 300)
-
+		{
+			// logger.error("Response body" + body);
 			response = new HTTPResponse(responseCode, connection.getResponseMessage(), body);
+		}
 		else
 			response = new HTTPResponse(responseCode, connection.getResponseMessage(), error);
 		}

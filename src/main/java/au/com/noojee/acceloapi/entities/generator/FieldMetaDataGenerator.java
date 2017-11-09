@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi.entities.meta;
+package au.com.noojee.acceloapi.entities.generator;
 
 import static org.reflections.ReflectionUtils.getAllFields;
 

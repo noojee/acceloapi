@@ -3,7 +3,7 @@ package au.com.noojee.acceloapi.filter.expressions;
 import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.entities.meta.FilterField;
+import au.com.noojee.acceloapi.entities.generator.FilterField;
 
 public class AfterOrEq<E extends AcceloEntity<E>> extends Expression
 {

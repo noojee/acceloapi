@@ -13,8 +13,9 @@ import org.javamoney.moneta.Money;
 import com.google.gson.annotations.SerializedName;
 
 import au.com.noojee.acceloapi.Formatters;
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.DateFilterField;
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
 
 public class Activity extends AcceloEntity<Activity>
 {
@@ -45,23 +46,24 @@ public class Activity extends AcceloEntity<Activity>
 
 		}
 	};
+	
 
 	private String subject;
-	private String parent;
-
+	
 	@BasicFilterField
-	private String parent_id;
+	private String parent;		// the parent entity of the form "activities/0"
 
 	private String thread;
 	
-	@BasicFilterField
-	private String thread_id;
+	private String against;		// of the form staff/10
 
 	@BasicFilterField
 	private String against_type;
 
 	@BasicFilterField
 	private int against_id;
+	
+	private String owner; // of the form staff/2
 
 	@BasicFilterField
 	private int owner_id;
@@ -69,13 +71,10 @@ public class Activity extends AcceloEntity<Activity>
 	@BasicFilterField
 	private String owner_type;
 
-	@BasicFilterField
-	private Medium medium;
-
 	private String body;
 
 	@BasicFilterField
-	private Visibility visiblity;
+	private Visibility visibility;
 
 	private String details; // For meetings this is the location, for postals this is the address and for calls this is
 							// the number.
@@ -121,7 +120,19 @@ public class Activity extends AcceloEntity<Activity>
 
 	List<Tag> tag; // A list of tags associated with the activity
 	
+	@SuppressWarnings("unused")
+	private class Meta implements MetaBasicFilterFields
+	{
+		@BasicFilterField
+		private transient String parent_id; 
+		
+		@BasicFilterField
+		private String thread_id;
 
+		
+	}
+
+	
 	public void setSubject(String subject)
 	{
 		this.subject = subject;
@@ -152,14 +163,10 @@ public class Activity extends AcceloEntity<Activity>
 		this.owner_type = owner_type;
 	}
 
-	public void setMedium(Medium medium)
-	{
-		this.medium = medium;
-	}
-
+	
 	public void setVisiblity(Visibility visiblity)
 	{
-		this.visiblity = visiblity;
+		this.visibility = visiblity;
 	}
 
 	public void setDetails(String details)
@@ -177,21 +184,12 @@ public class Activity extends AcceloEntity<Activity>
 		this._class = ClassId;
 	}
 
-	public void setThreadId(String threadId)
-	{
-		this.thread_id = threadId;
-	}
-
 	public void setTaskId(int taskId)
 	{
 		this.task = taskId;
 	}
 
-	public void setParentId(String parentId)
-	{
-		this.parent_id = parentId;
-	}
-
+	
 	public void setDateStarted(LocalDate dateStarted)
 	{
 		this.date_started = toLong(dateStarted);
@@ -225,12 +223,7 @@ public class Activity extends AcceloEntity<Activity>
 
 	public String getParent()
 	{
-		return parent_id;
-	}
-
-	public String getThread()
-	{
-		return thread_id;
+		return parent;
 	}
 
 	public int getAgainst()
@@ -243,16 +236,7 @@ public class Activity extends AcceloEntity<Activity>
 		return against_type;
 	}
 
-	public int getOwner()
-	{
-		return owner_id;
-	}
-
-	public Medium getMedium()
-	{
-		return medium;
-	}
-
+	
 	public String getBody()
 	{
 		return body;
@@ -338,15 +322,6 @@ public class Activity extends AcceloEntity<Activity>
 		this.contract_period_id = contractPeriodId;
 	}
 
-	public String getParentId()
-	{
-		return parent_id;
-	}
-
-	public String getThreadId()
-	{
-		return thread_id;
-	}
 
 	public int getAgainstId()
 	{
@@ -365,7 +340,7 @@ public class Activity extends AcceloEntity<Activity>
 
 	public Visibility getVisiblity()
 	{
-		return visiblity;
+		return visibility;
 	}
 
 	public long getDateLogged()
@@ -399,7 +374,7 @@ public class Activity extends AcceloEntity<Activity>
 	}
 	
 
-	public void setTimeAllocation(int timeAllocationId)
+	public void setTimeAllocationId(int timeAllocationId)
 	{
 		time_allocation = timeAllocationId;
 	}
@@ -434,10 +409,10 @@ public class Activity extends AcceloEntity<Activity>
 	@Override
 	public String toString()
 	{
-		return "Activity [id=" + getId() + ", subject=" + subject + ", parent=" + parent + ", parent_id=" + parent_id
-				+ ", thread=" + thread + ", thread_id=" + thread_id + ", against_type=" + against_type + ", against_id="
-				+ against_id + ", owner_id=" + owner_id + ", owner_type=" + owner_type + ", medium=" + medium
-				+ ", body=" + body + ", visiblity=" + visiblity + ", details=" + details + ", date_created="
+		return "Activity [id=" + getId() + ", subject=" + subject + ", parent=" + parent 
+				+ ", thread=" + thread + ", against_type=" + against_type + ", against_id="
+				+ against_id + ", owner_id=" + owner_id + ", owner_type=" + owner_type 
+				+ ", body=" + body + ", visibility=" + visibility + ", details=" + details + ", date_created="
 				+ date_created + ", date_started=" + date_started + ", date_ended=" + date_ended + ", date_logged="
 				+ date_logged + ", date_modified=" + date_modified + ", billable=" + billable + ", nonbillable="
 				+ nonbillable + ", staff=" + staff + ", priority=" + priority + ", _class=" + _class + ", task=" + task

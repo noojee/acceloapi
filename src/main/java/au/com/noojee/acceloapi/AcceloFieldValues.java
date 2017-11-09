@@ -44,57 +44,13 @@ public class AcceloFieldValues
 	 */
 	public String formatAsJson()
 	{
-		Fields jsonFields = new Fields(fields);
-		String json = new Gson().toJson(jsonFields);
+		String json = new Gson().toJson(fields);
 		
-		return json.substring(1, json.length()-2);
+		return json;
 		
-		/*
+		//return json.substring(1, json.length()-2);
 		
 		
-		for (String name : this.keys())
-		{
-			if (jsonFieldValues.length() > 0)
-				jsonFieldValues += ",";
-			
-			jsonFieldValues += "\"" + name + "\":" + "\"" + this.get(name) + "\"";
-		}
-
-		return "\"_fields:\" {" + jsonFieldValues + "}";
-		*/
-
 	}
-	
-	
-	static class Fields
-	{
-		Map<String, String>  _fields;
-		
-		public Fields()
-		{
-			
-		}
-			Fields(Map<String, String> fields)
-			{
-				this._fields = fields;
-			}
-	}
-
-	
-	/*
-
-	public String buildUrlArgs() throws UnsupportedEncodingException
-	{
-		String args = "";
-		for (String name : this.keys())
-		{
-			if (args.length() > 0)
-				args += "&";
-			
-			args += URLEncoder.encode(name, "UTF-8") + "=" + URLEncoder.encode(this.get(name), "UTF-8");
-		}
-		return args;
-	}
-	*/
 
 }

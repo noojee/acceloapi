@@ -2,10 +2,10 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.DateFilterField;
-import au.com.noojee.acceloapi.entities.meta.MetaBasicFilterFields;
-import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.generator.SearchFilterField;
 
 public class Affiliation extends AcceloEntity<Affiliation>
 {
@@ -43,7 +43,14 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	
 	@BasicFilterField
 	private String standing;
+	
+	
+	@BasicFilterField
+	private String status;
 
+	private String fax;
+	
+	
 	/**
 	 * You can search by these but they aren't returned when you query the entity.
 	 * @author bsutton
@@ -59,9 +66,6 @@ public class Affiliation extends AcceloEntity<Affiliation>
 		
 		@SearchFilterField
 		private transient String surname;
-		
-		@BasicFilterField
-		private transient String status;
 	}
 
 

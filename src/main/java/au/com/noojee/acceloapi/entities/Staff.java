@@ -1,7 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
 
 public class Staff extends AcceloEntity<Staff>
 {
@@ -27,7 +27,9 @@ public class Staff extends AcceloEntity<Staff>
 	private String position;
 	private String access_level;
 	private String financial_level;
-
+	private String standing;
+	private String fax;
+	
 
 	public String getSurname()
 	{

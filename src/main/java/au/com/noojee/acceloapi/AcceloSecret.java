@@ -34,10 +34,10 @@ public class AcceloSecret
 	private String client_secret;
 	private String fqdn;
 
-	// used when loading from a file.
-	AcceloSecret()
-	{
-	}
+//	// used when loading from a file.
+//	private AcceloSecret()
+//	{
+//	}
 
 	AcceloSecret(String FQDN, String clientId, String clientSecret)
 	{

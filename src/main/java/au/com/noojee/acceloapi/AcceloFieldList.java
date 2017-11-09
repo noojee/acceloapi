@@ -5,7 +5,7 @@ import java.util.List;
 
 public class AcceloFieldList
 {
-	public static String _ALL = "_ALL";
+	public static final String _ALL = "_ALL";
 	public static final AcceloFieldList ALL = new AcceloFieldList(_ALL);
 
 	private List<String> fields = new ArrayList<>();

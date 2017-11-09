@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.Activity.Medium;
 import au.com.noojee.acceloapi.entities.Activity.Visibility;
+import au.com.noojee.acceloapi.entities.generator.FilterField;
 
 
 public class Activity_ 

@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 import org.javamoney.moneta.Money;
 
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.DateFilterField;
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.DateFilterField;
 
 public class Contract extends AcceloEntity<Contract> 
 {
@@ -45,6 +45,10 @@ public class Contract extends AcceloEntity<Contract>
 	private int owner_affiliation;
 	@BasicFilterField
 	private int billable_affiliation;
+	
+	private String against;
+	private String affiliation;
+	private String contract_type;
 	
 	
 	public String getTitle()

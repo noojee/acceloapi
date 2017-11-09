@@ -26,6 +26,12 @@ public class HTTPResponse
 	{
 		return responseMessage;
 	}
+	
+	String getResponseBody()
+	{
+		return responseBody;
+	}
+
 
 
 	public <T> T parseBody(Class<T> clazz) throws AcceloException

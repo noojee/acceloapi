@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi.entities.meta;
+package au.com.noojee.acceloapi.entities.generator;
 
 /**
  * This interface is used to define the set of fields that Accelo allows a user to peform basic filters on,

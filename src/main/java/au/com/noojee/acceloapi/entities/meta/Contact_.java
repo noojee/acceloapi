@@ -14,6 +14,7 @@ import java.time.LocalDate;
  *
  */
 import au.com.noojee.acceloapi.entities.Contact;
+import au.com.noojee.acceloapi.entities.generator.FilterField;
 
 
 public class Contact_ 

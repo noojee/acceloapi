@@ -152,6 +152,7 @@ public class TicketDao extends AcceloDao<Ticket>
 
 	}
 
+	/*
 	public Ticket insert(Ticket ticket, Contact contacts, Company company) throws IOException, AcceloException
 	{
 		Ticket result = null;
@@ -186,6 +187,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		return result;
 
 	}
+	*/
 
 	/**
 	 * Assigns a staff member to a ticket and returns the new ticket.

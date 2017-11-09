@@ -4,11 +4,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.google.gson.Gson;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
@@ -18,9 +21,10 @@ import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.HTTPResponse;
+import au.com.noojee.acceloapi.Meta;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.entities.Activity;
-import au.com.noojee.acceloapi.entities.meta.FilterField;
+import au.com.noojee.acceloapi.entities.generator.FilterField;
+import au.com.noojee.acceloapi.entities.generator.JsonValidator;
 import au.com.noojee.acceloapi.filter.AcceloCache;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.CacheKey;
@@ -77,10 +81,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 	public E getById(int id) throws AcceloException
 	{
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add(AcceloFieldList._ALL);
-
-		return getById(getEndPoint(), id, fields);
+		return getById(getEndPoint(), id, AcceloFieldList.ALL);
 	}
 
 	protected E getById(EndPoint endpoint, int id, AcceloFieldList fields) throws AcceloException
@@ -116,13 +117,10 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	{
 		List<E> entities = new ArrayList<>();
 
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add(AcceloFieldList._ALL);
-
 		// pass in an empty filter
 		AcceloFilter<E> filter = new AcceloFilter<>();
 
-		CacheKey<E> key = new CacheKey<>(getEndPoint(), filter, fields, getResponseListClass(), this.getEntityClass());
+		CacheKey<E> key = new CacheKey<>(getEndPoint(), filter,  AcceloFieldList.ALL, getResponseListClass(), this.getEntityClass());
 
 		entities = (List<E>) AcceloCache.getInstance().get(key);
 
@@ -210,6 +208,33 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 			// We remove the entity from the cache. Of course it may also be attached to a query.
 			AcceloCache.getInstance().flushEntity(entity);
 
+	}
+
+
+	public void validateEntityClass()
+	{
+
+		AcceloApi api = AcceloApi.getInstance();
+		
+		AcceloFilter<E> filter = new AcceloFilter<>();
+
+		String rawResponse = api.getRaw(this.getEndPoint(), filter, AcceloFieldList.ALL, this.getResponseListClass());
+		@SuppressWarnings("unchecked")
+		ResponseForValidation response = new Gson().fromJson(rawResponse, ResponseForValidation.class);
+		
+		JsonValidator.validate(getEntityClass(), response.response[0]);
+
+	}
+	
+	public class ResponseForValidation
+	{
+		Meta meta;
+		Entity[] response;
+		
+	}
+
+	static class Entity extends HashMap
+	{
 	}
 
 }

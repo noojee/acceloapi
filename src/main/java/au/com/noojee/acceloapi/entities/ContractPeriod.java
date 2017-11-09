@@ -3,8 +3,8 @@ package au.com.noojee.acceloapi.entities;
 import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.Formatters;
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.DateFilterField;
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.DateFilterField;
 
 public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {

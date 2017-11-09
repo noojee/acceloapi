@@ -11,10 +11,10 @@ import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.entities.meta.BasicFilterField;
-import au.com.noojee.acceloapi.entities.meta.DateFilterField;
-import au.com.noojee.acceloapi.entities.meta.MetaBasicFilterFields;
-import au.com.noojee.acceloapi.entities.meta.SearchFilterField;
+import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
+import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.generator.SearchFilterField;
 
 public class Company extends AcceloEntity<Company>
 {
@@ -46,8 +46,16 @@ public class Company extends AcceloEntity<Company>
 	private String comments;
 	@BasicFilterField
 	private int default_affiliation;
-	private Contact contact;
-	private List<CustomField> customFields = new ArrayList<>();
+
+	private long date_last_interacted;
+	
+	private int custom_id;
+	
+	private String staff_bookmarked;
+	
+	private transient List<CustomField> customFields = new ArrayList<>();
+	
+
 	
 	@SuppressWarnings("unused")
 	private class Meta implements MetaBasicFilterFields
@@ -130,17 +138,13 @@ public class Company extends AcceloEntity<Company>
 		return comments;
 	}
 
-	public Contact getContact()
-	{
-		return contact;
-	}
 
 	@Override
 	public String toString()
 	{
 		return "Company [id=" + getId() + ", name=" + name + ", website=" + website + ", standing=" + standing + ", status="
 				+ status + ", phone=" + phone + ", fax=" + fax + ", date_created=" + date_created + ", date_modified="
-				+ date_modified + ", comments=" + comments + ", contact=" + contact + "]";
+				+ date_modified + ", comments=" + comments + "]";
 	}
 
 	public int getDefault_affiliation()
