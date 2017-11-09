@@ -1,6 +1,5 @@
 package au.com.noojee.acceloapi.dao;
 
-import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;

@@ -10,6 +10,7 @@ import au.com.noojee.acceloapi.entities.TimeAllocation;
 
 public class TimeAllocationDao extends AcceloDao<TimeAllocation>
 {
+	@SuppressWarnings("unused")
 	static private Logger logger = LogManager.getLogger(TimeAllocation.class);
 
 

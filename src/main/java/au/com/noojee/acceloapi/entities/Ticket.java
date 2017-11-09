@@ -1,7 +1,6 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -406,6 +405,51 @@ public class Ticket extends AcceloEntity<Ticket>
 	public void setResolution_detail(String resolution_detail)
 	{
 		this.resolution_detail = resolution_detail;
+	}
+
+	public String getAgainst()
+	{
+		return against;
+	}
+
+	public void setAgainst(String against)
+	{
+		this.against = against;
+	}
+
+	public int getIssue_object_budget()
+	{
+		return issue_object_budget;
+	}
+
+	public void setIssue_object_budget(int issue_object_budget)
+	{
+		this.issue_object_budget = issue_object_budget;
+	}
+
+	public int getContact()
+	{
+		return contact;
+	}
+
+	public void setContact(int contact)
+	{
+		this.contact = contact;
+	}
+
+	public String getStaff_bookmarked()
+	{
+		return staff_bookmarked;
+	}
+
+	public void setStaff_bookmarked(String staff_bookmarked)
+	{
+		this.staff_bookmarked = staff_bookmarked;
+	}
+	
+	public String getType()
+	{
+		return this.type;
 	}
 
 	@Override

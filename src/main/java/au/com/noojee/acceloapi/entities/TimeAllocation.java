@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
-import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
 
 public class TimeAllocation extends AcceloEntity<TimeAllocation>
 {
@@ -25,10 +24,6 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 	@DateFilterField
 	private long date_created;	// unix ts	The date the time was logged.
 	
-	private class Meta implements MetaBasicFilterFields
-	{
-		
-	}
 	
 	public String getStanding()
 	{
@@ -63,6 +58,26 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 	public LocalDate getDateCreated()
 	{
 		return toLocalDate(date_created);
+	}
+
+	public String getAgainst_type()
+	{
+		return against_type;
+	}
+
+	public void setAgainst_type(String against_type)
+	{
+		this.against_type = against_type;
+	}
+
+	public int getAgainst_id()
+	{
+		return against_id;
+	}
+
+	public void setAgainst_id(int against_id)
+	{
+		this.against_id = against_id;
 	}
 	
 	

@@ -78,17 +78,6 @@ public class JsonValidator
 		return noProblems;
 	}
 
-	private static boolean matchFieldName(String jsonField, Field field)
-	{
-		SerializedName annotation = field.getAnnotation(SerializedName.class);
-		
-		String fieldName = field.getName();
-		if (annotation != null)
-			fieldName = annotation.value();
-		
-		return fieldName.compareTo(jsonField) == 0;
-	}
-	
 	private static String getFieldName(Field field)
 	{
 		SerializedName annotation = field.getAnnotation(SerializedName.class);

@@ -48,6 +48,8 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	@BasicFilterField
 	private String status;
 
+
+
 	private String fax;
 	
 	
@@ -183,6 +185,15 @@ public class Affiliation extends AcceloEntity<Affiliation>
 		return position;
 	}
 	
+	public String getFax()
+	{
+		return fax;
+	}
+	public void setFax(String fax)
+	{
+		this.fax = fax;
+	}
+
 	@Override
 	public int compareTo(Affiliation o)
 	{

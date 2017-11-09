@@ -188,6 +188,36 @@ public class Contract extends AcceloEntity<Contract>
 		return Integer.valueOf(company);
 	}
 
+	public String getAgainst()
+	{
+		return against;
+	}
+
+	public void setAgainst(String against)
+	{
+		this.against = against;
+	}
+
+	public String getAffiliation()
+	{
+		return affiliation;
+	}
+
+	public void setAffiliation(String affiliation)
+	{
+		this.affiliation = affiliation;
+	}
+
+	public String getContract_type()
+	{
+		return contract_type;
+	}
+
+	public void setContract_type(String contract_type)
+	{
+		this.contract_type = contract_type;
+	}
+
 	@Override
 	public String toString()
 	{

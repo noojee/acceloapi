@@ -233,8 +233,9 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		
 	}
 
-	static class Entity extends HashMap
+	static class Entity extends HashMap<String, String>
 	{
+		private static final long serialVersionUID = 1L;
 	}
 
 }

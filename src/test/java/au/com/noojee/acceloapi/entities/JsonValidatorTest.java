@@ -10,11 +10,9 @@ import au.com.noojee.acceloapi.dao.ActivityDao;
 import au.com.noojee.acceloapi.dao.AffiliationDao;
 import au.com.noojee.acceloapi.dao.CompanyDao;
 import au.com.noojee.acceloapi.dao.ContractDao;
-import au.com.noojee.acceloapi.dao.ContractPeriodDao;
 import au.com.noojee.acceloapi.dao.InvoiceDao;
 import au.com.noojee.acceloapi.dao.StaffDao;
 import au.com.noojee.acceloapi.dao.TicketDao;
-import au.com.noojee.acceloapi.dao.TimeAllocationDao;
 
 public class JsonValidatorTest
 {

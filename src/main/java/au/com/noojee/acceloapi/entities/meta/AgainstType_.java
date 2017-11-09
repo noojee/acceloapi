@@ -8,22 +8,22 @@ public enum AgainstType_
 	, contract_period, deployment, event, invoice, job, membership, prospect, request, task, staff, activities;
 	
 	
-	private String name;
+	private String _name;
 	
 	AgainstType_()
 	{
-		this.name = name();
+		this._name = name();
 	}
 
 	AgainstType_(String name)
 	{
-		this.name = name;
+		this._name = name;
 	}
 	
 	
 	public String getName()
 	{
-		return this.name();
+		return this._name;
 	}
 
 }

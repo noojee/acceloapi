@@ -171,6 +171,42 @@ public class Company extends AcceloEntity<Company>
 		return PIN;
 	}
 
+	public long getDate_last_interacted()
+	{
+		return date_last_interacted;
+	}
+
+
+	public void setDate_last_interacted(long date_last_interacted)
+	{
+		this.date_last_interacted = date_last_interacted;
+	}
+
+
+	public int getCustom_id()
+	{
+		return custom_id;
+	}
+
+
+	public void setCustom_id(int custom_id)
+	{
+		this.custom_id = custom_id;
+	}
+
+
+	public String getStaff_bookmarked()
+	{
+		return staff_bookmarked;
+	}
+
+
+	public void setStaff_bookmarked(String staff_bookmarked)
+	{
+		this.staff_bookmarked = staff_bookmarked;
+	}
+
+
 	@Override
 	public int compareTo(Company o)
 	{

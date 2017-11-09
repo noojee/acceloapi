@@ -143,6 +143,11 @@ public class Activity extends AcceloEntity<Activity>
 		this.body = body;
 	}
 
+	public void setAgainst(String against)
+	{
+		this.against = against;
+	}
+
 	public void setAgainstId(int id)
 	{
 		this.against_id = id;
@@ -226,11 +231,7 @@ public class Activity extends AcceloEntity<Activity>
 		return parent;
 	}
 
-	public int getAgainst()
-	{
-		return against_id;
-	}
-
+	
 	public String getAgainstType()
 	{
 		return against_type;
@@ -398,6 +399,21 @@ public class Activity extends AcceloEntity<Activity>
 	public boolean isApproved()
 	{
 		return standing != null && (standing.equals("approved") || standing.equals("invoiced"));
+	}
+
+	public String getOwner()
+	{
+		return owner;
+	}
+
+	public void setOwner(String owner)
+	{
+		this.owner = owner;
+	}
+	
+	public String getAgainst()
+	{
+		return this.against;
 	}
 
 	@Override

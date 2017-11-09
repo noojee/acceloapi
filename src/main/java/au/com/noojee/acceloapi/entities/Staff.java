@@ -91,6 +91,26 @@ public class Staff extends AcceloEntity<Staff>
 		return financial_level;
 	}
 
+	public String getStanding()
+	{
+		return standing;
+	}
+
+	public void setStanding(String standing)
+	{
+		this.standing = standing;
+	}
+
+	public String getFax()
+	{
+		return fax;
+	}
+
+	public void setFax(String fax)
+	{
+		this.fax = fax;
+	}
+
 	@Override
 	public String toString()
 	{
