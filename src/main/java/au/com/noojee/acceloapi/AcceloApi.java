@@ -225,7 +225,11 @@ public class AcceloApi
 		{
 			throw new AcceloException(e);
 		} 
-		HTTPResponse response = _request(HTTPMethod.POST, completeUrl, fieldNameValues.formatAsJson());
+		
+		String fieldValues = fieldNameValues.formatAsJson();
+		
+		
+		HTTPResponse response = _request(HTTPMethod.POST, completeUrl, fieldValues);
 
 		return response.parseBody(clazz);
 	}
@@ -247,9 +251,9 @@ public class AcceloApi
 		{
 			throw new AcceloException(e);
 		} 
-		String fields = fieldNameValues.formatAsJson();
-		logger.error("Updating: url=" + completeUrl + " fields=" + fields);
-		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, fields);
+		String values = fieldNameValues.formatAsJson();
+		logger.error("Updating: url=" + completeUrl + " values=" + values);
+		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, values);
 
 		return response.parseBody(clazz);
 	}
@@ -332,7 +336,7 @@ public class AcceloApi
 		{
 			body = fastStreamReader(streamBody);
 		}
-		catch (@SuppressWarnings("unused") IOException e)
+		catch (IOException e)
 		{
 			try (InputStream streamError = connection.getErrorStream())
 			{

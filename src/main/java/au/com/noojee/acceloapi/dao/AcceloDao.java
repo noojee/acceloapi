@@ -108,7 +108,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 * 
 	 * @param endpoint
 	 * @param id
-	 * @param fields
+	 * @param fieldValues
 	 * @return
 	 * @throws AcceloException
 	 */
@@ -127,14 +127,15 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		return entities;
 	}
 
-	public void insert(AcceloEntity<E> entity)
+	public E insert(AcceloEntity<E> entity)
 	{
 		AcceloFieldValues fields = marshalFields(entity);
 
 		AcceloResponse<E> response = AcceloApi.getInstance().insert(this.getEndPoint(), fields,
 				this.getResponseClass());
-
-		logger.debug(response);
+		logger.error(response);
+		
+		return response.getEntity();
 	}
 
 	/**

@@ -198,10 +198,10 @@ public class TicketDao extends AcceloDao<Ticket>
 		{
 
 			// Assign the Ticket to the owning aCompany.
-			AcceloFieldValues fields = new AcceloFieldValues();
-			fields.add("assignee", staff.getId());
+			AcceloFieldValues values = new AcceloFieldValues();
+			values.add("assignee", staff.getId());
 
-			TicketDao.Response response = AcceloApi.getInstance().update(EndPoint.tickets, ticket.getId(), fields,
+			TicketDao.Response response = AcceloApi.getInstance().update(EndPoint.tickets, ticket.getId(), values,
 					TicketDao.Response.class);
 			if (response == null || response.getEntity() == null)
 			{

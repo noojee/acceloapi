@@ -6,6 +6,11 @@ import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
 public class Staff extends AcceloEntity<Staff>
 {
 	
+	enum Standing
+	{
+		active, inactive,lockout;
+	}
+	
 	@SuppressWarnings("unused")
 	private class Meta implements MetaBasicFilterFields
 	{
@@ -27,7 +32,7 @@ public class Staff extends AcceloEntity<Staff>
 	private String position;
 	private String access_level;
 	private String financial_level;
-	private String standing;
+	private Standing standing;  
 	private String fax;
 	
 
@@ -91,12 +96,12 @@ public class Staff extends AcceloEntity<Staff>
 		return financial_level;
 	}
 
-	public String getStanding()
+	public Standing getStanding()
 	{
 		return standing;
 	}
 
-	public void setStanding(String standing)
+	public void setStanding(Standing standing)
 	{
 		this.standing = standing;
 	}

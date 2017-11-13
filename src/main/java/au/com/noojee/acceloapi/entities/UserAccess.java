@@ -1,7 +1,5 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.Request;
-
 public class UserAccess
 {
     private Asset asset;

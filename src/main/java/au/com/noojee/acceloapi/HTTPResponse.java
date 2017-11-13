@@ -47,7 +47,7 @@ public class HTTPResponse
 			{
 				error = gson.fromJson(new StringReader(this.responseBody), AcceloErrorResponse.class);
 			}
-			catch (@SuppressWarnings("unused") Exception e)
+			catch (Exception e)
 			{
 				// response body wasn't json so just create an empty error
 				// object.

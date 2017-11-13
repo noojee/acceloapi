@@ -8,7 +8,7 @@ public enum EndPoint
 	activities("activities"), affiliations("affiliations"), companies("companies"), contacts("contacts"), contracts(
 			"contracts"), tickets("issues"), requests("requests"), staff(
 					"staff"), statuses("statuses"), invoices("invoices"), contractPeriods(
-							"contracts/periods"), activitiesAllocations("activities/allocations");
+							"contracts/periods"), activitiesAllocations("activities/allocations"), request("request");
 
 	private String endpoint;
 

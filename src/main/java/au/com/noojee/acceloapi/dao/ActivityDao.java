@@ -39,12 +39,14 @@ public class ActivityDao extends AcceloDao<Activity>
 	 * insert an new replacement activity based on the activity you pass in.
 	 * @param activity
 	 */
-	public void replace(Activity activity)
+	public Activity replace(Activity activity)
 	{
 		// we do the insert first so if anything goes wrong we don't loose data.
-		insert(activity);
+		Activity replacementActivity = insert(activity);
 
 		delete(activity);
+		
+		return replacementActivity;
 	}
 
 

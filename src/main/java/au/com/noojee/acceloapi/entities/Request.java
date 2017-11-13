@@ -1,26 +1,14 @@
-package au.com.noojee.acceloapi;
+package au.com.noojee.acceloapi.entities;
 
-import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import au.com.noojee.acceloapi.entities.Company;
 
-public class Request
+
+public class Request extends AcceloEntity<Request>
 {
-	public class Response extends AcceloResponse<Request>
-	{
-
-		@Override
-		public String getStatusMessage()
-		{
-			return super.getStatusMessage();
-		}
-
-		@Override
-		public boolean isOK()
-		{
-			return super.isOK();
-		}
-	}
+	@SuppressWarnings("unused")
+	static private Logger logger = LogManager.getLogger(Request.class);
 
 	private int id;
 	private String title;
@@ -39,23 +27,6 @@ public class Request
 		this.type_id = type_id;
 		this.affiliation_id = company.getDefault_affiliation();
 	}
-	
-	public Response insert() throws IOException, AcceloException
-	{
-	    AcceloFieldValues values = new AcceloFieldValues();
-
-		values.add("title", this.getTitle());
-		values.add("body", this.getBody()); 
-		values.add("type_id", "" + type_id);
-		values.add("affiliation_id", "" + affiliation_id);
-
-		Request.Response response = AcceloApi.getInstance().insert(EndPoint.requests, values, Request.Response.class);
-
-		return response;
-
-	}
-
-
 	
 	public int getId()
 	{
