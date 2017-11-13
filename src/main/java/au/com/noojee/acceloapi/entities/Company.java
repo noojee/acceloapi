@@ -15,6 +15,7 @@ import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
 import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.generator.SearchFilterField;
+import au.com.noojee.acceloapi.util.Conversions;
 
 public class Company extends AcceloEntity<Company>
 {
@@ -125,12 +126,12 @@ public class Company extends AcceloEntity<Company>
 
 	public LocalDate getDateCreated()
 	{
-		return toLocalDate(date_created);
+		return Conversions.toLocalDate(date_created);
 	}
 
 	public LocalDate getDateModified()
 	{
-		return toLocalDate(date_modified);
+		return Conversions.toLocalDate(date_modified);
 	}
 
 	public String getComments()

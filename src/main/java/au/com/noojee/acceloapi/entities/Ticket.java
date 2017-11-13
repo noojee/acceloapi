@@ -11,6 +11,7 @@ import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
 import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
+import au.com.noojee.acceloapi.util.Conversions;
 
 public class Ticket extends AcceloEntity<Ticket>
 {
@@ -191,17 +192,17 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public LocalDate getDateSubmitted()
 	{
-		return toLocalDate(date_submitted);
+		return Conversions.toLocalDate(date_submitted);
 	}
 
 	public LocalDate getDateOpened()
 	{
-		return toLocalDate(date_opened);
+		return Conversions.toLocalDate(date_opened);
 	}
 
 	public LocalDate getDateResolved()
 	{
-		return toLocalDate(date_resolved);
+		return Conversions.toLocalDate(date_resolved);
 	}
 
 	// Returns null if the ticket is still open.
@@ -210,17 +211,17 @@ public class Ticket extends AcceloEntity<Ticket>
 		if (date_closed == 0)
 			return null;
 
-		return toLocalDate(date_closed);
+		return Conversions.toLocalDate(date_closed);
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return toLocalDate(date_started);
+		return Conversions.toLocalDate(date_started);
 	}
 
 	public LocalDate getDateDue()
 	{
-		return toLocalDate(date_due);
+		return Conversions.toLocalDate(date_due);
 	}
 
 	public int getClosedBy()
@@ -255,7 +256,7 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public LocalDate getDateLastInteracted()
 	{
-		return toLocalDate(date_last_interacted);
+		return Conversions.toLocalDate(date_last_interacted);
 	}
 
 	public int getContractId()

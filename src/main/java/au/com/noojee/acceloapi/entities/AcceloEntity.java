@@ -17,7 +17,6 @@ import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Comparable<E>, Cloneable
 {
-	static protected CurrencyUnit currencyUnit = Monetary.getCurrency(Locale.getDefault());
 
 	@BasicFilterField
 	private int id;
@@ -33,32 +32,7 @@ public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Compara
 		return this.id - rhs.getId();
 	}
 
-	public static Money asMoney(double value)
-	{
-		return Money.of(value, currencyUnit);
-	}
-
-	public static double asDouble(Money value)
-	{
-		return value.getNumber().doubleValue();
-	}
-
-	public static LocalDate toLocalDate(long dateToSeconds)
-	{
-		LocalDate localDate = Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault()).toLocalDate();
-
-		return (localDate.equals(Expression.DATEZERO) ? null : localDate);
-	}
-
-	public static long toLong(LocalDate localDate)
-	{
-		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
-	}
-
-	public static Date toDate(LocalDate localDate)
-	{
-		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-	}
+	
 
 	/**
 	 * Special - used by the AcceloCache. Don't go there.

@@ -6,6 +6,7 @@ import org.javamoney.moneta.Money;
 
 import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.util.Conversions;
 
 public class Contract extends AcceloEntity<Contract> 
 {
@@ -63,39 +64,39 @@ public class Contract extends AcceloEntity<Contract>
 	 */
 	public Money getValue()
 	{
-		return asMoney(value);
+		return Conversions.asMoney(value);
 	}
 	
 	public Money getRemainingValue()
 	{
 		// until we work out how to get this.
-		return asMoney(0);
+		return Conversions.asMoney(0);
 	}
 
 
 	public LocalDate getDateCreated()
 	{
-		return toLocalDate(date_created);
+		return Conversions.toLocalDate(date_created);
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return super.toLocalDate(date_started);
+		return Conversions.toLocalDate(date_started);
 	}
 
 	public LocalDate getDatePeriodExpires()
 	{
-		return toLocalDate(date_period_expires);
+		return Conversions.toLocalDate(date_period_expires);
 	}
 
 	public LocalDate getDateExpires()
 	{
-		return super.toLocalDate(date_expires);
+		return Conversions.toLocalDate(date_expires);
 	}
 
 	public LocalDate getDateLastInteracted()
 	{
-		return super.toLocalDate(date_last_interacted);
+		return Conversions.toLocalDate(date_last_interacted);
 	}
 
 	public int getRenewDays()

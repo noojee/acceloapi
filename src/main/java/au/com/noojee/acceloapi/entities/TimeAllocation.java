@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.util.Conversions;
 
 public class TimeAllocation extends AcceloEntity<TimeAllocation>
 {
@@ -52,12 +53,12 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 	
 	public LocalDate getDatelocked()
 	{
-		return toLocalDate(date_locked);
+		return Conversions.toLocalDate(date_locked);
 	}
 	
 	public LocalDate getDateCreated()
 	{
-		return toLocalDate(date_created);
+		return Conversions.toLocalDate(date_created);
 	}
 
 	public String getAgainst_type()

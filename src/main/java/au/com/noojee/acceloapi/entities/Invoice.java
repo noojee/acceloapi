@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.util.Conversions;
 
 public class Invoice extends AcceloEntity<Invoice>
 {
@@ -94,17 +95,17 @@ public class Invoice extends AcceloEntity<Invoice>
 
 	public LocalDate getDateRaised()
 	{
-		return toLocalDate(date_raised);
+		return Conversions.toLocalDate(date_raised);
 	}
 
 	public LocalDate getDateDue()
 	{
-		return toLocalDate(date_due);
+		return Conversions.toLocalDate(date_due);
 	}
 
 	public LocalDate getDateModified()
 	{
-		return toLocalDate(date_modified);
+		return Conversions.toLocalDate(date_modified);
 	}
 
 	public int getContact()

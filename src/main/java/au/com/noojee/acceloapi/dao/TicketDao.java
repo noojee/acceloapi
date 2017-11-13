@@ -119,7 +119,8 @@ public class TicketDao extends AcceloDao<Ticket>
 		// or with no close date.
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.eq(Ticket_.contract, contract.getId())
-				.and(filter.after(Ticket_.date_closed, dayBefore).or(filter.before(Ticket_.date_closed, Expression.DATEZERO))));
+				.and(filter.after(Ticket_.date_closed, dayBefore)
+						.or(filter.before(Ticket_.date_closed, Expression.DATEZERO))));
 
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add("_ALL");
@@ -150,43 +151,6 @@ public class TicketDao extends AcceloDao<Ticket>
 		return this.getByFilter(filter, fields);
 
 	}
-
-	/*
-	public Ticket insert(Ticket ticket, Contact contacts, Company company) throws IOException, AcceloException
-	{
-		Ticket result = null;
-
-		// Assign the Ticket to the owning aCompany.
-		AcceloFieldValues fields = new AcceloFieldValues();
-		fields.add("title", ticket.getTitle()); // URLEncoder.encode(ticket.getTitle()));
-		fields.add("issue_type", ticket.getIssueType());
-
-		fields.add("against_id", "" + contacts.getId());
-		fields.add("against_type", "contact");
-
-		fields.add("against_id", "" + company.getId());
-		fields.add("against_type", "company");
-
-		fields.add("status_id", ticket.getStatus().getId());
-		fields.add("date_started", "" + (System.currentTimeMillis() / 1000));
-		fields.add("date_entered", "" + (System.currentTimeMillis() / 1000));
-		fields.add("description", ticket.getDescription());
-		fields.add("class_id", "" + ticket.getClassId()); // Imported
-
-		TicketDao.Response response = AcceloApi.getInstance().insert(EndPoint.tickets, fields,
-				TicketDao.Response.class);
-		if (response == null || response.getEntity() == null)
-		{
-			throw new AcceloException(
-					"Failed to insert ticket id:" + ticket.getCustomId() + " details:" + this.toString());
-		}
-
-		result = response.getEntity();
-
-		return result;
-
-	}
-	*/
 
 	/**
 	 * Assigns a staff member to a ticket and returns the new ticket.
@@ -255,9 +219,10 @@ public class TicketDao extends AcceloDao<Ticket>
 			LocalDate startOfMonth = LocalDate.now().withDayOfMonth(1);
 
 			List<Activity> activities = new ActivityDao().getByTicket(ticket);
-			long work = activities.stream().filter(a -> {
-				return a.getDateCreated().isAfter(startOfMonth) || a.getDateCreated().isEqual(startOfMonth);
-			}) // greater than or equal to first day of month.
+			long work = activities.stream().filter(a ->
+				{
+					return a.getDateCreated().isAfter(startOfMonth) || a.getDateCreated().isEqual(startOfMonth);
+				}) // greater than or equal to first day of month.
 					.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
 			mtdWork = Duration.ofSeconds(work);
@@ -280,29 +245,13 @@ public class TicketDao extends AcceloDao<Ticket>
 
 			LocalDate startOfLastMonth = LocalDate.now().withDayOfMonth(1).minus(java.time.Period.ofMonths(1));
 
-			long work = activities.stream().filter(a -> {
-				return (a.getDateCreated().isAfter(startOfLastMonth) // greater
-																		// than
-																		// or
-																		// equal
-																		// to
-																		// the
-																		// 1st
-																		// day
-																		// of
-																		// last
-																		// month.
-						|| a.getDateCreated().isEqual(startOfLastMonth))
-						&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1)) // before
-																							// the
-																							// first
-																							// day
-																							// of
-																							// the
-																							// current
-																							// month.
-				;
-			}).mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
+			long work = activities.stream().filter(a ->
+				{
+					return (a.getDateCreated().isAfter(startOfLastMonth) // greater than or equal to the 1st day of last month.
+							|| a.getDateCreated().isEqual(startOfLastMonth))
+							&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1)) // before the first day of the current month.
+					;
+				}).mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
 			lastMonthWork = Duration.ofSeconds(work);
 		}
@@ -328,8 +277,7 @@ public class TicketDao extends AcceloDao<Ticket>
 	}
 
 	/**
-	 * Returns true if all Activities for this ticket have been approved or
-	 * invoiced.
+	 * Returns true if all Activities for this ticket have been approved or invoiced.
 	 * 
 	 * @return
 	 * @throws AcceloException
@@ -343,16 +291,14 @@ public class TicketDao extends AcceloDao<Ticket>
 	public Duration getBillable(Ticket ticket)
 	{
 		return getActivities(ticket).stream().map(Activity::getBillable)
-					.reduce(Duration.ZERO, (a, b) -> a.plus(b));
+				.reduce(Duration.ZERO, (a, b) -> a.plus(b));
 	}
 
 	public Duration getNonBillable(Ticket ticket)
 	{
-			return getActivities(ticket).stream().map(Activity::getNonBillable)
-					.reduce(Duration.ZERO, (a, b) -> a.plus(b));
+		return getActivities(ticket).stream().map(Activity::getNonBillable)
+				.reduce(Duration.ZERO, (a, b) -> a.plus(b));
 	}
-	
-	
 
 	@Override
 	protected EndPoint getEndPoint()
@@ -360,14 +306,12 @@ public class TicketDao extends AcceloDao<Ticket>
 		return EndPoint.tickets;
 	}
 
-
-	
 	@Override
 	protected Class<Ticket> getEntityClass()
 	{
 		return Ticket.class;
 	}
-	
+
 	public class Response extends AcceloResponse<Ticket>
 	{
 	}
@@ -387,7 +331,5 @@ public class TicketDao extends AcceloDao<Ticket>
 	{
 		return TicketDao.Response.class;
 	}
-
-
 
 }

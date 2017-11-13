@@ -13,11 +13,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import au.com.noojee.acceloapi.AcceloAbstractResponseList;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.AcceloResponse;
+import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.HTTPResponse;
 import au.com.noojee.acceloapi.Meta;
@@ -32,7 +34,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 {
 	static Logger logger = LogManager.getLogger();
 
-	protected abstract Class<? extends AcceloResponseMeta<E>> getResponseListClass();
+	protected abstract Class<? extends AcceloAbstractResponseList<E>> getResponseListClass();
 
 	protected abstract Class<? extends AcceloResponse<E>> getResponseClass();
 

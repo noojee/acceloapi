@@ -5,7 +5,7 @@ import java.util.List;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 
-public abstract class AcceloResponseList<E extends AcceloEntity<E>> extends  AcceloAbstractResponseList<E>
+public class AcceloResponseList<E extends AcceloEntity<E>> extends  AcceloAbstractResponseList<E>
 {
 	// Stores a list of AcceloEntities. 
 	private List<E> response;

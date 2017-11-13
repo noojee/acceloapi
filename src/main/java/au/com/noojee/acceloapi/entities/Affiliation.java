@@ -6,6 +6,7 @@ import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
 import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.generator.SearchFilterField;
+import au.com.noojee.acceloapi.util.Conversions;
 
 public class Affiliation extends AcceloEntity<Affiliation>
 {
@@ -132,22 +133,22 @@ public class Affiliation extends AcceloEntity<Affiliation>
 
 	public LocalDate getDateLastInteracted()
 	{
-		return toLocalDate(date_last_interacted);
+		return Conversions.toLocalDate(date_last_interacted);
 	}
 
 	public void setDateLastInteracted(LocalDate dateLastInteracted)
 	{
-		this.date_last_interacted = toLong(dateLastInteracted);
+		this.date_last_interacted = Conversions.toLong(dateLastInteracted);
 	}
 
 	public LocalDate getDateModified()
 	{
-		return toLocalDate(date_modified);
+		return Conversions.toLocalDate(date_modified);
 	}
 
 	public void setDateModified(LocalDate dateModified)
 	{
-		this.date_modified = toLong(dateModified);
+		this.date_modified = Conversions.toLong(dateModified);
 	}
 
 	public int getStaffBookmarked()

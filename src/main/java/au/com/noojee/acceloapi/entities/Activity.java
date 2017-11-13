@@ -12,10 +12,11 @@ import org.javamoney.moneta.Money;
 
 import com.google.gson.annotations.SerializedName;
 
-import au.com.noojee.acceloapi.Formatters;
 import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
 import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.util.Conversions;
+import au.com.noojee.acceloapi.util.Formatters;
 
 public class Activity extends AcceloEntity<Activity>
 {
@@ -202,22 +203,22 @@ public class Activity extends AcceloEntity<Activity>
 	
 	public void setDateStarted(LocalDate dateStarted)
 	{
-		this.date_started = toLong(dateStarted);
+		this.date_started = Conversions.toLong(dateStarted);
 	}
 
 	public void setDateEnded(LocalDate dateEnded)
 	{
-		this.date_ended = toLong(dateEnded);
+		this.date_ended = Conversions.toLong(dateEnded);
 	}
 
 	public void setDateCreated(LocalDate dateCreated)
 	{
-		this.date_created = toLong(dateCreated);
+		this.date_created = Conversions.toLong(dateCreated);
 	}
 
 	public void setDateModified(LocalDate dateModified)
 	{
-		this.date_modified = toLong(dateModified);
+		this.date_modified = Conversions.toLong(dateModified);
 	}
 
 	public void setStaffId(int staffId)
@@ -255,22 +256,22 @@ public class Activity extends AcceloEntity<Activity>
 
 	public LocalDate getDateCreated()
 	{
-		return toLocalDate(date_created);
+		return Conversions.toLocalDate(date_created);
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return toLocalDate(date_started);
+		return Conversions.toLocalDate(date_started);
 	}
 
 	public LocalDate getDateEnded()
 	{
-		return toLocalDate(date_ended);
+		return Conversions.toLocalDate(date_ended);
 	}
 
 	public LocalDate getDateModified()
 	{
-		return toLocalDate(date_modified);
+		return Conversions.toLocalDate(date_modified);
 	}
 
 	public int getStaff()

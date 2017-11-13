@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi;
+package au.com.noojee.acceloapi.util;
 
 import java.time.Duration;
 import java.time.LocalDate;

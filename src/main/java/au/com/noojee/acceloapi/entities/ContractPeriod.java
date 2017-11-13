@@ -2,9 +2,10 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.Formatters;
 import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.util.Conversions;
+import au.com.noojee.acceloapi.util.Formatters;
 
 public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {
@@ -50,12 +51,12 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 
 	public LocalDate getDateCommenced()
 	{
-		return toLocalDate(date_commenced);
+		return Conversions.toLocalDate(date_commenced);
 	}
 
 	public LocalDate getDateExpires()
 	{
-		return toLocalDate(date_expires);
+		return Conversions.toLocalDate(date_expires);
 	}
 
 	public double getBudget()
@@ -70,12 +71,12 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 
 	public LocalDate getDateCreated()
 	{
-		return toLocalDate(date_created);
+		return Conversions.toLocalDate(date_created);
 	}
 
 	public LocalDate getDateClosed()
 	{
-		return toLocalDate(date_closed);
+		return Conversions.toLocalDate(date_closed);
 	}
 
 

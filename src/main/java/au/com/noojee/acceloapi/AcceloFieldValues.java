@@ -48,23 +48,6 @@ public class AcceloFieldValues
 
 	}
 
-	/**
-	 * takes a list of field name/value pairs and formats them to json ready to push. Example: { "subject": "Support
-	 * Request via Accelo The website has become unresponsive", "nonbillable": "0", "class": "1","rate_charged": "0.00"
-	 * }
-	 * 
-	 * @param fieldNameValues
-	 * @return
-	 */
-//	public String formatAsJson()
-//	{
-//		String json = new Gson().toJson(fieldValues);
-//
-//		return json;
-//
-//		// return json.substring(1, json.length()-2);
-//
-//	}
 
 	/**
 	 * Builds the gson for the set of fields and embeds the list of result fields that are required.
@@ -82,13 +65,13 @@ public class AcceloFieldValues
 	 */
 	public String formatAsJson()
 	{
-		Map<String, Object> x = new HashMap<>();
+		Map<String, Object> fieldsAndValues = new HashMap<>();
 		
-		x.putAll(fieldValues);
+		fieldsAndValues.putAll(fieldValues);
 		
-		x.put("_fields", responseFields.fields());
+		fieldsAndValues.put("_fields", responseFields.fields());
 		
-		String json = new Gson().toJson(x);
+		String json = new Gson().toJson(fieldsAndValues);
 
 		
 		return json;
