@@ -18,7 +18,6 @@ import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.AcceloResponse;
-import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.HTTPResponse;
 import au.com.noojee.acceloapi.Meta;
@@ -33,7 +32,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 {
 	static Logger logger = LogManager.getLogger();
 
-	protected abstract Class<? extends AcceloResponseList<E>> getResponseListClass();
+	protected abstract Class<? extends AcceloResponseMeta<E>> getResponseListClass();
 
 	protected abstract Class<? extends AcceloResponse<E>> getResponseClass();
 
@@ -144,7 +143,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 * @param ticket
 	 * @throws AcceloException
 	 */
-	public void update(AcceloEntity<E> entity)
+	public E update(AcceloEntity<E> entity)
 	{
 		AcceloFieldValues fields = marshalFields(entity);
 
@@ -157,6 +156,8 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 			throw new AcceloException("Failed to update " + entity.getClass().getSimpleName() + ":" + entity.getId()
 					+ " details:" + this.toString());
 		}
+		
+		return response.getEntity();
 	}
 
 	/**

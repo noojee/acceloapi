@@ -47,6 +47,11 @@ public class Activity extends AcceloEntity<Activity>
 		}
 	};
 	
+	public enum Standing
+	{
+		unapproved, approved, invoiced, locked, empty;
+	}
+	
 
 	private String subject;
 	
@@ -79,7 +84,7 @@ public class Activity extends AcceloEntity<Activity>
 	private String details; // For meetings this is the location, for postals this is the address and for calls this is
 							// the number.
 
-	private String standing; // The standing of the activity, may be one of “unapproved”, “approved”, “invoiced”,
+	private Standing standing; // The standing of the activity, may be one of “unapproved”, “approved”, “invoiced”,
 								// “locked”, or empty.
 	private int invoice_id;
 	private int contract_period_id;
@@ -293,12 +298,12 @@ public class Activity extends AcceloEntity<Activity>
 		return this.owner_type;
 	}
 
-	public String getStanding()
+	public Standing getStanding()
 	{
 		return standing;
 	}
 
-	public void setStanding(String standing)
+	public void setStanding(Standing standing)
 	{
 		this.standing = standing;
 	}
@@ -398,7 +403,7 @@ public class Activity extends AcceloEntity<Activity>
 
 	public boolean isApproved()
 	{
-		return standing != null && (standing.equals("approved") || standing.equals("invoiced"));
+		return standing != null && (standing.equals(Standing.approved) || standing.equals(Standing.invoiced));
 	}
 
 	public String getOwner()

@@ -2,7 +2,7 @@ package au.com.noojee.acceloapi.filter;
 
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.dao.AcceloList;
+import au.com.noojee.acceloapi.dao.AcceloResponseMeta;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 
 @SuppressWarnings("rawtypes")
@@ -11,12 +11,12 @@ public class CacheKey<E extends AcceloEntity>
 	EndPoint endPoint;
 	AcceloFilter filter;
 	private AcceloFieldList fields;
-	private Class<? extends AcceloList<E>> responseListClass;
+	private Class<? extends AcceloResponseMeta<E>> responseListClass;
 	Class<E> entityClass;
 
 	
 	public CacheKey(EndPoint endPoint, AcceloFilter filter, AcceloFieldList fields,
-			Class<? extends AcceloList<E>> responseListClass, Class<E> entityClass)
+			Class<? extends AcceloResponseMeta<E>> responseListClass, Class<E> entityClass)
 	{
 		this.endPoint = endPoint;
 		this.filter = filter;
@@ -48,7 +48,7 @@ public class CacheKey<E extends AcceloEntity>
 	}
 
 
-	public Class<? extends AcceloList<E>> getResponseListClass()
+	public Class<? extends AcceloResponseMeta<E>> getResponseListClass()
 	{
 		return responseListClass;
 	}

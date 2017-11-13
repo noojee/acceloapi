@@ -1,9 +1,11 @@
 package au.com.noojee.acceloapi;
 
-public abstract class AcceloResponse<T>  
+import java.util.List;
+
+import au.com.noojee.acceloapi.dao.AcceloResponseMeta;
+
+public abstract class AcceloResponse<T>  extends AcceloResponseMeta<T>
 {
-	private Meta meta;
-	
 	// The deserialized entity.
 	T response;
 	
@@ -11,12 +13,7 @@ public abstract class AcceloResponse<T>
 	{
 		
 	}
-	
-	void setMeta(Meta meta)
-	{
-		this.meta = meta;
-	}
-	
+
 	public T getEntity()
 	{
 		return response;
@@ -26,19 +23,7 @@ public abstract class AcceloResponse<T>
 	@Override
 	public String toString()
 	{
-		return "AcceloResponse [ response=" + response + " meta=" + meta + "]";
-	}
-
-
-	public String getStatusMessage()
-	{
-		return meta.getStatusMessage();
-	}
-
-
-	public boolean isOK()
-	{
-		return meta.isOK();
+		return "AcceloResponse [ response=" + response + super.toString() + "]";
 	}
 
 }

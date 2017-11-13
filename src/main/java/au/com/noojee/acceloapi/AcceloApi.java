@@ -24,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import au.com.noojee.acceloapi.dao.AcceloList;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
@@ -82,7 +81,7 @@ public class AcceloApi
 	 * @return all entities for the given endpoint subject to the filters limit.
 	 */
 	public <E extends AcceloEntity<E>> List<E> getAll(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList,
-			Class<? extends AcceloList<E>> clazz)
+			Class<? extends AcceloAbstractResponseList<E>> clazz)
 	{
 		List<E> list;
 		try
@@ -98,14 +97,14 @@ public class AcceloApi
 	}
 
 	
-	public <E extends AcceloEntity<E>, L extends AcceloList<E>> List<E> getAll(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<L> responseClass)
+	public <E extends AcceloEntity<E>, L extends AcceloAbstractResponseList<E>> List<E> getAll(URL url, AcceloFilter<E> filter, AcceloFieldList fieldList, Class<L> responseClass)
 	{
 		List<E> entities = new ArrayList<>();
 		boolean more = true;
 		int page = 0;
-		while (more && entities.size() < filterMap.getLimit())
+		while (more && entities.size() < filter.getLimit())
 		{
-			L responseList = get(url, filterMap, fieldList, responseClass, page);
+			L responseList = get(url, filter, fieldList, responseClass, page);
 
 			if (responseList != null)
 			{

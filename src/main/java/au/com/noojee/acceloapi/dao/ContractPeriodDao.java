@@ -3,14 +3,15 @@ package au.com.noojee.acceloapi.dao;
 import java.io.IOException;
 import java.util.List;
 
+import au.com.noojee.acceloapi.AcceloAbstractResponseList;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponse;
-import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Contract;
 import au.com.noojee.acceloapi.entities.ContractPeriod;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 {
@@ -21,7 +22,8 @@ public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 		List<ContractPeriod> periods;
 		try
 		{
-			periods = AcceloApi.getInstance().getAll(EndPoint.contracts.getURL(contract.getId(), "/periods"), null, AcceloFieldList.ALL,
+			periods = AcceloApi.getInstance().getAll(EndPoint.contracts.getURL(contract.getId(), "/periods"),
+					new AcceloFilter<ContractPeriod>(), AcceloFieldList.ALL,
 					ResponseList.class);
 		}
 		catch (IOException e)
@@ -32,7 +34,6 @@ public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 		return periods;
 
 	}
-	
 
 	@Override
 	protected EndPoint getEndPoint()
@@ -40,34 +41,46 @@ public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 		return EndPoint.contractPeriods;
 	}
 
-	
 	@Override
 	protected Class<ContractPeriod> getEntityClass()
 	{
 		return ContractPeriod.class;
 	}
-	
-	@Override
-	protected Class<ResponseList> getResponseListClass()
+
+	public class Response extends AcceloResponse<ContractPeriod>
 	{
-		return ResponseList.class;
+		List<ContractPeriod> periods;
+
+		public List<ContractPeriod> getList()
+		{
+			return periods;
+		}
+
 	}
 
 	@Override
-	protected Class<Response> getResponseClass()
+	protected Class<ContractPeriodDao.ResponseList> getResponseListClass()
+	{
+		return ContractPeriodDao.ResponseList.class;
+	}
+
+	public class ResponseList extends AcceloAbstractResponseList<ContractPeriod>
+	{
+		Response response;
+
+		@Override
+		public List<ContractPeriod> getList()
+		{
+			return response.getList();
+		}
+
+	}
+
+
+	@Override
+	protected Class<? extends AcceloResponse<ContractPeriod>> getResponseClass()
 	{
 		return Response.class;
 	}
-
-
-	public class ResponseList extends AcceloResponseList<ContractPeriod>
-	{
-	}
-	
-	public class Response extends AcceloResponse<ContractPeriod>
-	{
-	}
-
-
 
 }
