@@ -1,19 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.money.CurrencyUnit;
-import javax.money.Monetary;
-
-import org.javamoney.moneta.Money;
-
 import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.FilterField;
-import au.com.noojee.acceloapi.filter.expressions.Expression;
 
 public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Comparable<E>, Cloneable
 {

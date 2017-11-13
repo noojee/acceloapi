@@ -1,7 +1,5 @@
 package au.com.noojee.acceloapi;
 
-import java.util.List;
-
 import au.com.noojee.acceloapi.dao.AcceloResponseMeta;
 
 public abstract class AcceloResponse<T>  extends AcceloResponseMeta<T>

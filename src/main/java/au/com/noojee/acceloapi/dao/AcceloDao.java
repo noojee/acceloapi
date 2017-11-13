@@ -19,7 +19,6 @@ import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.AcceloResponse;
-import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.HTTPResponse;
 import au.com.noojee.acceloapi.Meta;

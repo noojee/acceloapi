@@ -22,6 +22,7 @@ import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 import au.com.noojee.acceloapi.entities.meta.Ticket_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.filter.expressions.Expression;
+import au.com.noojee.acceloapi.util.StreamMaths;
 
 public class TicketDao extends AcceloDao<Ticket>
 {
@@ -290,14 +291,12 @@ public class TicketDao extends AcceloDao<Ticket>
 
 	public Duration getBillable(Ticket ticket)
 	{
-		return getActivities(ticket).stream().map(Activity::getBillable)
-				.reduce(Duration.ZERO, (a, b) -> a.plus(b));
+		return StreamMaths.sum(getActivities(ticket).stream(), Activity::getBillable);
 	}
 
 	public Duration getNonBillable(Ticket ticket)
 	{
-		return getActivities(ticket).stream().map(Activity::getNonBillable)
-				.reduce(Duration.ZERO, (a, b) -> a.plus(b));
+		return StreamMaths.sum(getActivities(ticket).stream(), Activity::getNonBillable);
 	}
 
 	@Override
