@@ -1,34 +1,26 @@
-package au.com.noojee.acceloapi.filter.expressions;
+package au.com.noojee.acceloapi.filter;
 
 import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.generator.FilterField;
 
-public class After<E extends AcceloEntity<E>> extends Expression
+class AfterOrEq<E extends AcceloEntity<E>> extends Expression
 {
 
-	private String fieldName;
+	private FilterField<E, LocalDate> field;
 	private LocalDate operand;
 
-	public After(FilterField<E, LocalDate> field, LocalDate localDate)
+	public AfterOrEq(FilterField<E, LocalDate> field, LocalDate localDate)
 	{
-		this.fieldName = field.getFieldName();
+		this.field = field;
 		this.operand = localDate;
 	}
 
 	@Override
 	public String toJson()
 	{
-		String nameAndOperator = fieldName + "_after";
-
-		String json = "\"" + nameAndOperator + "\": [";
-		json += "\"" + formatDateAsFilterOperand(operand) + "\"";
-
-		json += "]";
-
-		return json;
-
+		return (new After<E>(field, operand).or(new Eq<E>(field, operand))).toJson();
 	}
 
 	@Override
@@ -36,7 +28,7 @@ public class After<E extends AcceloEntity<E>> extends Expression
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
+		result = prime * result + ((field == null) ? 0 : field.hashCode());
 		result = prime * result + ((operand == null) ? 0 : operand.hashCode());
 		return result;
 	}
@@ -51,13 +43,13 @@ public class After<E extends AcceloEntity<E>> extends Expression
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		After<E> other = (After<E>) obj;
-		if (fieldName == null)
+		AfterOrEq<E> other = (AfterOrEq<E>) obj;
+		if (field == null)
 		{
-			if (other.fieldName != null)
+			if (other.field != null)
 				return false;
 		}
-		else if (!fieldName.equals(other.fieldName))
+		else if (!field.equals(other.field))
 			return false;
 		if (operand == null)
 		{
@@ -69,5 +61,5 @@ public class After<E extends AcceloEntity<E>> extends Expression
 		return true;
 	}
 
-
+	
 }

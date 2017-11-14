@@ -1,9 +1,10 @@
-package au.com.noojee.acceloapi.filter;
+package au.com.noojee.acceloapi.cache;
 
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.dao.AcceloResponseMeta;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 @SuppressWarnings("rawtypes")
 public class CacheKey<E extends AcceloEntity>

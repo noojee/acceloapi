@@ -22,12 +22,12 @@ import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.HTTPResponse;
 import au.com.noojee.acceloapi.Meta;
+import au.com.noojee.acceloapi.cache.AcceloCache;
+import au.com.noojee.acceloapi.cache.CacheKey;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.generator.FilterField;
 import au.com.noojee.acceloapi.entities.generator.JsonValidator;
-import au.com.noojee.acceloapi.filter.AcceloCache;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.CacheKey;
 
 public abstract class AcceloDao<E extends AcceloEntity<E>>
 {
@@ -126,7 +126,18 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 		return entities;
 	}
-
+	
+	
+	/**
+	 * Inserts an entity into Accelo.
+	 * 
+	 * Becareful when doing inserts as any cached queries will not included the newly inserted entity.
+	 * You may need to identify any cached queries and flush them.
+	 * 
+	 * @param entity
+	 * 
+	 * @return the newly inserted entity as returned from Accelo.
+	 */
 	public E insert(AcceloEntity<E> entity)
 	{
 		AcceloFieldValues fields = marshalFields(entity);
@@ -139,7 +150,8 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	}
 
 	/**
-	 * Uses introspection to collect the set of fields that need to be sent to Accelo when updating an entity.
+	 * Updated an existing entity.
+	 * Any instances in the cache will be updated.
 	 * 
 	 * @param ticket
 	 * @throws AcceloException
@@ -157,6 +169,8 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 			throw new AcceloException("Failed to update " + entity.getClass().getSimpleName() + ":" + entity.getId()
 					+ " details:" + this.toString());
 		}
+		
+		AcceloCache.getInstance().updateEntity(response.getEntity());
 		
 		return response.getEntity();
 	}
@@ -212,6 +226,40 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 			AcceloCache.getInstance().flushEntity(entity);
 
 	}
+	
+	
+	/**
+	 * In same cases (such as activity) we can't update the entity so we
+	 * have to insert a new (cloned) entity and then delete the old one.
+	 * 
+	 * To use this method, retrieve an entity from accelo.
+	 * Adjust the details of the entity and then call replace.
+	 * 
+	 * This method will delete the original entity using its id and then
+	 * insert an new replacement entity based on the entity you pass in.
+	 * 
+	 * This method will also flush the cache, including any queries that 
+	 * contained the original entity.
+	 * 
+	 * @param activity
+	 */
+	public E replace(E entity)
+	{
+		// We need to clear the query from the cache now as after the
+		// delete/insert the query will be invalid but the entity won't exists
+		// so we can flush it.
+		AcceloCache.getInstance().flushEntity(entity, true);
+		
+		// we do the insert first so if anything goes wrong we don't loose data.
+		E replacementEntity = insert(entity);
+
+		delete(entity);
+		
+		
+		
+		return replacementEntity;
+	}
+
 
 
 	public void validateEntityClass()

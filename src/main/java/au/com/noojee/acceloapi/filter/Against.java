@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi.filter.expressions;
+package au.com.noojee.acceloapi.filter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 
-public class Against extends Expression
+class Against extends Expression
 {
 
 	private AgainstType_ type;

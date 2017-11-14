@@ -6,16 +6,6 @@ import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.generator.FilterField;
 import au.com.noojee.acceloapi.entities.meta.AgainstType_;
-import au.com.noojee.acceloapi.filter.expressions.After;
-import au.com.noojee.acceloapi.filter.expressions.AfterOrEq;
-import au.com.noojee.acceloapi.filter.expressions.Against;
-import au.com.noojee.acceloapi.filter.expressions.And;
-import au.com.noojee.acceloapi.filter.expressions.Before;
-import au.com.noojee.acceloapi.filter.expressions.Empty;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
-import au.com.noojee.acceloapi.filter.expressions.Expression;
-import au.com.noojee.acceloapi.filter.expressions.Or;
-import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class AcceloFilter<E extends AcceloEntity<E>>
 {

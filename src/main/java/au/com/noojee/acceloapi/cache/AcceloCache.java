@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi.filter;
+package au.com.noojee.acceloapi.cache;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,7 +17,7 @@ import com.google.gson.Gson;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.filter.expressions.Eq;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 /**
  * Manages the caching of queries when accessing the Accelo REST API. By default we hold 10,000 queries with a 10 minute
@@ -118,7 +118,7 @@ public class AcceloCache
 			for (AcceloEntity entity : list)
 			{
 				AcceloFilter filter = new AcceloFilter();
-				filter.where(new Eq(entity.getIdFilterField(), entity.getId()));
+				filter.where(filter.eq(entity.getIdFilterField(), entity.getId()));
 
 				idKey = new SingleEntityCacheKey(originalKey.getEndPoint(), filter, originalKey.getFields(),
 						originalKey.getResponseListClass(), entity.getClass(), entity.getId());
@@ -183,9 +183,9 @@ public class AcceloCache
 	{
 		Gson gson = new Gson();
 		String json = gson.toJson(rhs);
-		
+
 		AcceloEntity copy = gson.fromJson(json, rhs.getClass());
-		
+
 		return copy;
 	}
 
@@ -236,12 +236,19 @@ public class AcceloCache
 		queryCache.invalidate(key);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void flushEntity(AcceloEntity entity)
 	{
-		// search the cache for any CacheKeys that are the same type as entity.
-		// This should find both single entities inserted by populateIds as well
-		// as entities contained as part of a queries list.
+		flushEntity(entity, false);
+	}
+
+	/*
+	 * Flushes the given entity from the cache. search the cache for any CacheKeys that are the same type as entity.
+	 * This should find both single entities inserted by populateIds as well as entities contained as part of a queries
+	 * list. If flushQueries is true then we will also flush any queries that contain the entity.
+	 */
+	@SuppressWarnings("unchecked")
+	public void flushEntity(AcceloEntity entity, boolean flushQueries)
+	{
 		queryCache.asMap().keySet().stream().filter(k -> k.getEntityClass() == entity.getClass())
 				.forEach(k ->
 					{
@@ -260,10 +267,15 @@ public class AcceloCache
 							List<? extends AcceloEntity> list;
 							try
 							{
-								list = queryCache.get(k);
-								list.remove(entity);
-								// Even if the list is now empty we don't invalidate the cache key as we support
-								// negative caching. i.e. if a query returns zero results don't run it again.
+								if (flushQueries)
+									queryCache.invalidate(k); // we have been instructed to take out the whole query.
+								else
+								{
+									list = queryCache.get(k);
+									list.remove(entity);
+									// Even if the list is now empty we don't invalidate the cache key as we support
+									// negative caching. i.e. if a query returns zero results don't run it again.
+								}
 							}
 							catch (ExecutionException e)
 							{
@@ -276,84 +288,54 @@ public class AcceloCache
 	}
 
 	/**
-	 * deep clone entities.
+	 * Finds the entity (by its id and type) any where in the cache and updates it.
 	 * 
 	 * @param entity
-	 * @return
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
 	 */
-
-	/*
-	private Object copy(Object entity)
+	@SuppressWarnings("unchecked")
+	public void updateEntity(AcceloEntity entity)
 	{
-		Class<?> clazz = entity.getClass();
-
-		Object newEntity = null;
-		try
-		{
-			newEntity = entity.getClass().newInstance();
-
-			while (clazz != null)
+		queryCache.asMap().keySet().stream().filter(k -> k.getEntityClass() == entity.getClass())
+		.forEach(k ->
 			{
-				copyFields(entity, newEntity, clazz);
-				clazz = clazz.getSuperclass();
-			}
-		}
-		catch (Exception e)
-		{
-			throw new AcceloException(e);
-		}
-		return newEntity;
+				// For a single entity added by populateid then we want to remove it.
+				if (k instanceof SingleEntityCacheKey)
+				{
+					SingleEntityCacheKey seck = (SingleEntityCacheKey) k;
+					if (seck.getId() == entity.getId())
+					{
+						// replace the entity with the new one.
+						queryCache.put(k, Arrays.asList(entity));
+					}
+				}
+				else
+				{
+					// For a query we want to prune out the deleted entity.
+					// Get the list from the cache for the key.
+					// this could be a list of 0, 1 or many
+					List<AcceloEntity> list;
+					try
+					{
+						list = queryCache.get(k);
+						
+						// find and remove the old version of the entity.
+						AcceloEntity element = list.stream().filter(e -> e.getId() == entity.getId())
+						.findFirst()
+						.get();
+						list.remove(element);
+						
+						// add the new version of the entity.
+						list.add(entity);
+					}
+					catch (ExecutionException e)
+					{
+						logger.error(e, e);
+					}
+				}
+
+			});
+
 	}
-	*/
 
-	/**
-	 * Used by the 'copy' method to copy the individual fields in an object.
-	 * 
-	 * @param entity
-	 * @param newEntity
-	 * @param clazz
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
-	 */
-	/*
-	private void copyFields(Object entity, Object newEntity, Class<?> clazz)
-			throws IllegalAccessException, InstantiationException
-	{
-		logger.debug("copyFields for Class=" + clazz);
-
-		List<Field> fields = new ArrayList<>();
-		for (Field field : clazz.getDeclaredFields())
-		{
-			fields.add(field);
-		}
-		for (Field field : fields)
-		{
-			field.setAccessible(true);
-			logger.debug("Field name=" + field.getName());
-			logger.debug("Field type=" + field.getType());
-			if (field.getType().isPrimitive())
-			{
-				field.set(newEntity, field.get(entity));
-			}
-			else if (field.getType().isArray())
-			{
-
-				// get the class type of the original array we passed in and determine the type, store in arrayType
-				Class<?> arrayType = field.getType().getClass().getComponentType();
-
-				// declare array, cast to (T[]) that was determined using reflection, use java.lang.reflect to create a
-				// new instance of an Array(of arrayType variable, and the same length as the original
-				T[] copy = (T[]) java.lang.reflect.Array.newInstance(arrayType, field.length);
-
-				// Use System and arraycopy to copy the array
-				System.arraycopy(original, 0, copy, 0, original.length);
-			}
-			else
-				entity = copy(field.getType().newInstance());
-
-		}
-	}
-	*/
+	
 }

@@ -5,7 +5,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 
-public class StreamMaths
+public interface StreamMaths
 {
 
 	public static <E> Duration sum(Stream<E> stream, Function<E, Duration> functor)

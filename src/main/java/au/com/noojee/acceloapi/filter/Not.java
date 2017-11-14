@@ -1,6 +1,6 @@
-package au.com.noojee.acceloapi.filter.expressions;
+package au.com.noojee.acceloapi.filter;
 
-public class Not extends Expression
+class Not extends Expression
 {
 
 	@Override

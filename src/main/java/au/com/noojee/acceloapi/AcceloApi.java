@@ -35,12 +35,11 @@ public class AcceloApi
 	static private AcceloApi self = null;;
 	/**
 	 * The base url to the Accelo api crm e.g. "https://myorg.api.accelo.com"
-	 * 
 	 */
 	private String baseURL = null;
 
 	private String accessToken = null;
-	
+
 	public enum HTTPMethod
 	{
 		GET, POST, PUT, DELETE
@@ -50,10 +49,10 @@ public class AcceloApi
 	{
 		if (self == null)
 			self = new AcceloApi();
-		
+
 		return AcceloApi.self;
 	}
-	
+
 	private AcceloApi()
 	{
 		System.setProperty("http.maxConnections", "8"); // set globally only
@@ -65,13 +64,10 @@ public class AcceloApi
 		return baseURL;
 	}
 
-
 	/**
-	 * Pulls every matching entity. Be careful! you could run out of memory and
-	 * slam Accelo! You can only use this method of Accelo returns a list of
-	 * entities. This method will throw an exception if you try to make a call
-	 * that causes Accelo to return a single entity (e.g. don't try to get a
-	 * contact by id).
+	 * Pulls every matching entity. Be careful! you could run out of memory and slam Accelo! You can only use this
+	 * method of Accelo returns a list of entities. This method will throw an exception if you try to make a call that
+	 * causes Accelo to return a single entity (e.g. don't try to get a contact by id).
 	 * 
 	 * @param method
 	 * @param url
@@ -80,7 +76,8 @@ public class AcceloApi
 	 * @param clazz
 	 * @return all entities for the given endpoint subject to the filters limit.
 	 */
-	public <E extends AcceloEntity<E>> List<E> getAll(EndPoint endPoint, AcceloFilter<E> filterMap, AcceloFieldList fieldList,
+	public <E extends AcceloEntity<E>> List<E> getAll(EndPoint endPoint, AcceloFilter<E> filterMap,
+			AcceloFieldList fieldList,
 			Class<? extends AcceloAbstractResponseList<E>> clazz)
 	{
 		List<E> list;
@@ -92,12 +89,12 @@ public class AcceloApi
 		{
 			throw new AcceloException(e);
 		}
-		
+
 		return list;
 	}
 
-	
-	public <E extends AcceloEntity<E>, L extends AcceloAbstractResponseList<E>> List<E> getAll(URL url, AcceloFilter<E> filter, AcceloFieldList fieldList, Class<L> responseClass)
+	public <E extends AcceloEntity<E>, L extends AcceloAbstractResponseList<E>> List<E> getAll(URL url,
+			AcceloFilter<E> filter, AcceloFieldList fieldList, Class<L> responseClass)
 	{
 		List<E> entities = new ArrayList<>();
 		boolean more = true;
@@ -123,36 +120,33 @@ public class AcceloApi
 		return entities;
 	}
 
-
-
-
 	/**
-	 * Send a request to get a single entity or the 'nth' page of entities. The
-	 * first page is page 0.
+	 * Send a request to get a single entity or the 'nth' page of entities. The first page is page 0.
 	 * 
 	 * @param method
 	 * @param url
 	 * @param filterMap
 	 * @param fieldList
 	 * @param clazz
-	 * @param pageNo
-	 *            the Page to return
+	 * @param pageNo the Page to return
 	 * @return
 	 */
 
-	public <E extends AcceloEntity<E>, R> R get(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, Class<R> clazz, int pageNo)
+	public <E extends AcceloEntity<E>, R> R get(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList,
+			Class<R> clazz, int pageNo)
 	{
 		HTTPResponse response = get(url, filterMap, fieldList, pageNo);
 		return response.parseBody(clazz);
 	}
-	
-	public <E extends AcceloEntity<E>, R> String getRaw(EndPoint endPoint, AcceloFilter<E> filter, AcceloFieldList fieldList,  Class<R> clazz)
+
+	public <E extends AcceloEntity<E>, R> String getRaw(EndPoint endPoint, AcceloFilter<E> filter,
+			AcceloFieldList fieldList, Class<R> clazz)
 	{
 		HTTPResponse response;
 		try
 		{
 			String json = buildJsonBody(HTTPMethod.GET, fieldList.formatAsJson(), filter.toJson());
-			
+
 			response = _request(HTTPMethod.POST, endPoint.getURL(), json);
 		}
 		catch (MalformedURLException e)
@@ -162,28 +156,26 @@ public class AcceloApi
 		return response.getResponseBody();
 	}
 
-
 	/**
-	 * Send a request to get a single entity or the 'nth' page of entities. The
-	 * first page is page 0.
+	 * Send a request to get a single entity or the 'nth' page of entities. The first page is page 0.
 	 * 
 	 * @param method
 	 * @param url
 	 * @param filterMap
 	 * @param fieldList
 	 * @param clazz
-	 * @param pageNo
-	 *            the Page to return
+	 * @param pageNo the Page to return
 	 * @return
 	 */
 
-	private <E extends AcceloEntity<E>> HTTPResponse get(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList, int pageNo)
+	private <E extends AcceloEntity<E>> HTTPResponse get(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList,
+			int pageNo)
 	{
 		String fields = fieldList.formatAsJson();
 		String filters = (filterMap == null) ? null : filterMap.toJson();
 
 		String json = buildJsonBody(HTTPMethod.GET, fields, filters);
-		
+
 		HTTPResponse response = null;
 
 		URL pagedURL;
@@ -194,7 +186,7 @@ public class AcceloApi
 		}
 		catch (IOException e)
 		{
-			
+
 			throw new AcceloException(e);
 		}
 
@@ -203,8 +195,7 @@ public class AcceloApi
 	}
 
 	/*
-	 * Send an entity to Accelo. FieldValues is a map of name value pair that
-	 * constitute the entity that we are pushing.
+	 * Send an entity to Accelo. FieldValues is a map of name value pair that constitute the entity that we are pushing.
 	 */
 	public <T> T insert(EndPoint endPoint, AcceloFieldValues fieldNameValues, Class<T> clazz)
 	{
@@ -213,7 +204,7 @@ public class AcceloApi
 		// looks like you can't post fields via json so we need to add data to
 		// the url.
 
-		//String urlArgs = fieldNameValues.buildUrlArgs();
+		// String urlArgs = fieldNameValues.buildUrlArgs();
 
 		URL completeUrl;
 		try
@@ -223,20 +214,18 @@ public class AcceloApi
 		catch (MalformedURLException e)
 		{
 			throw new AcceloException(e);
-		} 
-		
+		}
+
 		String fieldValues = fieldNameValues.formatAsJson();
-		
-		
+
 		HTTPResponse response = _request(HTTPMethod.POST, completeUrl, fieldValues);
 
 		return response.parseBody(clazz);
 	}
 
 	/*
-	 * Updates an existing entity . FieldValues is a map of name value pair that
-	 * constitute the entity that we are pushing.
-	 * 
+	 * Updates an existing entity . FieldValues is a map of name value pair that constitute the entity that we are
+	 * pushing.
 	 * @entityId - the accelo id of the entityt to be updated.
 	 */
 	public <T> T update(EndPoint endPoint, int entityId, AcceloFieldValues fieldNameValues, Class<T> clazz)
@@ -249,24 +238,23 @@ public class AcceloApi
 		catch (MalformedURLException e)
 		{
 			throw new AcceloException(e);
-		} 
+		}
 		String values = fieldNameValues.formatAsJson();
 		logger.error("Updating: url=" + completeUrl + " values=" + values);
 		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, values);
 
 		return response.parseBody(clazz);
 	}
-	
-	public HTTPResponse delete(EndPoint endPoint, int id) 
+
+	public HTTPResponse delete(EndPoint endPoint, int id)
 	{
-		URL completeUrl = buildURL(endPoint, id); 
+		URL completeUrl = buildURL(endPoint, id);
 		logger.error("Deleting: url=" + completeUrl);
 		HTTPResponse response = _request(HTTPMethod.DELETE, completeUrl, null);
 		logger.error("Deleted: url=" + completeUrl);
-		
+
 		return response;
 	}
-
 
 	private URL buildURL(EndPoint endPoint, int id)
 	{
@@ -283,74 +271,73 @@ public class AcceloApi
 
 	/**
 	 * Returns a raw response string.
-	 * 
 	 */
-	private HTTPResponse _request(HTTPMethod method, URL url, String jsonArgs)
+	public HTTPResponse _request(HTTPMethod method, URL url, String jsonArgs)
 	{
 		HTTPResponse response = null;
 
 		try
 		{
 
-		logger.debug(method + " url: " + url);
-		HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+			logger.debug(method + " url: " + url);
+			HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 
-		// We always use post as we are using json and defining the method via
-		// _method in the json data.
-		connection.setRequestMethod(method.toString());
-		connection.setDoOutput(true);
-		connection.setAllowUserInteraction(false); // no users here so don't do
-													// anything silly.
+			// We always use post as we are using json and defining the method via
+			// _method in the json data.
+			connection.setRequestMethod(method.toString());
+			connection.setDoOutput(true);
+			connection.setAllowUserInteraction(false); // no users here so don't do
+														// anything silly.
 
-		// connection.setRequestProperty("Content-Type",
-		// "application/x-www-form-urlencoded; charset=UTF-8");
-		connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-		connection.setRequestProperty("Authorization", "Bearer " + accessToken);
+			// connection.setRequestProperty("Content-Type",
+			// "application/x-www-form-urlencoded; charset=UTF-8");
+			connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+			connection.setRequestProperty("Authorization", "Bearer " + accessToken);
 
-		connection.connect();
+			connection.connect();
 
-		// Write the json arguments if any exist.
-		if (jsonArgs != null)
-		{
-			logger.debug("jsonArgs: " + jsonArgs);
-			try (OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream(), "UTF-8"))
+			// Write the json arguments if any exist.
+			if (jsonArgs != null)
 			{
-				osw.write(jsonArgs.toString());
-				osw.flush();
-				osw.close();
+				logger.debug("jsonArgs: " + jsonArgs);
+				try (OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream(), "UTF-8"))
+				{
+					osw.write(jsonArgs.toString());
+					osw.flush();
+					osw.close();
+				}
+
 			}
 
-		}
+			int responseCode = connection.getResponseCode();
 
-		int responseCode = connection.getResponseCode();
+			// 404 returns HTML so no point trying to parse it.
+			if (responseCode == 404)
+				throw new AcceloException("The passed url was not found" + url.toString());
 
-		// 404 returns HTML so no point trying to parse it.
-		if (responseCode == 404)
-			throw new AcceloException("The passed url was not found" + url.toString());
+			String body = "";
+			String error = "";
 
-		String body = "";
-		String error = "";
-
-		try (InputStream streamBody = connection.getInputStream())
-		{
-			body = fastStreamReader(streamBody);
-		}
-		catch (IOException e)
-		{
-			try (InputStream streamError = connection.getErrorStream())
+			try (InputStream streamBody = connection.getInputStream())
 			{
-				error = fastStreamReader(streamError);
+				body = fastStreamReader(streamBody);
 			}
-		}
+			catch (IOException e)
+			{
+				try (InputStream streamError = connection.getErrorStream())
+				{
+					error = fastStreamReader(streamError);
+				}
+			}
 
-		// Read the response.
-		if (responseCode < 300)
-		{
-			// logger.error("Response body" + body);
-			response = new HTTPResponse(responseCode, connection.getResponseMessage(), body);
-		}
-		else
-			response = new HTTPResponse(responseCode, connection.getResponseMessage(), error);
+			// Read the response.
+			if (responseCode < 300)
+			{
+				// logger.error("Response body" + body);
+				response = new HTTPResponse(responseCode, connection.getResponseMessage(), body);
+			}
+			else
+				response = new HTTPResponse(responseCode, connection.getResponseMessage(), error);
 		}
 		catch (IOException e)
 		{
@@ -361,7 +348,7 @@ public class AcceloApi
 
 	}
 
-	String fastStreamReader(InputStream inputStream) 
+	String fastStreamReader(InputStream inputStream)
 	{
 		if (inputStream != null)
 		{
@@ -385,11 +372,9 @@ public class AcceloApi
 		}
 		return "";
 	}
-	
-	
+
 	/**
 	 * @param secret - use AcceloSecret.load
-	 * 
 	 */
 	public void connect(AcceloSecret secret)
 	{
@@ -533,8 +518,5 @@ public class AcceloApi
 
 		return out;
 	}
-
-
-
 
 }

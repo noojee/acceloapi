@@ -1,12 +1,12 @@
-package au.com.noojee.acceloapi.filter.expressions;
+package au.com.noojee.acceloapi.filter;
 
-public class Or extends Expression
+class And extends Expression
 {
 
 	private Expression parent;
 	private Expression child;
 
-	public Or(Expression parent, Expression child)
+	public And(Expression parent, Expression child)
 	{
 		super();
 		this.parent = parent;
@@ -16,7 +16,7 @@ public class Or extends Expression
 	@Override
 	public String toJson()
 	{
-		String expression = "\"_OR\": {\n" + parent.toJson() + "," + child.toJson() + "\n}";
+		String expression = "\"_AND\": {\n" + parent.toJson() + "," + child.toJson() + "\n}";
 
 		return expression;
 
@@ -41,7 +41,7 @@ public class Or extends Expression
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Or other = (Or) obj;
+		And other = (And) obj;
 		if (child == null)
 		{
 			if (other.child != null)
@@ -58,5 +58,4 @@ public class Or extends Expression
 			return false;
 		return true;
 	}
-
 }

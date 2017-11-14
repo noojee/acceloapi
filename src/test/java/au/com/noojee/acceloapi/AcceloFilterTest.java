@@ -10,7 +10,6 @@ import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 import au.com.noojee.acceloapi.entities.meta.Company_;
 import au.com.noojee.acceloapi.entities.meta.Contract_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class AcceloFilterTest
 {
@@ -59,7 +58,7 @@ public class AcceloFilterTest
 		System.out.println(cf.toJson());
 
 		cf = new AcceloFilter<>();
-		filter.where(new Search("911"));
+		filter.where(cf.search("911"));
 
 		System.out.println(filter.toJson());
 

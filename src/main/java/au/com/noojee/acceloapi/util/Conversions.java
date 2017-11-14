@@ -11,11 +11,9 @@ import javax.money.Monetary;
 
 import org.javamoney.moneta.Money;
 
-import au.com.noojee.acceloapi.filter.expressions.Expression;
-
-public class Conversions
+public interface Conversions
 {
-	static protected CurrencyUnit currencyUnit = Monetary.getCurrency(Locale.getDefault());
+	static final CurrencyUnit currencyUnit = Monetary.getCurrency(Locale.getDefault());
 
 	public static Money asMoney(double value)
 	{
@@ -31,7 +29,7 @@ public class Conversions
 	{
 		LocalDate localDate = Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault()).toLocalDate();
 
-		return (localDate.equals(Expression.DATEZERO) ? null : localDate);
+		return (localDate.equals(Constants.DATEZERO) ? null : localDate);
 	}
 
 	public static long toLong(LocalDate localDate)

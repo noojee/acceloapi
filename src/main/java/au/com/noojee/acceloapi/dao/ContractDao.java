@@ -14,7 +14,7 @@ import au.com.noojee.acceloapi.entities.ContractPeriod;
 import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 import au.com.noojee.acceloapi.entities.meta.Contract_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Expression;
+import au.com.noojee.acceloapi.util.Constants;
 
 public class ContractDao extends AcceloDao<Contract>
 {
@@ -134,7 +134,7 @@ public class ContractDao extends AcceloDao<Contract>
 		AcceloFilter<Contract> filter = new AcceloFilter<>();
 		filter.where(filter.before(Contract_.date_started, LocalDate.now())
 				.and(filter.after(Contract_.date_expires, LocalDate.now())
-						.or(filter.empty(Contract_.date_expires)).or(filter.eq(Contract_.date_expires, Expression.DATEZERO))));
+						.or(filter.empty(Contract_.date_expires)).or(filter.eq(Contract_.date_expires, Constants.DATEZERO))));
 
 		return getByFilter(filter);
 	}

@@ -29,27 +29,6 @@ public class ActivityDao extends AcceloDao<Activity>
 	}
 	
 	
-	/**
-	 * As we can't update a lot of the attributes of an activity we resort
-	 * to deleting it and recreating it.
-	 * 
-	 * To use this method, retrieve an activity from accelo.
-	 * Adjust the details of the activity object and then call replace
-	 * This method will delete the original activity using its id and then
-	 * insert an new replacement activity based on the activity you pass in.
-	 * @param activity
-	 */
-	public Activity replace(Activity activity)
-	{
-		// we do the insert first so if anything goes wrong we don't loose data.
-		Activity replacementActivity = insert(activity);
-
-		delete(activity);
-		
-		return replacementActivity;
-	}
-
-
 	@Override
 	protected EndPoint getEndPoint()
 	{

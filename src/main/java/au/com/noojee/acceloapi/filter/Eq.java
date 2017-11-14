@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi.filter.expressions;
+package au.com.noojee.acceloapi.filter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,8 +7,9 @@ import java.util.List;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.generator.FilterField;
+import au.com.noojee.acceloapi.util.Constants;
 
-public class Eq<E extends AcceloEntity<E>> extends Expression
+class Eq<E extends AcceloEntity<E>> extends Expression
 {
 
 	private String fieldName;
@@ -38,7 +39,7 @@ public class Eq<E extends AcceloEntity<E>> extends Expression
 		this.fieldName = field.getFieldName();
 		
 		// HACK Accelo Doesn't support comparison of a date against '0'. Using (\"date_before\", Expression.DATEZERO) is accelos recommended hack.;
-		if (operand == Expression.DATEZERO)
+		if (operand == Constants.DATEZERO)
 			this.fieldName = fieldName + "_before";
 
 		this.operands.add(formatDateAsFilterOperand(operand));

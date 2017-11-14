@@ -13,7 +13,6 @@ import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 import au.com.noojee.acceloapi.entities.meta.Contact_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class ContactDao extends AcceloDao<Contact>
 {
@@ -25,9 +24,9 @@ public class ContactDao extends AcceloDao<Contact>
 
 		if (contact_firstname != null && contact_lastname != null)
 		{
-			AcceloFilter<Contact> filters = new AcceloFilter<>();
-			filters.where(new Search(contact_firstname + " " + contact_lastname));
-			List<Contact> contacts = getByFilter(filters);
+			AcceloFilter<Contact> filter = new AcceloFilter<>();
+			filter.where(filter.search(contact_firstname + " " + contact_lastname));
+			List<Contact> contacts = getByFilter(filter);
 			contact = contacts.size() > 0 ? contacts.get(0) : null;
 		}
 

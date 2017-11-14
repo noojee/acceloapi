@@ -11,7 +11,6 @@ import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.entities.meta.Company_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
-import au.com.noojee.acceloapi.filter.expressions.Search;
 
 public class CompanyDao extends AcceloDao<Company>
 {
@@ -24,7 +23,7 @@ public class CompanyDao extends AcceloDao<Company>
 		fields.add(Contact.FIELDS_ALL);
 
 		AcceloFilter<Company> filter = new AcceloFilter<>();
-		filter.where(new Search(companyName));
+		filter.where(filter.search(companyName));
 
 		List<Company> companies = getByFilter(filter, fields);
 

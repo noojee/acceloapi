@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
 import au.com.noojee.acceloapi.entities.generator.DateFilterField;
 import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
-import au.com.noojee.acceloapi.filter.expressions.Expression;
+import au.com.noojee.acceloapi.util.Constants;
 import au.com.noojee.acceloapi.util.Conversions;
 
 public class Ticket extends AcceloEntity<Ticket>
@@ -112,7 +112,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	 */
 	public boolean isOpen()
 	{
-		return getDateClosed() == null || getDateClosed().equals(Expression.DATEZERO)
+		return getDateClosed() == null || getDateClosed().equals(Constants.DATEZERO)
 				|| getDateClosed().isAfter(LocalDate.now()); // I don't think
 																// this is
 																// possible. but

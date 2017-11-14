@@ -1,9 +1,10 @@
-package au.com.noojee.acceloapi.filter;
+package au.com.noojee.acceloapi.cache;
 
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.dao.AcceloResponseMeta;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 /**
  * This class is used to differentiate between a cache entry for a single id verses a full query.

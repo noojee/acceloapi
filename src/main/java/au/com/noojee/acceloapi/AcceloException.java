@@ -11,7 +11,7 @@ public class AcceloException extends RuntimeException
 		super(message);
 	}
 
-	public AcceloException(Exception e)
+	public AcceloException(Throwable e)
 	{
 		super(e);
 	}
