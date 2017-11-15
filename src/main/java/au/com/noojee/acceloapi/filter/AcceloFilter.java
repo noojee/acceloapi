@@ -4,7 +4,6 @@ import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.generator.FilterField;
 import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 

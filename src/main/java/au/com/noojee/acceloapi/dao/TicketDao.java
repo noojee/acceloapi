@@ -18,6 +18,7 @@ import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.entities.Contract;
 import au.com.noojee.acceloapi.entities.Staff;
 import au.com.noojee.acceloapi.entities.Ticket;
+import au.com.noojee.acceloapi.entities.meta.Activity_;
 import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 import au.com.noojee.acceloapi.entities.meta.Ticket_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
@@ -198,12 +199,37 @@ public class TicketDao extends AcceloDao<Ticket>
 		return contact;
 	}
 
-	public List<Activity> getActivities(Ticket ticket)
+	
+	/**
+	 * Activities can be roughly categorized in to staff generated and system generated activities.
+	 * 
+	 * 
+	 * unlike the method getActivities this method only returns activites which were
+	 * logged by a staff member.
+	 * 
+	 * Mostly we are only interested in staff generated activities (for the purposes of timesheets and ticket billable hours).
+	 * 
+	 * As such you will normally want to exclude system activities.
+	 * 
+	 * This method is generally more useful as there are a lot of system activites that for the most
+	 * part you just don't care about.
+	 * 
+	 * @param ticket
+	 * @param excludeSystemActivities if true then we exclude system activities from the result.
+	 * @return
+	 */
+	public List<Activity> getActivities(Ticket ticket, boolean excludeSystemActivities)
 	{
 		List<Activity> list = null;
 		try
 		{
-			list = new ActivityDao().getByTicket(ticket);
+			AcceloFilter<Activity> filter = new AcceloFilter<>();
+			
+			if (excludeSystemActivities)
+				// If the staff field is 0 then this is a system generated activity.
+				filter.where(filter.greaterThan(Activity_.staff, 0));
+			
+			list = new ActivityDao().getByFilter(filter);
 		}
 		catch (AcceloException e)
 		{
@@ -211,6 +237,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		}
 		return list;
 	}
+
 
 	public Duration sumMTDWork(Ticket ticket)
 	{
@@ -271,7 +298,7 @@ public class TicketDao extends AcceloDao<Ticket>
 	public Duration totalWork(Ticket ticket)
 	{
 
-		long work = getActivities(ticket).stream()
+		long work = getActivities(ticket, true).stream()
 				.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
 		return Duration.ofSeconds(work);
@@ -285,18 +312,18 @@ public class TicketDao extends AcceloDao<Ticket>
 	 */
 	public boolean isFullyApproved(Ticket ticket) throws AcceloException
 	{
-		boolean isFullyApproved = getActivities(ticket).stream().allMatch(a -> a.isApproved());
+		boolean isFullyApproved = getActivities(ticket, true).stream().allMatch(a -> a.isApproved());
 		return isFullyApproved;
 	}
 
 	public Duration getBillable(Ticket ticket)
 	{
-		return StreamMaths.sum(getActivities(ticket).stream(), Activity::getBillable);
+		return StreamMaths.sum(getActivities(ticket, true).stream(), Activity::getBillable);
 	}
 
 	public Duration getNonBillable(Ticket ticket)
 	{
-		return StreamMaths.sum(getActivities(ticket).stream(), Activity::getNonBillable);
+		return StreamMaths.sum(getActivities(ticket, true).stream(), Activity::getNonBillable);
 	}
 
 	@Override

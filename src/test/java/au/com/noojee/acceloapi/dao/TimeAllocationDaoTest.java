@@ -34,7 +34,7 @@ public class TimeAllocationDaoTest
 			// find a ticket with an activity
 			for (Ticket ticket : tickets)
 			{
-				activities = new TicketDao().getActivities(ticket);
+				activities = new TicketDao().getActivities(ticket, true);
 				if (!activities.isEmpty())
 				{
 					ticketWithActivites = ticket;
