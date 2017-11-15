@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.generator.FilterField;
 import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 
@@ -124,8 +125,54 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	{
 		return new Empty<E>(dateField);
 	}
-
 	
+	public Expression greaterThan(FilterField<E, Integer> field, Integer operand)
+	{
+		return new GreaterThan<E>(field, operand);
+	}
+	
+	public Expression greaterThan(FilterField<E, String> field, String operand)
+	{
+		return new GreaterThan<E>(field, operand);
+	}
+	
+	
+	public Expression lessThan(FilterField<E, Integer> field, Integer operand)
+	{
+		return new LessThan<E>(field, operand);
+	}
+	
+	public Expression lessThan(FilterField<E, String> field, String operand)
+	{
+		return new LessThan<E>(field, operand);
+	}
+	
+	
+	public Expression greaterThanOrEq(FilterField<E, Integer> field, Integer operand)
+	{
+		return new GreaterThanOrEq<E>(field, operand);
+	}
+	
+	public Expression greaterThanOrEq(FilterField<E, String> field, String operand)
+	{
+		return new GreaterThanOrEq<E>(field, operand);
+	}
+	
+	
+	public Expression lessThanOrEq(FilterField<E, Integer> field, Integer operand)
+	{
+		return new LessThanOrEq<E>(field, operand);
+	}
+	
+	public Expression lessThanOrEq(FilterField<E, String> field, String operand)
+	{
+		return new LessThanOrEq<E>(field, operand);
+	}
+
+
+
+
+
 	/**
 	 * Use this method to invalid any cache data associated with this filter.
 	 * This will force the system to re-fetch the data from the accelo servers.
