@@ -27,11 +27,9 @@ class LessThan<E extends AcceloEntity<E>> extends Expression
 	@Override
 	public String toJson()
 	{
-		String json = field.getFieldName() + "_less_than(";
+		String json = "\"" + field.getFieldName() + "less_than\" : ";
 
-		json += "\"" + operand + "\"";
-
-		json += ")";
+		json +=  "[" + operand  + "]";
 
 		return json;
 	}

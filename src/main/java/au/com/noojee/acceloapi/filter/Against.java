@@ -38,7 +38,7 @@ class Against extends Expression
 		
 		json += "\"against\":[{";
 
-		json += "\"" + type + "\": [";
+		json += "\"" + type.getName() + "\": [";
 
 		boolean firstOperand = true;
 		for (Integer matchId : matchIds)

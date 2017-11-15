@@ -225,9 +225,12 @@ public class TicketDao extends AcceloDao<Ticket>
 		{
 			AcceloFilter<Activity> filter = new AcceloFilter<>();
 			
+			filter.where(filter.against(AgainstType_.ticket, ticket.getId()));
+			
+			
 			if (excludeSystemActivities)
 				// If the staff field is 0 then this is a system generated activity.
-				filter.where(filter.greaterThan(Activity_.staff, 0));
+				filter.and(filter.greaterThan(Activity_.staff, 0));
 			
 			list = new ActivityDao().getByFilter(filter);
 		}

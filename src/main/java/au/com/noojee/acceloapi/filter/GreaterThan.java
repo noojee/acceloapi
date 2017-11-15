@@ -23,15 +23,12 @@ class GreaterThan<E extends AcceloEntity<E>> extends Expression
 		this.operand = operand;
 	}
 
-
 	@Override
 	public String toJson()
 	{
-		String json = field.getFieldName() + "_greater_than(";
+		String json = "\"" + field.getFieldName() + "_greater_than\" : ";
 
-		json += "\"" + operand + "\"";
-
-		json += ")";
+		json +=  "[" + operand  + "]";
 
 		return json;
 	}
