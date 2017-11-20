@@ -14,6 +14,7 @@ package au.com.noojee.acceloapi.entities.meta;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
+import au.com.noojee.acceloapi.dao.ActivityOwnerType;
 import java.time.LocalDate;
 import au.com.noojee.acceloapi.entities.Activity.Visibility;
 
@@ -31,7 +32,7 @@ public class Activity_
 	public static FilterField<Activity, LocalDate> date_started = new FilterField<>("date_started"); 
 	public static FilterField<Activity, Integer> id = new FilterField<>("id"); 
 	public static FilterField<Activity, Integer> owner_id = new FilterField<>("owner_id"); 
-	public static FilterField<Activity, String> owner_type = new FilterField<>("owner_type"); 
+	public static FilterField<Activity, ActivityOwnerType> owner_type = new FilterField<>("owner_type"); 
 	public static FilterField<Activity, String> parent = new FilterField<>("parent"); 
 	public static FilterField<Activity, String> parent_id = new FilterField<>("parent_id"); 
 	public static FilterField<Activity, Integer> priority = new FilterField<>("priority"); 
