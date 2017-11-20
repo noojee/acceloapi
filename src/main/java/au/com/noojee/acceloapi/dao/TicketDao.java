@@ -295,7 +295,7 @@ public class TicketDao extends AcceloDao<Ticket>
 	 * @return
 	 * @throws AcceloException
 	 */
-	public boolean isFullyApproved(Ticket ticket) throws AcceloException
+	public boolean isWorkApproved(Ticket ticket) throws AcceloException
 	{
 		boolean isFullyApproved = getActivities(ticket, true).stream().allMatch(a -> a.isApproved());
 		return isFullyApproved;
