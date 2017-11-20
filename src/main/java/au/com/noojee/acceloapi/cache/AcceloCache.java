@@ -168,8 +168,6 @@ public class AcceloCache
 		}
 
 		// We always return a cloned list as we don't want anyone changing the data in the cache accidentally.
-
-		// List<AcceloEntity> immutable = list.stream().map(e -> (AcceloEntity)copy(e)).collect(Collectors.toList());
 		List<AcceloEntity> listCopy = list.stream().map(e -> copy(e)).collect(Collectors.toList());
 
 		logger.error("Request for : " + cacheKey + " entities returned: " + list.size());
