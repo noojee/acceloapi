@@ -2,9 +2,7 @@ package au.com.noojee.acceloapi.dao.gson;
 
 import java.io.StringReader;
 import java.lang.reflect.Type;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -118,7 +116,7 @@ public class GsonForAccelo
 		public LocalDate deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException
 		{
-			LocalDate localDate = Instant.ofEpochSecond(json.getAsLong()).atZone(ZoneId.systemDefault()).toLocalDate();
+			LocalDate localDate = Conversions.toLocalDate(json.getAsLong());
 
 			return (localDate.equals(Constants.DATEZERO) ? null : localDate);
 
