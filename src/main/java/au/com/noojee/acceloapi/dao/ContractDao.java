@@ -11,8 +11,8 @@ import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.entities.Contract;
 import au.com.noojee.acceloapi.entities.ContractPeriod;
-import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 import au.com.noojee.acceloapi.entities.meta.Contract_;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.util.Constants;
 
@@ -143,7 +143,7 @@ public class ContractDao extends AcceloDao<Contract>
 	{
 		List<Contract> contracts;
 		AcceloFilter<Contract> filter = new AcceloFilter<>();
-		filter.where(filter.against(AgainstType_.company, company.getId()));
+		filter.where(filter.against(AgainstType.company, company.getId()));
 		contracts = getByFilter(filter);
 		return contracts;
 	}

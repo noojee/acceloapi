@@ -4,8 +4,9 @@ import java.time.LocalDate;
 
 import org.javamoney.moneta.Money;
 
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.util.Conversions;
 
 public class Contract extends AcceloEntity<Contract> 
@@ -13,14 +14,14 @@ public class Contract extends AcceloEntity<Contract>
 	private int company;			// The owning company id.
 	private String title;
 	@DateFilterField
-	private long date_created;
+	private LocalDate date_created;
 	@DateFilterField
-	private long date_started;
+	private LocalDate date_started;
 	@DateFilterField
-	private long date_period_expires;
+	private LocalDate date_period_expires;
 	@DateFilterField
-	private long date_expires;
-	private long date_last_interacted;
+	private LocalDate date_expires;
+	private LocalDate date_last_interacted;
 	private int renew_days;
 	@BasicFilterField
 	private String standing;
@@ -28,7 +29,7 @@ public class Contract extends AcceloEntity<Contract>
 	private String auto_renew;
 	private String deployment;
 	private int against_id;
-	private String against_type;
+	private AgainstType against_type;
 	@BasicFilterField
 	private int manager;  // the staff id of the staff member that manages this contract.
 	private String job;
@@ -47,7 +48,6 @@ public class Contract extends AcceloEntity<Contract>
 	@BasicFilterField
 	private int billable_affiliation;
 	
-	private String against;
 	private String affiliation;
 	private String contract_type;
 	
@@ -76,27 +76,27 @@ public class Contract extends AcceloEntity<Contract>
 
 	public LocalDate getDateCreated()
 	{
-		return Conversions.toLocalDate(date_created);
+		return date_created;
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return Conversions.toLocalDate(date_started);
+		return date_started;
 	}
 
 	public LocalDate getDatePeriodExpires()
 	{
-		return Conversions.toLocalDate(date_period_expires);
+		return date_period_expires;
 	}
 
 	public LocalDate getDateExpires()
 	{
-		return Conversions.toLocalDate(date_expires);
+		return date_expires;
 	}
 
 	public LocalDate getDateLastInteracted()
 	{
-		return Conversions.toLocalDate(date_last_interacted);
+		return date_last_interacted;
 	}
 
 	public int getRenewDays()
@@ -129,9 +129,15 @@ public class Contract extends AcceloEntity<Contract>
 		return billable_affiliation;
 	}
 
-	public String getAgainstType()
+	public AgainstType getAgainstType()
 	{
 		return against_type;
+	}
+
+	public  void setAgainstType(AgainstType type, int against_id)
+	{
+		this.against_type = type;
+		this.against_id = against_id;
 	}
 
 	public int getManager()
@@ -187,16 +193,6 @@ public class Contract extends AcceloEntity<Contract>
 	public int getCompanyId()
 	{
 		return Integer.valueOf(company);
-	}
-
-	public String getAgainst()
-	{
-		return against;
-	}
-
-	public void setAgainst(String against)
-	{
-		this.against = against;
 	}
 
 	public String getAffiliation()

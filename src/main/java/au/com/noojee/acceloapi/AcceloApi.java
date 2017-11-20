@@ -24,6 +24,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import au.com.noojee.acceloapi.dao.gson.GsonForAccelo;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
@@ -145,7 +146,7 @@ public class AcceloApi
 		HTTPResponse response;
 		try
 		{
-			String json = buildJsonBody(HTTPMethod.GET, fieldList.formatAsJson(), filter.toJson());
+			String json = buildJsonBody(HTTPMethod.GET, GsonForAccelo.toJson(fieldList), filter.toJson());
 
 			response = _request(HTTPMethod.POST, endPoint.getURL(), json);
 		}
@@ -171,7 +172,7 @@ public class AcceloApi
 	private <E extends AcceloEntity<E>> HTTPResponse get(URL url, AcceloFilter<E> filterMap, AcceloFieldList fieldList,
 			int pageNo)
 	{
-		String fields = fieldList.formatAsJson();
+		String fields = GsonForAccelo.toJson(fieldList);
 		String filters = (filterMap == null) ? null : filterMap.toJson();
 
 		String json = buildJsonBody(HTTPMethod.GET, fields, filters);
@@ -197,7 +198,10 @@ public class AcceloApi
 	/*
 	 * Send an entity to Accelo. FieldValues is a map of name value pair that constitute the entity that we are pushing.
 	 */
-	public <T> T insert(EndPoint endPoint, AcceloFieldValues fieldNameValues, Class<T> clazz)
+	public <E> E insert(EndPoint endPoint, // AcceloFieldValues fieldNameValues
+			// AcceloEntity<?> entity
+
+			String jsonFieldValues, Class<E> clazz)
 	{
 		// String json = buildJsonBody(method, fieldNameValues);
 
@@ -216,9 +220,9 @@ public class AcceloApi
 			throw new AcceloException(e);
 		}
 
-		String fieldValues = fieldNameValues.formatAsJson();
+		// String fieldValues = fieldNameValues.formatAsJson();
 
-		HTTPResponse response = _request(HTTPMethod.POST, completeUrl, fieldValues);
+		HTTPResponse response = _request(HTTPMethod.POST, completeUrl, jsonFieldValues);
 
 		return response.parseBody(clazz);
 	}
@@ -226,9 +230,11 @@ public class AcceloApi
 	/*
 	 * Updates an existing entity . FieldValues is a map of name value pair that constitute the entity that we are
 	 * pushing.
-	 * @entityId - the accelo id of the entityt to be updated.
+	 * @entityId - the accelo id of the entity to be updated.
 	 */
-	public <T> T update(EndPoint endPoint, int entityId, AcceloFieldValues fieldNameValues, Class<T> clazz)
+	public <E> E update(EndPoint endPoint, int entityId,
+			// AcceloFieldValues fieldNameValues
+			String jsonFieldValues, Class<E> clazz)
 	{
 		URL completeUrl;
 		try
@@ -239,9 +245,10 @@ public class AcceloApi
 		{
 			throw new AcceloException(e);
 		}
-		String values = fieldNameValues.formatAsJson();
-		logger.error("Updating: url=" + completeUrl + " values=" + values);
-		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, values);
+		// String fieldValues = fieldNameValues.formatAsJson();
+
+		logger.error("Updating: url=" + completeUrl + " jsonFieldValues=" + jsonFieldValues);
+		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, jsonFieldValues);
 
 		return response.parseBody(clazz);
 	}
@@ -337,7 +344,14 @@ public class AcceloApi
 				response = new HTTPResponse(responseCode, connection.getResponseMessage(), body);
 			}
 			else
+			{
+
 				response = new HTTPResponse(responseCode, connection.getResponseMessage(), error);
+
+				logger.error(response);
+				logger.error("EndPoint responsible for error: " + method.toString() + " " + url);
+				logger.error("Subumitted body responsible for error: " + jsonArgs);
+			}
 		}
 		catch (IOException e)
 		{
@@ -467,22 +481,6 @@ public class AcceloApi
 
 		if (filters != null && filters.length() > 0)
 			json += ",\n" + filters;
-
-		json += "}";
-
-		return json;
-
-	}
-
-	@SuppressWarnings("unused")
-	private String buildJsonBody(HTTPMethod method, AcceloFieldValues fieldNameValues)
-	{
-		String json = "{";
-		json += "\"_method\": \"" + method + "\"";
-
-		String fields = fieldNameValues.formatAsJson();
-		if (fields.length() > 0)
-			json += ",\n" + fields;
 
 		json += "}";
 

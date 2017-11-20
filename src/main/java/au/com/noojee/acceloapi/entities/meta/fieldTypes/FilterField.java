@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi.entities.generator;
+package au.com.noojee.acceloapi.entities.meta.fieldTypes;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 

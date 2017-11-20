@@ -2,11 +2,10 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.DateFilterField;
-import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
-import au.com.noojee.acceloapi.entities.generator.SearchFilterField;
-import au.com.noojee.acceloapi.util.Conversions;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
 
 public class Affiliation extends AcceloEntity<Affiliation>
 {
@@ -35,10 +34,10 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	
 	private String position; // ??
 	
-	private long date_last_interacted; // unix time
+	private LocalDate date_last_interacted; // unix time
 	
 	@DateFilterField
-	private long date_modified; // unix time
+	private LocalDate date_modified; // unix time
 	
 	private int staff_bookmarked;
 	
@@ -133,22 +132,22 @@ public class Affiliation extends AcceloEntity<Affiliation>
 
 	public LocalDate getDateLastInteracted()
 	{
-		return Conversions.toLocalDate(date_last_interacted);
+		return date_last_interacted;
 	}
 
 	public void setDateLastInteracted(LocalDate dateLastInteracted)
 	{
-		this.date_last_interacted = Conversions.toLong(dateLastInteracted);
+		this.date_last_interacted = dateLastInteracted;
 	}
 
 	public LocalDate getDateModified()
 	{
-		return Conversions.toLocalDate(date_modified);
+		return date_modified;
 	}
 
 	public void setDateModified(LocalDate dateModified)
 	{
-		this.date_modified = Conversions.toLong(dateModified);
+		this.date_modified = dateModified;
 	}
 
 	public int getStaffBookmarked()

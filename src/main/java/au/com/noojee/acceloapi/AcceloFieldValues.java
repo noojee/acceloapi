@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 public class AcceloFieldValues
@@ -33,7 +32,6 @@ public class AcceloFieldValues
 
 	public Set<String> keys()
 	{
-		// TODO Auto-generated method stub
 		return fieldValues.keySet();
 	}
 
@@ -63,18 +61,18 @@ public class AcceloFieldValues
 	 * @param all
 	 * @return
 	 */
-	public String formatAsJson()
-	{
-		Map<String, Object> fieldsAndValues = new HashMap<>();
-		
-		fieldsAndValues.putAll(fieldValues);
-		
-		fieldsAndValues.put("_fields", responseFields.fields());
-		
-		String json = new Gson().toJson(fieldsAndValues);
-
-		
-		return json;
-	}
+//	public String formatAsJson()
+//	{
+//		Map<String, Object> fieldsAndValues = new HashMap<>();
+//		
+//		fieldsAndValues.putAll(fieldValues);
+//		
+//		fieldsAndValues.put("_fields", responseFields.fields());
+//		
+//		String json = new Gson().toJson(fieldsAndValues);
+//
+//		
+//		return json;
+//	}
 
 }

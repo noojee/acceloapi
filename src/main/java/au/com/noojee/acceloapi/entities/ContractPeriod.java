@@ -2,46 +2,45 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.DateFilterField;
-import au.com.noojee.acceloapi.util.Conversions;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.util.Formatters;
 
 public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {
 	@BasicFilterField(name="contract")
-	int contract_id;
+	private int contract_id;
 	@DateFilterField
-	long date_created;
+	private LocalDate date_created;
 	@DateFilterField
-	long date_commenced;
+	private LocalDate date_commenced;
 	@DateFilterField
-	long date_closed;
+	private LocalDate date_closed;
 	@DateFilterField
-	long date_expires;
+	private LocalDate date_expires;
 
 	@BasicFilterField
-	String budget_type; // pre-paid
+	private String budget_type; // pre-paid
 	@BasicFilterField
-	String duration_type; // fixed
+	private String duration_type; // fixed
 	@BasicFilterField
-	float contract_budget;
+	private float contract_budget;
 	@BasicFilterField
-	String rollover; // yes no
+	private String rollover; // yes no
 	@BasicFilterField
-	String standing; // open
+	private String standing; // open
 	
 	@BasicFilterField(name="rate")
-	int rate_id; // -1
+	private int rate_id; // -1
 	
 	@BasicFilterField
-	String rate_type; // object
+	private String rate_type; // object
 	
 	@BasicFilterField
-	String allowance_type; // fixed_value
+	private String allowance_type; // fixed_value
 	
 	@BasicFilterField(name="service_item")
-	int service_item_id;
+	private int service_item_id;
 	
 	
 	public String getPeriodRange()
@@ -51,12 +50,12 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 
 	public LocalDate getDateCommenced()
 	{
-		return Conversions.toLocalDate(date_commenced);
+		return date_commenced;
 	}
 
 	public LocalDate getDateExpires()
 	{
-		return Conversions.toLocalDate(date_expires);
+		return date_expires;
 	}
 
 	public double getBudget()
@@ -71,12 +70,12 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 
 	public LocalDate getDateCreated()
 	{
-		return Conversions.toLocalDate(date_created);
+		return date_created;
 	}
 
 	public LocalDate getDateClosed()
 	{
-		return Conversions.toLocalDate(date_closed);
+		return date_closed;
 	}
 
 

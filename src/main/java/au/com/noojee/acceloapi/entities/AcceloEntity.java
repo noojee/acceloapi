@@ -1,13 +1,22 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.FilterField;
+import au.com.noojee.acceloapi.AcceloFieldList;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 
 public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Comparable<E>, Cloneable
 {
 
 	@BasicFilterField
 	private int id;
+	
+	/**	
+	 * This is a hack as accelo requires that we provide a list of 'return' fields 
+	 * embedded in the entity we send when inserting or updating an entity.
+	 * If you are performed a 'get' operation this field will be ignored.
+	 */
+	@SuppressWarnings("unused")
+	private String[] _fields = new String[] {AcceloFieldList._ALL};
 
 	public int getId()
 	{

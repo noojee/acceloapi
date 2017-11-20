@@ -11,11 +11,10 @@ import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.DateFilterField;
-import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
-import au.com.noojee.acceloapi.entities.generator.SearchFilterField;
-import au.com.noojee.acceloapi.util.Conversions;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
 
 public class Company extends AcceloEntity<Company>
 {
@@ -41,9 +40,9 @@ public class Company extends AcceloEntity<Company>
 	private int postal_address;
 	
 	@DateFilterField
-	private int date_created;
+	private LocalDate date_created;
 	@DateFilterField
-	private int date_modified;
+	private LocalDate date_modified;
 	private String comments;
 	@BasicFilterField
 	private int default_affiliation;
@@ -126,12 +125,12 @@ public class Company extends AcceloEntity<Company>
 
 	public LocalDate getDateCreated()
 	{
-		return Conversions.toLocalDate(date_created);
+		return date_created;
 	}
 
 	public LocalDate getDateModified()
 	{
-		return Conversions.toLocalDate(date_modified);
+		return date_modified;
 	}
 
 	public String getComments()

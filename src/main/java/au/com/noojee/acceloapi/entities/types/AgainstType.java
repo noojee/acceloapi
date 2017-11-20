@@ -1,6 +1,6 @@
-package au.com.noojee.acceloapi.entities.meta;
+package au.com.noojee.acceloapi.entities.types;
 
-public enum AgainstType_
+public enum AgainstType
 {
 	company, contact, issue,ticket("issue")
 
@@ -10,12 +10,12 @@ public enum AgainstType_
 	
 	private String _name;
 	
-	AgainstType_()
+	AgainstType()
 	{
 		this._name = name();
 	}
 
-	AgainstType_(String name)
+	AgainstType(String name)
 	{
 		this._name = name;
 	}

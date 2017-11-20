@@ -12,10 +12,10 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.gson.Gson;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.dao.gson.GsonForAccelo;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
@@ -179,12 +179,12 @@ public class AcceloCache
 		// return Collections.unmodifiableList(list.c);
 	}
 
+	@SuppressWarnings("unchecked")
 	private AcceloEntity copy(AcceloEntity rhs)
 	{
-		Gson gson = new Gson();
-		String json = gson.toJson(rhs);
+		String json = GsonForAccelo.toJson(rhs);
 
-		AcceloEntity copy = gson.fromJson(json, rhs.getClass());
+		AcceloEntity copy = GsonForAccelo.fromJson(json, rhs.getClass());
 
 		return copy;
 	}

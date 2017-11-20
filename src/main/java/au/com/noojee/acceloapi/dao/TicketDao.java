@@ -4,10 +4,8 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
-import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
@@ -19,8 +17,8 @@ import au.com.noojee.acceloapi.entities.Contract;
 import au.com.noojee.acceloapi.entities.Staff;
 import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.entities.meta.Activity_;
-import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 import au.com.noojee.acceloapi.entities.meta.Ticket_;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.util.Constants;
 import au.com.noojee.acceloapi.util.StreamMaths;
@@ -92,9 +90,7 @@ public class TicketDao extends AcceloDao<Ticket>
 	public List<Ticket> getByCompany(Company company) throws AcceloException
 	{
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
-		filter.where(filter.against(AgainstType_.company, company.getId()));
-
-		// against_id=3617, against_type=company,
+		filter.where(filter.against(AgainstType.company, company.getId()));
 
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add("_ALL");
@@ -144,7 +140,7 @@ public class TicketDao extends AcceloDao<Ticket>
 
 		// Get tickets with a close date on or after the firstDateOfInterest
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
-		filter.where(filter.eq(Ticket_.contract, 0).and(filter.against(AgainstType_.company, company.getId())));
+		filter.where(filter.eq(Ticket_.contract, 0).and(filter.against(AgainstType.company, company.getId())));
 
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add("_ALL");
@@ -162,20 +158,14 @@ public class TicketDao extends AcceloDao<Ticket>
 		Ticket result = null;
 		try
 		{
+			ticket.setAssignee(staff.getId());
+			result = this.update(ticket);
 
-			// Assign the Ticket to the owning aCompany.
-			AcceloFieldValues values = new AcceloFieldValues();
-			values.add("assignee", staff.getId());
-
-			TicketDao.Response response = AcceloApi.getInstance().update(EndPoint.tickets, ticket.getId(), values,
-					TicketDao.Response.class);
-			if (response == null || response.getEntity() == null)
+			if (result == null)
 			{
 				throw new AcceloException(
 						"Failed to assign staff to ticket id:" + ticket.getId() + " details:" + this.toString());
 			}
-
-			result = response.getEntity();
 		}
 		catch (Exception e)
 		{
@@ -199,20 +189,12 @@ public class TicketDao extends AcceloDao<Ticket>
 		return contact;
 	}
 
-	
 	/**
-	 * Activities can be roughly categorized in to staff generated and system generated activities.
-	 * 
-	 * 
-	 * unlike the method getActivities this method only returns activites which were
-	 * logged by a staff member.
-	 * 
-	 * Mostly we are only interested in staff generated activities (for the purposes of timesheets and ticket billable hours).
-	 * 
-	 * As such you will normally want to exclude system activities.
-	 * 
-	 * This method is generally more useful as there are a lot of system activites that for the most
-	 * part you just don't care about.
+	 * Activities can be roughly categorized in to staff generated and system generated activities. unlike the method
+	 * getActivities this method only returns activites which were logged by a staff member. Mostly we are only
+	 * interested in staff generated activities (for the purposes of timesheets and ticket billable hours). As such you
+	 * will normally want to exclude system activities. This method is generally more useful as there are a lot of
+	 * system activites that for the most part you just don't care about.
 	 * 
 	 * @param ticket
 	 * @param excludeSystemActivities if true then we exclude system activities from the result.
@@ -224,14 +206,13 @@ public class TicketDao extends AcceloDao<Ticket>
 		try
 		{
 			AcceloFilter<Activity> filter = new AcceloFilter<>();
-			
-			filter.where(filter.against(AgainstType_.ticket, ticket.getId()));
-			
-			
+
+			filter.where(filter.against(AgainstType.ticket, ticket.getId()));
+
 			if (excludeSystemActivities)
 				// If the staff field is 0 then this is a system generated activity.
 				filter.and(filter.greaterThan(Activity_.staff, 0));
-			
+
 			list = new ActivityDao().getByFilter(filter);
 		}
 		catch (AcceloException e)
@@ -240,7 +221,6 @@ public class TicketDao extends AcceloDao<Ticket>
 		}
 		return list;
 	}
-
 
 	public Duration sumMTDWork(Ticket ticket)
 	{
@@ -278,9 +258,11 @@ public class TicketDao extends AcceloDao<Ticket>
 
 			long work = activities.stream().filter(a ->
 				{
-					return (a.getDateCreated().isAfter(startOfLastMonth) // greater than or equal to the 1st day of last month.
+					return (a.getDateCreated().isAfter(startOfLastMonth) // greater than or equal to the 1st day of last
+																			// month.
 							|| a.getDateCreated().isEqual(startOfLastMonth))
-							&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1)) // before the first day of the current month.
+							&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1)) // before the first day of
+																								// the current month.
 					;
 				}).mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
@@ -328,6 +310,19 @@ public class TicketDao extends AcceloDao<Ticket>
 	{
 		return StreamMaths.sum(getActivities(ticket, true).stream(), Activity::getNonBillable);
 	}
+	
+	
+
+	@Override
+	void preInsertValidation(Ticket ticket)
+	{
+		if (ticket.getTitle().isEmpty())
+		{
+			throw new AcceloException("You must provide a title");
+		}
+
+	}
+
 
 	@Override
 	protected EndPoint getEndPoint()

@@ -12,10 +12,11 @@ import org.javamoney.moneta.Money;
 
 import com.google.gson.annotations.SerializedName;
 
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.DateFilterField;
-import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
-import au.com.noojee.acceloapi.util.Conversions;
+import au.com.noojee.acceloapi.dao.ActivityOwnerType;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.util.Formatters;
 
 public class Activity extends AcceloEntity<Activity>
@@ -54,6 +55,8 @@ public class Activity extends AcceloEntity<Activity>
 	}
 	
 
+	private Medium medium = Medium.note; 		// The type of activity.
+	
 	private String subject;
 	
 	@BasicFilterField
@@ -61,26 +64,22 @@ public class Activity extends AcceloEntity<Activity>
 
 	private String thread;
 	
-	private String against;		// of the form staff/10
-
 	@BasicFilterField
-	private String against_type;
+	private AgainstType against_type;
 
 	@BasicFilterField
 	private int against_id;
 	
-	private String owner; // of the form staff/2
-
 	@BasicFilterField
 	private int owner_id;
 
 	@BasicFilterField
-	private String owner_type;
+	private ActivityOwnerType owner_type;
 
 	private String body;
 
 	@BasicFilterField
-	private Visibility visibility;
+	private Visibility visibility = Visibility.all;
 
 	private String details; // For meetings this is the location, for postals this is the address and for calls this is
 							// the number.
@@ -91,15 +90,15 @@ public class Activity extends AcceloEntity<Activity>
 	private int contract_period_id;
 
 	@DateFilterField
-	private long date_created;
+	private LocalDate date_created;
 	@DateFilterField
-	private long date_started;
+	private LocalDate date_started;
 	@DateFilterField
-	private long date_ended;
+	private LocalDate date_ended;
 	@DateFilterField
-	private long date_logged;
+	private LocalDate date_logged;
 	@DateFilterField
-	private long date_modified;
+	private LocalDate date_modified;
 
 	private long billable; // amount of billable time logged for the activity in
 							// seconds.
@@ -138,8 +137,26 @@ public class Activity extends AcceloEntity<Activity>
 		
 	}
 
+	public void setOwner(ActivityOwnerType ownerType, int ownerId)
+	{
+		this.owner_type = ownerType;
+		this.owner_id = ownerId;
+		
+	}
+
+
+	public void setMedium(Medium medium)
+	{
+		this.medium = medium;
+	}
 	
+	public Medium getMedium()
+	{
+		return this.medium;
+	}
+
 	public void setSubject(String subject)
+	
 	{
 		this.subject = subject;
 	}
@@ -149,32 +166,12 @@ public class Activity extends AcceloEntity<Activity>
 		this.body = body;
 	}
 
-	public void setAgainst(String against)
+	public void setAgainst(AgainstType type, int id)
 	{
-		this.against = against;
-	}
-
-	public void setAgainstId(int id)
-	{
+		this.against_type = type;
 		this.against_id = id;
 	}
 
-	public void setAgainst_type(String against_type)
-	{
-		this.against_type = against_type;
-	}
-
-	public void setOwnerId(int id)
-	{
-		this.owner_id = id;
-	}
-
-	public void setOwner_type(String owner_type)
-	{
-		this.owner_type = owner_type;
-	}
-
-	
 	public void setVisiblity(Visibility visiblity)
 	{
 		this.visibility = visiblity;
@@ -203,27 +200,12 @@ public class Activity extends AcceloEntity<Activity>
 	
 	public void setDateStarted(LocalDate dateStarted)
 	{
-		this.date_started = Conversions.toLong(dateStarted);
+		this.date_started = dateStarted;
 	}
 
 	public void setDateEnded(LocalDate dateEnded)
 	{
-		this.date_ended = Conversions.toLong(dateEnded);
-	}
-
-	public void setDateCreated(LocalDate dateCreated)
-	{
-		this.date_created = Conversions.toLong(dateCreated);
-	}
-
-	public void setDateModified(LocalDate dateModified)
-	{
-		this.date_modified = Conversions.toLong(dateModified);
-	}
-
-	public void setStaffId(int staffId)
-	{
-		this.staff = staffId;
+		this.date_ended = dateEnded;
 	}
 
 
@@ -238,7 +220,7 @@ public class Activity extends AcceloEntity<Activity>
 	}
 
 	
-	public String getAgainstType()
+	public AgainstType getAgainstType()
 	{
 		return against_type;
 	}
@@ -256,22 +238,22 @@ public class Activity extends AcceloEntity<Activity>
 
 	public LocalDate getDateCreated()
 	{
-		return Conversions.toLocalDate(date_created);
+		return date_created;
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return Conversions.toLocalDate(date_started);
+		return date_started;
 	}
 
 	public LocalDate getDateEnded()
 	{
-		return Conversions.toLocalDate(date_ended);
+		return date_ended;
 	}
 
 	public LocalDate getDateModified()
 	{
-		return Conversions.toLocalDate(date_modified);
+		return date_modified;
 	}
 
 	public int getStaff()
@@ -294,19 +276,9 @@ public class Activity extends AcceloEntity<Activity>
 		return task;
 	}
 
-	public String getOwnerType()
-	{
-		return this.owner_type;
-	}
-
 	public Standing getStanding()
 	{
 		return standing;
-	}
-
-	public void setStanding(Standing standing)
-	{
-		this.standing = standing;
 	}
 
 	public int getInvoiceId()
@@ -314,19 +286,9 @@ public class Activity extends AcceloEntity<Activity>
 		return invoice_id;
 	}
 
-	public void setInvoiceId(int invoiceId)
-	{
-		this.invoice_id = invoiceId;
-	}
-
 	public int getContractPeriodId()
 	{
 		return contract_period_id;
-	}
-
-	public void setContractPeriodId(int contractPeriodId)
-	{
-		this.contract_period_id = contractPeriodId;
 	}
 
 
@@ -340,7 +302,7 @@ public class Activity extends AcceloEntity<Activity>
 		return owner_id;
 	}
 
-	public String getOwner_type()
+	public ActivityOwnerType getOwnerType()
 	{
 		return owner_type;
 	}
@@ -350,7 +312,7 @@ public class Activity extends AcceloEntity<Activity>
 		return visibility;
 	}
 
-	public long getDateLogged()
+	public LocalDate getDateLogged()
 	{
 		return date_logged;
 	}
@@ -381,11 +343,6 @@ public class Activity extends AcceloEntity<Activity>
 	}
 	
 
-	public void setTimeAllocationId(int timeAllocationId)
-	{
-		time_allocation = timeAllocationId;
-	}
-
 
 	public int getRateId()
 	{
@@ -405,21 +362,6 @@ public class Activity extends AcceloEntity<Activity>
 	public boolean isApproved()
 	{
 		return standing != null && (standing.equals(Standing.approved) || standing.equals(Standing.invoiced));
-	}
-
-	public String getOwner()
-	{
-		return owner;
-	}
-
-	public void setOwner(String owner)
-	{
-		this.owner = owner;
-	}
-	
-	public String getAgainst()
-	{
-		return this.against;
 	}
 
 	@Override

@@ -14,6 +14,9 @@ import java.util.stream.Collectors;
 import org.reflections.Reflections;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 
 public class FieldMetaDataGenerator
 {
@@ -190,35 +193,23 @@ public class FieldMetaDataGenerator
 	{
 		Set<String> imports = new HashSet<String>();
 
+		imports.add(au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField.class.getCanonicalName());
 		imports.add("au.com.noojee.acceloapi.entities." + className);
 
 		/**
-		 * Special processing for LocalDate as these aren't in the fields but we convert longs to LocalDates for date
-		 * fields.
-		 */
-		for (Field field : fields)
-		{
-			if (field.isAnnotationPresent(DateFilterField.class))
-			{
-				imports.add("java.time.LocalDate");
-				break;
-			}
-		}
-
-		/**
-		 * Find any custom imports we need to ouput.
+		 * Find any custom imports we need to output.
 		 */
 		for (Field field : fields)
 		{
 			Class<?> type = field.getType();
-			if (field.isAnnotationPresent(BasicFilterField.class))
+			if (field.isAnnotationPresent(BasicFilterField.class) || field.isAnnotationPresent(DateFilterField.class))
 			{
 				if (!type.getName().startsWith("java.lang") && !type.isPrimitive())
 				{
 					// nested packages have a $ in the name.
 					imports.add(type.getName().replace('$', '.'));
-					;
 				}
+				
 			}
 		}
 		return imports;

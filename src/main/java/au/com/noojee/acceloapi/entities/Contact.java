@@ -1,9 +1,11 @@
 package au.com.noojee.acceloapi.entities;
 
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.DateFilterField;
-import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
-import au.com.noojee.acceloapi.entities.generator.SearchFilterField;
+import java.time.LocalDate;
+
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
 
 public class Contact extends AcceloEntity<Contact>
 {
@@ -39,9 +41,9 @@ public class Contact extends AcceloEntity<Contact>
 	private String invoice_method;
 	
 	@DateFilterField
-	private int date_created;
+	private LocalDate date_created;
 	@DateFilterField
-	private int date_modified;
+	private LocalDate date_modified;
 
 	
 	@SuppressWarnings("unused")

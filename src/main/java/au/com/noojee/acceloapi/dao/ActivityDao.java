@@ -9,9 +9,10 @@ import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
+import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.Ticket;
-import au.com.noojee.acceloapi.entities.meta.AgainstType_;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 public class ActivityDao extends AcceloDao<Activity>
@@ -19,16 +20,29 @@ public class ActivityDao extends AcceloDao<Activity>
 	@SuppressWarnings("unused")
 	static private Logger logger = LogManager.getLogger(Activity.class);
 
-
 	public List<Activity> getByTicket(Ticket ticket) throws AcceloException
 	{
 		AcceloFilter<Activity> filter = new AcceloFilter<>();
-		filter.where(filter.against(AgainstType_.issue, ticket.getId()));
-		
+		filter.where(filter.against(AgainstType.issue, ticket.getId()));
+
 		return getByFilter(filter);
 	}
-	
-	
+
+	@Override
+	void preInsertValidation(Activity activity)
+	{
+		if (activity.getBillable() != null && activity.getOwnerType() == null)
+		{
+			throw new AcceloException("Validation Error: when setting a billable amount you must set the OwnerType");
+		}
+		
+		if (activity.getSubject().isEmpty())
+		{
+			throw new AcceloException("You must provide a subject");
+		}
+
+	}
+
 	@Override
 	protected EndPoint getEndPoint()
 	{
@@ -40,7 +54,7 @@ public class ActivityDao extends AcceloDao<Activity>
 	{
 		return Activity.class;
 	}
-	
+
 	public class Response extends AcceloResponse<Activity>
 	{
 	}
@@ -54,14 +68,11 @@ public class ActivityDao extends AcceloDao<Activity>
 	{
 		return ResponseList.class;
 	}
-	
+
 	@Override
 	protected Class<? extends AcceloResponse<Activity>> getResponseClass()
 	{
 		return Response.class;
 	}
-
-
-
 
 }

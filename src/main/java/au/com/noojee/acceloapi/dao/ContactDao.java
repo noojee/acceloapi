@@ -10,8 +10,8 @@ import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Affiliation;
 import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Contact;
-import au.com.noojee.acceloapi.entities.meta.AgainstType_;
 import au.com.noojee.acceloapi.entities.meta.Contact_;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 public class ContactDao extends AcceloDao<Contact>
@@ -69,7 +69,7 @@ public class ContactDao extends AcceloDao<Contact>
 	public List<Contact> getByCompany(int companyId)
 	{
 		AcceloFilter<Contact> filter = new AcceloFilter<>();
-		filter.where(filter.against(AgainstType_.company, companyId));
+		filter.where(filter.against(AgainstType.company, companyId));
 
 		return super.getByFilter(filter);
 	}

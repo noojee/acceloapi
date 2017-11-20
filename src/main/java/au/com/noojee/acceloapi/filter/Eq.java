@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.entities.generator.FilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 import au.com.noojee.acceloapi.util.Constants;
 
 class Eq<E extends AcceloEntity<E>> extends Expression

@@ -1,7 +1,7 @@
 package au.com.noojee.acceloapi.filter;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.entities.generator.FilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 
 class LessThan<E extends AcceloEntity<E>> extends Expression
 {

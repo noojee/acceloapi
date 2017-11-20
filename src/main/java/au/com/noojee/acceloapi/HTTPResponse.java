@@ -2,7 +2,7 @@ package au.com.noojee.acceloapi;
 
 import java.io.StringReader;
 
-import com.google.gson.Gson;
+import au.com.noojee.acceloapi.dao.gson.GsonForAccelo;
 
 public class HTTPResponse
 {
@@ -37,15 +37,14 @@ public class HTTPResponse
 	public <T> T parseBody(Class<T> clazz) throws AcceloException
 	{
 		T entity;
-		Gson gson = new Gson();
 		if (responseCode < 300)
-			entity = gson.fromJson(new StringReader(this.responseBody), clazz);
+			entity = GsonForAccelo.fromJson(new StringReader(this.responseBody), clazz);
 		else
 		{
 			AcceloErrorResponse error;
 			try
 			{
-				error = gson.fromJson(new StringReader(this.responseBody), AcceloErrorResponse.class);
+				error = GsonForAccelo.fromJson(new StringReader(this.responseBody), AcceloErrorResponse.class);
 			}
 			catch (Exception e)
 			{

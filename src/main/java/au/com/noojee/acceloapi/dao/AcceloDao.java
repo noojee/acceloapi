@@ -1,9 +1,6 @@
 package au.com.noojee.acceloapi.dao;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -17,16 +14,17 @@ import au.com.noojee.acceloapi.AcceloAbstractResponseList;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
-import au.com.noojee.acceloapi.AcceloFieldValues;
 import au.com.noojee.acceloapi.AcceloResponse;
+import au.com.noojee.acceloapi.DaoOperation;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.HTTPResponse;
 import au.com.noojee.acceloapi.Meta;
 import au.com.noojee.acceloapi.cache.AcceloCache;
 import au.com.noojee.acceloapi.cache.CacheKey;
+import au.com.noojee.acceloapi.dao.gson.GsonForAccelo;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.entities.generator.FilterField;
 import au.com.noojee.acceloapi.entities.generator.JsonValidator;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 public abstract class AcceloDao<E extends AcceloEntity<E>>
@@ -129,7 +127,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	
 	
 	/**
-	 * Inserts an entity into Accelo.
+	 * Inserts an entity into Accelo.	
 	 * 
 	 * Becareful when doing inserts as any cached queries will not included the newly inserted entity.
 	 * You may need to identify any cached queries and flush them.
@@ -138,11 +136,15 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 * 
 	 * @return the newly inserted entity as returned from Accelo.
 	 */
-	public E insert(AcceloEntity<E> entity)
+	public E insert(E entity)
 	{
-		AcceloFieldValues fields = marshalFields(entity);
+		
+		preInsertValidation(entity);
+		
+		String fieldValues = toJson(entity, DaoOperation.INSERT);
 
-		AcceloResponse<E> response = AcceloApi.getInstance().insert(this.getEndPoint(), fields,
+
+		AcceloResponse<E> response = AcceloApi.getInstance().insert(this.getEndPoint(), fieldValues, // fields,
 				this.getResponseClass());
 		logger.error(response);
 		
@@ -156,11 +158,15 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 * @param ticket
 	 * @throws AcceloException
 	 */
-	public E update(AcceloEntity<E> entity)
+	public E update(E entity)
 	{
-		AcceloFieldValues fields = marshalFields(entity);
+		
+		preUpdateValidation(entity);
 
-		AcceloResponse<E> response = AcceloApi.getInstance().update(this.getEndPoint(), entity.getId(), fields,
+		String fieldValues = toJson(entity, DaoOperation.UPDATE);
+		
+		AcceloResponse<E> response = AcceloApi.getInstance().update(this.getEndPoint(), entity.getId(), fieldValues,
+				// fields,
 				this.getResponseClass());
 
 		logger.error(response);
@@ -174,6 +180,20 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		
 		return response.getEntity();
 	}
+	
+	
+	protected String toJson(E entity, DaoOperation update)
+	{
+		
+		return GsonForAccelo.toJson(entity);
+	}
+	
+	
+	protected E fromJson(String jsonEntity)
+	{
+		return GsonForAccelo.fromJson(jsonEntity, getEntityClass());
+	}
+
 
 	/**
 	 * Uses reflection to build the AcceloFieldValues. We only marshal private fields that are not transient and not
@@ -183,6 +203,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 * @return
 	 * @throws IllegalAccessException
 	 */
+	/*
 	private AcceloFieldValues marshalFields(AcceloEntity<E> entity)
 	{
 		AcceloFieldValues fields = new AcceloFieldValues();
@@ -213,8 +234,9 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 		return fields;
 	}
+	*/
 
-	public void delete(AcceloEntity<E> entity)
+	public void delete(E entity)
 	{
 		HTTPResponse response = AcceloApi.getInstance().delete(getEndPoint(), entity.getId());
 
@@ -262,9 +284,12 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 
 
+	/**
+	 * a handy method used when adding new entities to the dao to validate that the
+	 * raw json data matches the defined entity.
+	 */
 	public void validateEntityClass()
 	{
-
 		AcceloApi api = AcceloApi.getInstance();
 		
 		AcceloFilter<E> filter = new AcceloFilter<>();
@@ -288,5 +313,30 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	{
 		private static final long serialVersionUID = 1L;
 	}
+
+	/**
+	 * Overload this method to apply validation on the entity before it is inserted.
+	 * 
+	 * @param entity
+	 */
+	void preInsertValidation(E  entity)
+	{
+		// default validation takes no action.
+		
+	}
+	
+	/**
+	 * Overload this method to apply validation on the entity before it is update.
+	 * 
+	 * By default this method calls preInsertValidation(E entity)
+	 * 
+	 * @param entity
+	 */
+	void preUpdateValidation(E  entity)
+	{
+		preInsertValidation(entity);
+		
+	}
+
 
 }

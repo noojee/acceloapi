@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.entities.generator.FilterField;
-import au.com.noojee.acceloapi.entities.meta.AgainstType_;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 
 public class AcceloFilter<E extends AcceloEntity<E>>
 {
@@ -77,7 +77,7 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 		return new Eq<E>(field, operand);
 	}
 	
-	public Expression eq(FilterField<E, String> field, AgainstType_ operand)
+	public Expression eq(FilterField<E, String> field, AgainstType operand)
 	{
 		return new Eq<E>(field, operand.getName());
 	}
@@ -109,12 +109,12 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 		return new AfterOrEq<E>(field, operand);
 	}
 	
-	public Expression against(AgainstType_ type, Integer operand)
+	public Expression against(AgainstType type, Integer operand)
 	{
 		return new Against(type, operand);
 	}
 	
-	public Expression against(AgainstType_ type, Integer... operand)
+	public Expression against(AgainstType type, Integer... operand)
 	{
 		return new Against(type, operand);
 	}

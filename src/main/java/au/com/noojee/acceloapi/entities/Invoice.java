@@ -2,15 +2,15 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.DateFilterField;
-import au.com.noojee.acceloapi.util.Conversions;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 
 public class Invoice extends AcceloEntity<Invoice>
 {
 	private float amount; // The value of the invoice, less any tax.
 	private String subject; // The title of the invoice
-	private String against_type; // The object the invoice was created against (usually the company)
+	private AgainstType against_type; // The object the invoice was created against (usually the company)
 	private int against_id; // The unique identifier for the object the invoice was created against (i.e the company id).
 	private String notes; // notes made on the invoice.
 
@@ -26,11 +26,11 @@ public class Invoice extends AcceloEntity<Invoice>
 	private int modified_by; // unsigned The unique identifier of the staff member who
 	
 	@DateFilterField
-	private long date_raised; // unix ts The date the invoice was raised.
+	private LocalDate  date_raised; // unix ts The date the invoice was raised.
 	@DateFilterField
-	private long date_due; // unix ts The date the invoice is due.
+	private LocalDate  date_due; // unix ts The date the invoice is due.
 	@DateFilterField
-	private long date_modified; // unix ts The date the invoice was last modified.
+	private LocalDate  date_modified; // unix ts The date the invoice was last modified.
 	private int contact; // The id of the contact to whom the invoice is to be billed.
 	private int affiliation_id; // unsigned The unique identifier for the affiliation the invoice is raised against.
 	private int affiliation; // unsigned or object The affiliation against whom the invoice is raised.
@@ -48,7 +48,7 @@ public class Invoice extends AcceloEntity<Invoice>
 		return subject;
 	}
 
-	public String getAgainstType()
+	public AgainstType getAgainstType()
 	{
 		return against_type;
 	}
@@ -95,17 +95,17 @@ public class Invoice extends AcceloEntity<Invoice>
 
 	public LocalDate getDateRaised()
 	{
-		return Conversions.toLocalDate(date_raised);
+		return date_raised;
 	}
 
 	public LocalDate getDateDue()
 	{
-		return Conversions.toLocalDate(date_due);
+		return date_due;
 	}
 
 	public LocalDate getDateModified()
 	{
-		return Conversions.toLocalDate(date_modified);
+		return date_modified;
 	}
 
 	public int getContact()

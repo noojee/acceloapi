@@ -10,7 +10,7 @@ import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.entities.TimeAllocation;
-import au.com.noojee.acceloapi.entities.meta.AgainstType_;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 public class TimeAllocationDaoTest
@@ -49,7 +49,7 @@ public class TimeAllocationDaoTest
 				AcceloFilter<TimeAllocation> filter = new AcceloFilter<>();
 
 				// filter.where(TimeAllocation_.activity_id, activity.getId());
-				filter.where(filter.against(AgainstType_.activities, activity.getId()));
+				filter.where(filter.against(AgainstType.activities, activity.getId()));
 
 				List<TimeAllocation> allocations = daoTimeAllocation.getByFilter(filter);
 				

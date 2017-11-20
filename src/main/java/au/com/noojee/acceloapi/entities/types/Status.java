@@ -1,4 +1,4 @@
-package au.com.noojee.acceloapi.entities;
+package au.com.noojee.acceloapi.entities.types;
 
 import com.google.gson.annotations.SerializedName;
 

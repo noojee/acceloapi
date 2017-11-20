@@ -7,11 +7,12 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.annotations.SerializedName;
 
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.DateFilterField;
-import au.com.noojee.acceloapi.entities.generator.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
+import au.com.noojee.acceloapi.entities.types.Status;
 import au.com.noojee.acceloapi.util.Constants;
-import au.com.noojee.acceloapi.util.Conversions;
 
 public class Ticket extends AcceloEntity<Ticket>
 {
@@ -24,7 +25,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private class Meta implements MetaBasicFilterFields
 	{
 		@BasicFilterField
-		private transient String contact_number;  // filters over phone, fax and mobile
+		private transient String contact_number; // filters over phone, fax and mobile
 
 	}
 
@@ -33,73 +34,77 @@ public class Ticket extends AcceloEntity<Ticket>
 	private String custom_id;
 	private String description;
 	@BasicFilterField
+	@SerializedName(value="type_id", alternate="issue_type") // insert and update use type_id.
 	private int issue_type;
-	
+
 	@BasicFilterField
 	private int affiliation; // The affiliated with this ticket which links
 								// through to the contact
+	private AgainstType against_type;
 	private int against_id;
-	private String against_type;
+	
 	private int company; // If against_type is company, then this holds the id of the company the ticket is
 							// against.
 	@BasicFilterField
 	private String priority;
-	@BasicFilterField(name="class")
+	@BasicFilterField(name = "class")
 	@SerializedName("class")
 	private int _class;
-	
+
 	@BasicFilterField
 	private int resolution;
 	@BasicFilterField
 	private Status status; // Breaks our rules of using Ids but there is no
 							// other way to get the status.
-	
+
 	@BasicFilterField
 	private String referrer_type;
 	@BasicFilterField
 	private int referrer_id;
-	
+
 	@BasicFilterField
 	private String standing;
 	@BasicFilterField
 	private int submitted_by;
-	
+
 	@DateFilterField
-	private long date_submitted;
+	private LocalDate date_submitted;
 	@DateFilterField
-	private long date_opened;
-	
-	private long date_resolved;
+	private LocalDate date_opened;
+
+	private LocalDate date_resolved;
 	@DateFilterField
-	private long date_closed;
+	private LocalDate date_closed;
 	@DateFilterField
-	private long date_started;
+	private LocalDate date_started;
 	@DateFilterField
-	private long date_due;
+	private LocalDate date_due;
 	@BasicFilterField
-	private int opened_by;			// staff member
+	private int opened_by; // staff member
 	@BasicFilterField
-	private int closed_by;			// staff member
+	private int closed_by; // staff member
 	@BasicFilterField
-	private int resolved_by;		// staff member
+	private int resolved_by; // staff member
 	private String object_budget;
 	@BasicFilterField
-	private int  assignee;			// staff member
-	private int billable_seconds;
-	private long date_last_interacted;
+	private int assignee; // staff member
 	
+	/*
+	 * This field is read-only. To bill time create an activity attached to this ticket.
+	 */
+	private int billable_seconds;
+	
+	private LocalDate date_last_interacted;
+
 	@BasicFilterField
 	private int contract; // the contract id or 0 if this ticket is unassigned.
 	private String resolution_detail;
-	
-	private String against;
-	private String type;
+
 	private int issue_object_budget;
 	private int contact;
-	
+
 	private String staff_bookmarked;
-	
-	
+
 	public int getAffiliation()
 	{
 		return affiliation;
@@ -154,11 +159,10 @@ public class Ticket extends AcceloEntity<Ticket>
 		return against_id;
 	}
 
-	public String getAgainstType()
+	public AgainstType getAgainstType()
 	{
 		return against_type;
 	}
-
 
 	public String getPriority()
 	{
@@ -192,36 +196,36 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public LocalDate getDateSubmitted()
 	{
-		return Conversions.toLocalDate(date_submitted);
+		return date_submitted;
 	}
 
 	public LocalDate getDateOpened()
 	{
-		return Conversions.toLocalDate(date_opened);
+		return date_opened;
 	}
 
 	public LocalDate getDateResolved()
 	{
-		return Conversions.toLocalDate(date_resolved);
+		return date_resolved;
 	}
 
-	// Returns null if the ticket is still open.
+	/**
+	 * 
+	 * @return null if the ticket is still open.
+	 */
 	public LocalDate getDateClosed()
 	{
-		if (date_closed == 0)
-			return null;
-
-		return Conversions.toLocalDate(date_closed);
+		return date_closed;
 	}
 
 	public LocalDate getDateStarted()
 	{
-		return Conversions.toLocalDate(date_started);
+		return date_started;
 	}
 
 	public LocalDate getDateDue()
 	{
-		return Conversions.toLocalDate(date_due);
+		return date_due;
 	}
 
 	public int getClosedBy()
@@ -239,7 +243,6 @@ public class Ticket extends AcceloEntity<Ticket>
 		return resolved_by;
 	}
 
-
 	public String getObjectBudget()
 	{
 		return object_budget;
@@ -253,10 +256,19 @@ public class Ticket extends AcceloEntity<Ticket>
 		return assignee;
 	}
 
+	/**
+	 * Set the staff member assigned to this ticket.
+	 * 
+	 * @param staffId
+	 */
+	public void setAssignee(int staffId)
+	{
+		this.assignee = staffId;
+	}
 
 	public LocalDate getDateLastInteracted()
 	{
-		return Conversions.toLocalDate(date_last_interacted);
+		return date_last_interacted;
 	}
 
 	public int getContractId()
@@ -268,9 +280,10 @@ public class Ticket extends AcceloEntity<Ticket>
 	{
 		return trim(resolution_detail);
 	}
-	
+
 	/**
 	 * Is the ticket Attached to a contract.
+	 * 
 	 * @return
 	 */
 	public boolean isAttached()
@@ -298,14 +311,10 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.issue_type = issueTypeId;
 	}
 
-	public void setAgainstId(int against_id)
+	public void setAgainst(AgainstType type, int against_id)
 	{
+		this.against_type = type;
 		this.against_id = against_id;
-	}
-
-	public void setAgainstType(String against_type)
-	{
-		this.against_type = against_type;
 	}
 
 	public void setPriority(String priority)
@@ -333,49 +342,54 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.submitted_by = submitted_by;
 	}
 
-	public void setDateSubmitted(long date_submitted)
+	public void setDateSubmitted(LocalDate date_submitted)
 	{
 		this.date_submitted = date_submitted;
 	}
 
-	public void setDateOpened(long date_opened)
+	public void setDateOpened(LocalDate date_opened)
 	{
 		this.date_opened = date_opened;
 	}
 
-	public void setDateResolved(long date_resolved)
+	public void setDateResolved(LocalDate date_resolved)
 	{
 		this.date_resolved = date_resolved;
 	}
 
-	public void setDateClosed(long date_closed)
+	public void setDateClosed(LocalDate date_closed)
 	{
 		this.date_closed = date_closed;
 	}
 
-	public void setDateStarted(long date_started)
+	public void setDateStarted(LocalDate date_started)
 	{
 		this.date_started = date_started;
 	}
 
-	public void setDateDue(long date_due)
+	public void setDateDue(LocalDate date_due)
 	{
 		this.date_due = date_due;
 	}
 
-	public void setClosedBy(int closed_by)
+	public void setClosedBy(int staffId)
 	{
-		this.closed_by = closed_by;
+		this.closed_by = staffId;
 	}
 
-	public void setOpenedBy(int opened_by)
+	public void setOpenedBy(int staffId)
 	{
-		this.opened_by = opened_by;
+		this.opened_by = staffId;
 	}
 
-	public void setResolvedBy(int resolved_by)
+	/**
+	 * The staff member that resolved the ticket.
+	 * 
+	 * @param resolved_by
+	 */
+	public void setResolvedBy(int staffId)
 	{
-		this.resolved_by = resolved_by;
+		this.resolved_by = staffId;
 	}
 
 	public void setCompanyId(int companyId)
@@ -388,12 +402,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.object_budget = object_budget;
 	}
 
-	public void setBillableSeconds(int billable_seconds)
-	{
-		this.billable_seconds = billable_seconds;
-	}
-
-	public void setDateLastInteracted(long date_last_interacted)
+	public void setDateLastInteracted(LocalDate date_last_interacted)
 	{
 		this.date_last_interacted = date_last_interacted;
 	}
@@ -408,16 +417,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.resolution_detail = resolution_detail;
 	}
 
-	public String getAgainst()
-	{
-		return against;
-	}
-
-	public void setAgainst(String against)
-	{
-		this.against = against;
-	}
-
+	
 	public int getIssue_object_budget()
 	{
 		return issue_object_budget;
@@ -447,16 +447,11 @@ public class Ticket extends AcceloEntity<Ticket>
 	{
 		this.staff_bookmarked = staff_bookmarked;
 	}
-	
-	public String getType()
-	{
-		return this.type;
-	}
 
 	@Override
 	public String toString()
 	{
-		return "Ticket [id=" + getId() + ", title=" + title + ", custom_id=" + custom_id + ", type=" + issue_type 
+		return "Ticket [id=" + getId() + ", title=" + title + ", custom_id=" + custom_id + ", type=" + issue_type
 				+ ", against_id=" + against_id + ", against_type=" + against_type + ", priority=" + priority
 				+ ", resolution=" + resolution + ", status=" + status + ", standing=" + standing + ", submitted_by="
 				+ submitted_by + ", date_submitted=" + date_submitted + ", date_opened=" + date_opened
@@ -475,7 +470,4 @@ public class Ticket extends AcceloEntity<Ticket>
 	}
 
 
-	
-
 }
-
