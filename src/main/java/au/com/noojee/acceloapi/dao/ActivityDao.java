@@ -9,7 +9,6 @@ import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
