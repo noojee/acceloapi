@@ -26,7 +26,11 @@ public class Ticket extends AcceloEntity<Ticket>
 	{
 		@BasicFilterField
 		private transient String contact_number; // filters over phone, fax and mobile
+	}
 
+	public enum Standing
+	{
+		submitted, open, resolved, closed, inactive;
 	}
 
 	private String title;
@@ -34,7 +38,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private String custom_id;
 	private String description;
 	@BasicFilterField
-	@SerializedName(value="type_id", alternate="issue_type") // insert and update use type_id.
+	@SerializedName(value = "type_id", alternate = "issue_type") // insert and update use type_id.
 	private int issue_type;
 
 	@BasicFilterField
@@ -42,7 +46,7 @@ public class Ticket extends AcceloEntity<Ticket>
 								// through to the contact
 	private AgainstType against_type;
 	private int against_id;
-	
+
 	private int company; // If against_type is company, then this holds the id of the company the ticket is
 							// against.
 	@BasicFilterField
@@ -55,7 +59,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int resolution;
 	@BasicFilterField
 	private TicketStatus status; // Breaks our rules of using Ids but there is no
-							// other way to get the status.
+	// other way to get the status.
 
 	@BasicFilterField
 	private String referrer_type;
@@ -63,7 +67,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int referrer_id;
 
 	@BasicFilterField
-	private String standing;
+	private Standing standing;
 	@BasicFilterField
 	private int submitted_by;
 
@@ -88,12 +92,12 @@ public class Ticket extends AcceloEntity<Ticket>
 	private String object_budget;
 	@BasicFilterField
 	private int assignee; // staff member
-	
+
 	/*
 	 * This field is read-only. To bill time create an activity attached to this ticket.
 	 */
 	private int billable_seconds;
-	
+
 	private LocalDate date_last_interacted;
 
 	@BasicFilterField
@@ -184,7 +188,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		return status;
 	}
 
-	public String getStanding()
+	public Standing getStanding()
 	{
 		return standing;
 	}
@@ -210,7 +214,6 @@ public class Ticket extends AcceloEntity<Ticket>
 	}
 
 	/**
-	 * 
 	 * @return null if the ticket is still open.
 	 */
 	public LocalDate getDateClosed()
@@ -332,7 +335,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.resolution = resolution;
 	}
 
-	public void setStanding(String standing)
+	public void setStanding(Standing standing)
 	{
 		this.standing = standing;
 	}
@@ -417,7 +420,6 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.resolution_detail = resolution_detail;
 	}
 
-	
 	public int getIssue_object_budget()
 	{
 		return issue_object_budget;
@@ -468,6 +470,5 @@ public class Ticket extends AcceloEntity<Ticket>
 	{
 		return this.getId() - o.getId();
 	}
-
 
 }
