@@ -45,6 +45,12 @@ class Eq<E extends AcceloEntity<E>> extends Expression
 		this.operands.add(formatDateAsFilterOperand(operand));
 	}
 
+	public <T extends Enum<T>> Eq(FilterField<E, T> field, T operand)
+	{
+		this.fieldName = field.getFieldName();
+		this.operands.add(operand.name());
+	}
+
 	public boolean isFieldName(String fieldName)
 	{
 		return this.fieldName.compareTo(fieldName) == 0;

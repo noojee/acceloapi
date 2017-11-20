@@ -93,6 +93,12 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 		return new Eq<E>(field, operand);
 	}
 	
+	public <T extends Enum<T>> Expression eq(FilterField<E, T> field, T operand)
+	{
+		return new Eq<E>(field, operand);
+	}
+
+	
 	public Expression before(FilterField<E, LocalDate> field, LocalDate operand)
 	{
 		return new Before<E>(field, operand);
@@ -294,6 +300,7 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	{
 		return this.limit;
 	}
+
 
 
 	
