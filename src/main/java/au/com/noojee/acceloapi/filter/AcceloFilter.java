@@ -18,11 +18,25 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	private boolean refreshCache = false;
 
 	/**
-	 * Limits the no. of rows returned during a query.
+	 * Limits the no. of pages returned during a query.
 	 * 
-	 * We default to 50 (a single page) unless the caller explicitly over-rides the default.
+	 * A page can contain up to 50 rows.
+	 * 
+	 * We default to 1 page (50 rows) unless the caller explicitly over-rides the default.
 	 */
-	private int limit = 50;
+	private int limit = 1;
+
+	/**
+	 * Used with limit to iterate through a large list of entities.
+	 * 
+	 * Defaults to 0 so we get the first page.
+	 * 
+	 * The offset is the page to start from (0 based).
+	 * 
+	 * Increment the offset each time you call getByFilter to move forward a page at a time.
+	 * 
+	 */
+	private int offset = 0;
 
 	public void where(Search search) throws AcceloException
 	{
@@ -299,6 +313,16 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	public int getLimit()
 	{
 		return this.limit;
+	}
+
+	public void offset(int offset)
+	{
+		this.offset = offset;
+	}
+
+	public int getOffset()
+	{
+		return this.offset;
 	}
 
 

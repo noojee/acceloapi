@@ -99,8 +99,9 @@ public class AcceloApi
 	{
 		List<E> entities = new ArrayList<>();
 		boolean more = true;
-		int page = 0;
-		while (more && entities.size() < filter.getLimit())
+		int page = filter.getOffset();
+		
+		while (more && entities.size() < (filter.getLimit() * PAGE_SIZE))
 		{
 			L responseList = get(url, filter, fieldList, responseClass, page);
 
