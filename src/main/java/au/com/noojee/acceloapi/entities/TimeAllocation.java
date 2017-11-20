@@ -2,9 +2,9 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
 
-import au.com.noojee.acceloapi.entities.generator.BasicFilterField;
-import au.com.noojee.acceloapi.entities.generator.DateFilterField;
-import au.com.noojee.acceloapi.util.Conversions;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.types.AgainstType;
 
 public class TimeAllocation extends AcceloEntity<TimeAllocation>
 {
@@ -17,13 +17,13 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 	private String comments;	// string	Any comments made against the logged time.
 	
 	
-	private String against_type;
+	private AgainstType against_type;
 	private int against_id;
 	
 	@DateFilterField
-	private long date_locked;	// unix ts	The date the activity was locked, that is, when the logged time was approved for invoicing.
+	private LocalDate date_locked;	// unix ts	The date the activity was locked, that is, when the logged time was approved for invoicing.
 	@DateFilterField
-	private long date_created;	// unix ts	The date the time was logged.
+	private LocalDate date_created;	// unix ts	The date the time was logged.
 	
 	
 	public String getStanding()
@@ -53,34 +53,27 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 	
 	public LocalDate getDatelocked()
 	{
-		return Conversions.toLocalDate(date_locked);
+		return date_locked;
 	}
 	
 	public LocalDate getDateCreated()
 	{
-		return Conversions.toLocalDate(date_created);
+		return date_created;
 	}
 
-	public String getAgainst_type()
+	public AgainstType getAgainst_type()
 	{
 		return against_type;
 	}
 
-	public void setAgainst_type(String against_type)
+	public void setAgainstType(AgainstType againsType, int againstId)
 	{
-		this.against_type = against_type;
+		this.against_type = againsType;
+		this.against_id = againstId;
 	}
 
 	public int getAgainst_id()
 	{
 		return against_id;
 	}
-
-	public void setAgainst_id(int against_id)
-	{
-		this.against_id = against_id;
-	}
-	
-	
-
 }
