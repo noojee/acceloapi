@@ -14,7 +14,7 @@ package au.com.noojee.acceloapi.entities.meta;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 import java.time.LocalDate;
 import au.com.noojee.acceloapi.entities.Ticket;
-import au.com.noojee.acceloapi.entities.types.Status;
+import au.com.noojee.acceloapi.entities.types.TicketStatus;
 
 
 public class Ticket_ 
@@ -41,7 +41,7 @@ public class Ticket_
 	public static FilterField<Ticket, Integer> resolution = new FilterField<>("resolution"); 
 	public static FilterField<Ticket, Integer> resolved_by = new FilterField<>("resolved_by"); 
 	public static FilterField<Ticket, String> standing = new FilterField<>("standing"); 
-	public static FilterField<Ticket, Status> status = new FilterField<>("status"); 
+	public static FilterField<Ticket, TicketStatus> status = new FilterField<>("status"); 
 	public static FilterField<Ticket, Integer> submitted_by = new FilterField<>("submitted_by"); 
 
 }

@@ -11,7 +11,7 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
-import au.com.noojee.acceloapi.entities.types.Status;
+import au.com.noojee.acceloapi.entities.types.TicketStatus;
 import au.com.noojee.acceloapi.util.Constants;
 
 public class Ticket extends AcceloEntity<Ticket>
@@ -54,7 +54,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	@BasicFilterField
 	private int resolution;
 	@BasicFilterField
-	private Status status; // Breaks our rules of using Ids but there is no
+	private TicketStatus status; // Breaks our rules of using Ids but there is no
 							// other way to get the status.
 
 	@BasicFilterField
@@ -179,7 +179,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		return resolution;
 	}
 
-	public Status getStatus()
+	public TicketStatus getStatus()
 	{
 		return status;
 	}

@@ -2,7 +2,7 @@ package au.com.noojee.acceloapi.entities.types;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum Status
+public enum TicketStatus
 {
 	@SerializedName("2")
 	Open(2),
@@ -86,7 +86,7 @@ public enum Status
 					// deployment.
 	
 	
-	Status(int id)
+	TicketStatus(int id)
 	{
 		this.id = id;
 		
