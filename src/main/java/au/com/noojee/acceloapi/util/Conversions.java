@@ -34,7 +34,8 @@ public interface Conversions
 
 	public static long toLong(LocalDate localDate)
 	{
-		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
+		return localDate.atStartOfDay(ZoneId.systemDefault()).toInstant().getEpochSecond();
+
 	}
 
 	public static Date toDate(LocalDate localDate)
