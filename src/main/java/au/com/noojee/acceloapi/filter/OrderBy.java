@@ -1,37 +1,47 @@
 package au.com.noojee.acceloapi.filter;
 
-import java.time.LocalDate;
-
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.OrderByField.Order;
 
-class Empty<E extends AcceloEntity<E>> extends Expression
+public class OrderBy<E extends AcceloEntity<E>, T extends Object>
 {
-	private FilterField<E, LocalDate> field;
 
-	public Empty(FilterField<E, LocalDate> field)
+	private FilterField<E, T >field;
+	private Order order;
+
+	public OrderBy(FilterField<E, T> field, Order order)
 	{
 		this.field = field;
+		this.order = order;
 	}
-	
-	@Override
-	public Expression copy()
+
+	public String getFieldName()
 	{
-		Empty<E> empty = new Empty<>(this.field);
-		
-		return empty;
+		return this.field.getFieldName();
 	}
 
+	public Order getOrder()
+	{
+		return order;
+	}
 
-	@Override
+	public OrderBy<E,T> copy()
+	{
+		return new OrderBy<E,T>(this.field.copy(),  order);
+	}
+
 	public String toJson()
 	{
-		String json = "\"empty\": [";
+		String orderBy = "order_by_" + order.name().toLowerCase();
+
+		String json = "\"" + orderBy + "\": [";
 		json += "\"" + field.getFieldName() + "\"";
 
 		json += "]";
 
 		return json;
+
 	}
 
 	@Override
@@ -40,6 +50,7 @@ class Empty<E extends AcceloEntity<E>> extends Expression
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((field == null) ? 0 : field.hashCode());
+		result = prime * result + ((order == null) ? 0 : order.hashCode());
 		return result;
 	}
 
@@ -53,7 +64,7 @@ class Empty<E extends AcceloEntity<E>> extends Expression
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("rawtypes")
-		Empty other = (Empty) obj;
+		OrderBy other = (OrderBy) obj;
 		if (field == null)
 		{
 			if (other.field != null)
@@ -61,6 +72,11 @@ class Empty<E extends AcceloEntity<E>> extends Expression
 		}
 		else if (!field.equals(other.field))
 			return false;
+		if (order != other.order)
+			return false;
 		return true;
 	}
+
+
+	
 }

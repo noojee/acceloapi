@@ -22,6 +22,16 @@ public class AcceloFieldList
 	{
 	}
 
+	public AcceloFieldList copy()
+	{
+		AcceloFieldList fieldList = new AcceloFieldList();
+		for (String field : fields)
+		{
+			fieldList.add(field);
+		}
+		return fieldList;
+	}
+
 	public void add(String fieldName)
 	{
 		fields.add(fieldName);

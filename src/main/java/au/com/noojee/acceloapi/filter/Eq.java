@@ -12,10 +12,13 @@ import au.com.noojee.acceloapi.util.Constants;
 class Eq<E extends AcceloEntity<E>> extends Expression
 {
 
-	private String fieldName;
+	String fieldName;
 	private List<String> operands = new ArrayList<>();
 
-	
+	// Required for serialization
+	public Eq()
+	{
+	}
 	public Eq(FilterField<E, Integer> field, int operand)
 	{
 		this.fieldName = field.getFieldName();
@@ -50,7 +53,17 @@ class Eq<E extends AcceloEntity<E>> extends Expression
 		this.fieldName = field.getFieldName();
 		this.operands.add(operand.name());
 	}
+	
+	@Override
+	public Expression copy()
+	{
+		Eq<E> eq = new Eq<>();
+		
+		eq.fieldName = this.fieldName;
+		eq.operands.addAll(operands);
 
+		return eq;
+	}
 	public boolean isFieldName(String fieldName)
 	{
 		return this.fieldName.compareTo(fieldName) == 0;

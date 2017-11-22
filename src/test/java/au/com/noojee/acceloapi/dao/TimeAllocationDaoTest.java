@@ -1,5 +1,6 @@
 package au.com.noojee.acceloapi.dao;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.junit.Test;
@@ -17,10 +18,8 @@ public class TimeAllocationDaoTest
 {
 
 	@Test
-	public void test()
+	public void test() throws FileNotFoundException
 	{
-		try
-		{
 			AcceloApi.getInstance().connect(AcceloSecret.load());
 
 			Company company = new CompanyDao().getByName("Noojee Contact Solutions Pty Ltd");
@@ -77,11 +76,6 @@ public class TimeAllocationDaoTest
 				}
 
 			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 
 	}
 

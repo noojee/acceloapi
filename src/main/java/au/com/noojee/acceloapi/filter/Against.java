@@ -30,6 +30,15 @@ class Against extends Expression
 		this.matchIds.addAll(Arrays.asList(matches));
 	}
 
+	
+	@Override
+	public Expression copy()
+	{
+		Against against = new Against(this.type);
+		against.matchIds = new ArrayList<Integer>(this.matchIds);
+		
+		return against;
+	}
 
 	@Override
 	public String toJson()

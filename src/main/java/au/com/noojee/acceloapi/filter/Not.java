@@ -4,6 +4,14 @@ class Not extends Expression
 {
 
 	@Override
+	public Expression copy()
+	{
+		// a no op at this point.
+		return this;
+	}
+
+	
+	@Override
 	public String toJson()
 	{
 		throw new RuntimeException("Not is not supported :)");

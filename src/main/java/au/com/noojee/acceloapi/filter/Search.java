@@ -13,6 +13,11 @@ class Search extends Expression
 		this.operand = seachValue;
 	}
 
+	public Search copy()
+	{
+		return new Search(this.operand);
+	}
+
 	public String toJson()
 	{
 		String json = "";
@@ -57,6 +62,7 @@ class Search extends Expression
 			return false;
 		return true;
 	}
+
 
 
 

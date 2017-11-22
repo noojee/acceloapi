@@ -22,6 +22,15 @@ class GreaterThan<E extends AcceloEntity<E>> extends Expression
 		this.field = (FilterField<E, Object>)field;
 		this.operand = operand;
 	}
+	
+	@Override
+	public Expression copy()
+	{
+		GreaterThan<E> exp = new GreaterThan<E>(this.field, this.operand.toString());
+		
+		return exp;
+	}
+
 
 	@Override
 	public String toJson()

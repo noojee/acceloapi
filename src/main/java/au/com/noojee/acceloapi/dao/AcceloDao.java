@@ -3,6 +3,7 @@ package au.com.noojee.acceloapi.dao;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 import org.apache.logging.log4j.LogManager;
@@ -76,6 +77,16 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 		return entities;
 	}
+	
+	@SuppressWarnings("unchecked")
+	protected Optional<E> getSingleByFilter(AcceloFilter<E> filter, AcceloFieldList fields) throws AcceloException
+	{
+		CacheKey<E> key = new CacheKey<>(getEndPoint(), filter, fields, getResponseClass(), this.getEntityClass());
+		List<? extends AcceloEntity<E>> list = (List<? extends AcceloEntity<E>>) AcceloCache.getInstance().get(key);
+
+		return list.isEmpty() ? Optional.empty() :Optional.of((E)list.get(0));
+	}
+
 
 	public E getById(int id) throws AcceloException
 	{

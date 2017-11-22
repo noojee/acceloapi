@@ -10,6 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.OrderByField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.entities.types.TicketStatus;
 import au.com.noojee.acceloapi.util.Constants;
@@ -33,7 +34,9 @@ public class Ticket extends AcceloEntity<Ticket>
 		submitted, open, resolved, closed, inactive;
 	}
 
+	@OrderByField
 	private String title;
+	
 	@BasicFilterField
 	private String custom_id;
 	private String description;
@@ -51,12 +54,15 @@ public class Ticket extends AcceloEntity<Ticket>
 							// against.
 	@BasicFilterField
 	private String priority;
+	
 	@BasicFilterField(name = "class")
 	@SerializedName("class")
 	private int _class;
 
 	@BasicFilterField
 	private int resolution;
+	
+	@OrderByField
 	@BasicFilterField
 	private TicketStatus status; // Breaks our rules of using Ids but there is no
 	// other way to get the status.
@@ -66,21 +72,33 @@ public class Ticket extends AcceloEntity<Ticket>
 	@BasicFilterField
 	private int referrer_id;
 
+	@OrderByField
 	@BasicFilterField
 	private Standing standing;
 	@BasicFilterField
 	private int submitted_by;
 
+	@OrderByField
 	@DateFilterField
 	private LocalDate date_submitted;
+	
+	@OrderByField
 	@DateFilterField
 	private LocalDate date_opened;
+	
+	@OrderByField
 
 	private LocalDate date_resolved;
+	
+	@OrderByField
 	@DateFilterField
 	private LocalDate date_closed;
+	
+	@OrderByField
 	@DateFilterField
 	private LocalDate date_started;
+	
+	@OrderByField
 	@DateFilterField
 	private LocalDate date_due;
 	@BasicFilterField
@@ -98,6 +116,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	 */
 	private int billable_seconds;
 
+	@OrderByField
 	private LocalDate date_last_interacted;
 
 	@BasicFilterField

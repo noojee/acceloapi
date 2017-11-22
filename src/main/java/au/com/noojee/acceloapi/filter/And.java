@@ -6,11 +6,25 @@ class And extends Expression
 	private Expression parent;
 	private Expression child;
 
+	// Required for serialization
+	public And()
+	{
+	}
+	
 	public And(Expression parent, Expression child)
 	{
 		super();
 		this.parent = parent;
 		this.child = child;
+	}
+
+	
+	@Override
+	public Expression copy()
+	{
+		And and = new And(this.parent, this.child);
+		
+		return and;
 	}
 
 	@Override

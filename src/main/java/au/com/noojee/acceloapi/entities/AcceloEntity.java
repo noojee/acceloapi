@@ -3,11 +3,13 @@ package au.com.noojee.acceloapi.entities;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.OrderByField;
 
 public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Comparable<E>, Cloneable
 {
 
 	@BasicFilterField
+	@OrderByField
 	private int id;
 	
 	/**	

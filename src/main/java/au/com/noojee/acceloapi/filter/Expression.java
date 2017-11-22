@@ -15,6 +15,12 @@ public abstract class Expression
 	@Override
 	public abstract boolean equals(Object e);
 
+	public abstract Expression copy();
+
+	// Required for serialization.
+	public Expression()
+	{
+	}
 	
 	public Expression and(Expression child) // throws AcceloException
 	{

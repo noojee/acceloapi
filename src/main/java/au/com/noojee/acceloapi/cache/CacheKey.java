@@ -7,24 +7,25 @@ import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 @SuppressWarnings("rawtypes")
-public class CacheKey<E extends AcceloEntity>
+public class CacheKey<E extends AcceloEntity<E>>
 {
 	EndPoint endPoint;
-	AcceloFilter filter;
+	AcceloFilter<E> filter;
 	private AcceloFieldList fields;
-	private Class<? extends AcceloResponseMeta<E>> responseListClass;
-	Class<E> entityClass;
+	
+	// The following two don't form part of the key as the endPoint implies these.
+	private transient Class<? extends AcceloResponseMeta<E>> responseClass;
+	private transient Class<E> entityClass;
 
 	
-	public CacheKey(EndPoint endPoint, AcceloFilter filter, AcceloFieldList fields,
-			Class<? extends AcceloResponseMeta<E>> responseListClass, Class<E> entityClass)
+	public CacheKey(EndPoint endPoint, AcceloFilter<E> filter, AcceloFieldList fields,
+			Class<? extends AcceloResponseMeta<E>> responseClass, Class<E> entityClass)
 	{
 		this.endPoint = endPoint;
 		this.filter = filter;
 		this.fields = fields;
-		this.responseListClass = responseListClass;
+		this.responseClass = responseClass;
 		this.entityClass = entityClass;
-
 	}
 	
 	public Class<E> getEntityClass()
@@ -32,7 +33,7 @@ public class CacheKey<E extends AcceloEntity>
 		return this.entityClass;
 	}
 
-	public AcceloFilter getFilter()
+	public AcceloFilter<E> getFilter()
 	{
 		return filter;
 	}
@@ -49,11 +50,20 @@ public class CacheKey<E extends AcceloEntity>
 	}
 
 
-	public Class<? extends AcceloResponseMeta<E>> getResponseListClass()
+	public Class<? extends AcceloResponseMeta<E>> getMetaResponseClass()
 	{
-		return responseListClass;
+		return responseClass;
 	}
 	
+	public CacheKey<E> copy()
+	{
+		AcceloFilter<E> filter = this.filter.copy();
+		AcceloFieldList fields = this.fields.copy();
+		
+		CacheKey<E> newKey = new CacheKey<>(this.endPoint, filter, fields, this.responseClass, this.entityClass);
+		
+		return newKey;
+	}
 
 	@Override
 	public int hashCode()

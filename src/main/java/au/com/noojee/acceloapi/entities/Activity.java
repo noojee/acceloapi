@@ -122,6 +122,10 @@ public class Activity extends AcceloEntity<Activity>
 	
 	private int rate; // id of the rate object
 	private int rate_charged; // The rate at which the billable time was charged.
+	
+	private int thread_id;
+	
+	private int parent_id;
 
 	List<Tag> tag; // A list of tags associated with the activity
 	
@@ -382,6 +386,120 @@ public class Activity extends AcceloEntity<Activity>
 				+ nonbillable + ", staff=" + staff + ", priority=" + priority + ", _class=" + _class + ", task=" + task
 				+ ", time_allocation=" + time_allocation + ", rate=" + rate + ", rate_charged=" + rate_charged
 				+ ", tag=" + tag + "]";
+	}
+
+
+	public AgainstType getAgainst_type()
+	{
+		return against_type;
+	}
+
+
+	public int getAgainst_id()
+	{
+		return against_id;
+	}
+
+
+	public int getOwner_id()
+	{
+		return owner_id;
+	}
+
+
+	public ActivityOwnerType getOwner_type()
+	{
+		return owner_type;
+	}
+
+
+	public Visibility getVisibility()
+	{
+		return visibility;
+	}
+
+
+	public int getInvoice_id()
+	{
+		return invoice_id;
+	}
+
+
+	public int getContract_period_id()
+	{
+		return contract_period_id;
+	}
+
+
+	public LocalDate getDate_created()
+	{
+		return date_created;
+	}
+
+
+	public LocalDate getDate_started()
+	{
+		return date_started;
+	}
+
+
+	public LocalDate getDate_ended()
+	{
+		return date_ended;
+	}
+
+
+	public LocalDate getDate_logged()
+	{
+		return date_logged;
+	}
+
+
+	public LocalDate getDate_modified()
+	{
+		return date_modified;
+	}
+
+
+	public long getNonbillable()
+	{
+		return nonbillable;
+	}
+
+
+	public int get_class()
+	{
+		return _class;
+	}
+
+
+	public int getTime_allocation()
+	{
+		return time_allocation;
+	}
+
+
+	public int getRate()
+	{
+		return rate;
+	}
+
+
+	public int getRate_charged()
+	{
+		return rate_charged;
+	}
+
+
+	public int getThread_id()
+	{
+		return thread_id;
+	}
+
+
+	public int getParent_id()
+	{
+		return parent_id;
 	}
 
 	

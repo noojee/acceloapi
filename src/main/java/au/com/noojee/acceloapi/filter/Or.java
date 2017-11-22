@@ -12,6 +12,15 @@ class Or extends Expression
 		this.parent = parent;
 		this.child = child;
 	}
+	
+	@Override
+	public Expression copy()
+	{
+		Or exp = new Or(this.parent, this.child);
+		
+		return exp;
+	}
+
 
 	@Override
 	public String toJson()

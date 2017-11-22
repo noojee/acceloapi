@@ -22,6 +22,13 @@ class AfterOrEq<E extends AcceloEntity<E>> extends Expression
 	{
 		return (new After<E>(field, operand).or(new Eq<E>(field, operand))).toJson();
 	}
+	
+	@Override
+	public Expression copy()
+	{
+		return new AfterOrEq<E>(field, operand);
+	}
+
 
 	@Override
 	public int hashCode()
@@ -60,6 +67,7 @@ class AfterOrEq<E extends AcceloEntity<E>> extends Expression
 			return false;
 		return true;
 	}
+
 
 	
 }

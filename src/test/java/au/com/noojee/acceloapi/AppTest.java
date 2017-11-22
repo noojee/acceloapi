@@ -52,7 +52,7 @@ public class AppTest extends TestCase
 	}
 
 	/**
-	 * Rigourous Test :-)
+	 * Rigorous Test :-)
 	 * @throws AcceloException 
 	 */
 	public void testApp() throws AcceloException
@@ -96,7 +96,7 @@ public class AppTest extends TestCase
 
 				for (Activity activity : activities)
 				{
-					int ticketid = activity.getOwnerId();
+					int ticketid = activity.getAgainstId();
 					new TicketDao().getById(ticketid);
 					
 					// test the cache.

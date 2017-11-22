@@ -94,13 +94,31 @@ public class AcceloApi
 		return list;
 	}
 
+	public <E extends AcceloEntity<E>> E get(EndPoint endPoint, AcceloFilter<E> filterMap,
+			AcceloFieldList fieldList,
+			Class<? extends AcceloResponse<E>> clazz)
+	{
+		AcceloResponse<E> response;
+		try
+		{
+			response = get(endPoint.getURL(), filterMap, fieldList, clazz, 0);
+			
+		}
+		catch (MalformedURLException e)
+		{
+			throw new AcceloException(e);
+		}
+
+		return response.getEntity();
+	}
+
 	public <E extends AcceloEntity<E>, L extends AcceloAbstractResponseList<E>> List<E> getAll(URL url,
 			AcceloFilter<E> filter, AcceloFieldList fieldList, Class<L> responseClass)
 	{
 		List<E> entities = new ArrayList<>();
 		boolean more = true;
 		int page = filter.getOffset();
-		
+
 		while (more && entities.size() < (filter.getLimit() * PAGE_SIZE))
 		{
 			L responseList = get(url, filter, fieldList, responseClass, page);

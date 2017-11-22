@@ -8,19 +8,25 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 class After<E extends AcceloEntity<E>> extends Expression
 {
 
-	private String fieldName;
+	private FilterField<E,LocalDate> field;
 	private LocalDate operand;
 
 	public After(FilterField<E, LocalDate> field, LocalDate localDate)
 	{
-		this.fieldName = field.getFieldName();
+		this.field = field;
 		this.operand = localDate;
+	}
+
+	@Override
+	public Expression copy()
+	{
+		return new After<E>(this.field, operand);
 	}
 
 	@Override
 	public String toJson()
 	{
-		String nameAndOperator = fieldName + "_after";
+		String nameAndOperator = this.field.getFieldName() + "_after";
 
 		String json = "\"" + nameAndOperator + "\": [";
 		json += "\"" + formatDateAsFilterOperand(operand) + "\"";
@@ -36,7 +42,7 @@ class After<E extends AcceloEntity<E>> extends Expression
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fieldName == null) ? 0 : fieldName.hashCode());
+		result = prime * result + ((field == null) ? 0 : field.hashCode());
 		result = prime * result + ((operand == null) ? 0 : operand.hashCode());
 		return result;
 	}
@@ -50,14 +56,14 @@ class After<E extends AcceloEntity<E>> extends Expression
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		@SuppressWarnings("unchecked")
-		After<E> other = (After<E>) obj;
-		if (fieldName == null)
+		@SuppressWarnings("rawtypes")
+		After other = (After) obj;
+		if (field == null)
 		{
-			if (other.fieldName != null)
+			if (other.field != null)
 				return false;
 		}
-		else if (!fieldName.equals(other.fieldName))
+		else if (!field.equals(other.field))
 			return false;
 		if (operand == null)
 		{
@@ -68,6 +74,7 @@ class After<E extends AcceloEntity<E>> extends Expression
 			return false;
 		return true;
 	}
+
 
 
 }

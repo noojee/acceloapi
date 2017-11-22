@@ -17,6 +17,10 @@ public class FilterField<E extends AcceloEntity<E>, T>
 		return this.fieldName;
 	}
 
+	public FilterField<E,T> copy()
+	{
+		return new FilterField<E,T>(this.fieldName);
+	}
 	
 	
 	@Override
@@ -48,4 +52,6 @@ public class FilterField<E extends AcceloEntity<E>, T>
 			return false;
 		return true;
 	}
+
+	
 }

@@ -58,7 +58,7 @@ public class AcceloFilterTest
 		System.out.println(cf.toJson());
 
 		cf = new AcceloFilter<>();
-		filter.where(cf.search("911"));
+		cf.where(cf.search("911"));
 
 		System.out.println(filter.toJson());
 
