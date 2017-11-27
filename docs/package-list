@@ -1,6 +1,12 @@
 au.com.noojee.acceloapi
+au.com.noojee.acceloapi.cache
 au.com.noojee.acceloapi.dao
+au.com.noojee.acceloapi.dao.gson
 au.com.noojee.acceloapi.entities
+au.com.noojee.acceloapi.entities.generator
 au.com.noojee.acceloapi.entities.meta
+au.com.noojee.acceloapi.entities.meta.fieldTypes
+au.com.noojee.acceloapi.entities.types
 au.com.noojee.acceloapi.filter
-au.com.noojee.acceloapi.filter.expressions
+au.com.noojee.acceloapi.progressions
+au.com.noojee.acceloapi.util

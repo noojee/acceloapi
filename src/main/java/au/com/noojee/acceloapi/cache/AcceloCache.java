@@ -3,6 +3,7 @@ package au.com.noojee.acceloapi.cache;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -61,7 +62,8 @@ public enum AcceloCache
 				.removalListener(notification ->
 					{
 						// if (!(notification.getKey() instanceof SingleEntityCacheKey))
-						if (notification.getCause() != RemovalCause.REPLACED)
+						if (notification.getCause() 
+								!= RemovalCause.REPLACED)
 							logger.error(
 									"Cache eviction of " + notification.getKey() + " because: "
 											+ notification.getCause());
@@ -343,10 +345,9 @@ public enum AcceloCache
 								list = queryCache.get(k);
 
 								// find and remove the old version of the entity.
-								AcceloEntity element = list.stream().filter(e -> e.getId() == entity.getId())
+								list.stream().filter(e -> e.getId() == entity.getId())
 										.findFirst()
-										.get();
-								list.remove(element);
+										.ifPresent(element -> list.remove(element));
 
 								// add the new version of the entity.
 								list.add(entity);
