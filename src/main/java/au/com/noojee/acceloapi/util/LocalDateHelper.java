@@ -29,4 +29,15 @@ public class LocalDateHelper
 		else
 			return rhs;
 	}
+	
+	/**
+	 * Checks if the LocalDateTime is null or is set to zero.
+	 *  
+	 * @param dateTimeStarted
+	 * @return true if null or zero.
+	 */
+	public static boolean isEmpty(LocalDate date)
+	{
+		return date == null || date == Constants.DATEZERO ;
+	}
 }

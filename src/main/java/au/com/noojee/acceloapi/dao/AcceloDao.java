@@ -88,7 +88,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 	public E getById(int id) throws AcceloException
 	{
-		return getById(getEndPoint(), id, AcceloFieldList.ALL);
+		return getById(getEndPoint(), id, getFieldList(), false);
 	}
 	
 	public E getById(int id, boolean refreshCache) throws AcceloException
@@ -97,9 +97,9 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	}
 
 
-	protected E getById(EndPoint endpoint, int id, AcceloFieldList fields) throws AcceloException
+	protected E getById(EndPoint endpoint, int id) throws AcceloException
 	{
-		return getById(endpoint, id, fields, false);
+		return getById(endpoint, id, getFieldList(), false);
 	}
 	protected E getById(EndPoint endpoint, int id, AcceloFieldList fields, boolean refreshCache) throws AcceloException
 	{
@@ -181,6 +181,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 */
 	public E update(E entity)
 	{
+		entity.setFieldList(getFieldList());
 		
 		preUpdateValidation(entity);
 

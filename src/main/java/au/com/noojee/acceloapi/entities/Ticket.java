@@ -14,7 +14,7 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.OrderByField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.entities.types.TicketStatus;
-import au.com.noojee.acceloapi.util.Constants;
+import au.com.noojee.acceloapi.util.LocalDateTimeHelper;
 
 public class Ticket extends AcceloEntity<Ticket>
 {
@@ -140,7 +140,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	 */
 	public boolean isOpen()
 	{
-		return getDateTimeClosed().equals(Constants.DATETIMEZERO)
+		return LocalDateTimeHelper.isEmpty(getDateTimeClosed())
 				|| getDateTimeClosed().isAfter(LocalDateTime.now()); // I don't think this is possible. but still.
 	}
 
@@ -156,7 +156,7 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	private String trim(String field)
 	{
-		return (field == null ? null : field.trim());
+		return (field == null ? "" : field.trim());
 	}
 
 	public String getCustomId()
@@ -431,7 +431,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.contract = contract;
 	}
 
-	public void setResolution_detail(String resolution_detail)
+	public void setResolutionDetail(String resolution_detail)
 	{
 		this.resolution_detail = resolution_detail;
 	}

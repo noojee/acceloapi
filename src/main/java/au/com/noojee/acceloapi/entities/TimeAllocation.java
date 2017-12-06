@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
-import au.com.noojee.acceloapi.util.Constants;
 
 public class TimeAllocation extends AcceloEntity<TimeAllocation>
 {

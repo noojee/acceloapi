@@ -35,17 +35,22 @@ public class ContactDao extends AcceloDao<Contact>
 
 	public List<Contact> getByPhone(String phone) throws AcceloException
 	{
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add(AcceloFieldList._ALL);
-		fields.add(Company.FIELDS_ALL);
-
 		AcceloFilter<Contact> filters = new AcceloFilter<>();
 		filters.where(filters.eq(Contact_.contact_number, phone));
 
-		List<Contact> contacts = getByFilter(filters, fields);
+		List<Contact> contacts = getByFilter(filters);
 
 		return contacts;
 
+	}
+
+	@Override
+	protected AcceloFieldList getFieldList()
+	{
+		AcceloFieldList fields = new AcceloFieldList();
+		fields.add(AcceloFieldList._ALL);
+		fields.add(Company.FIELDS_ALL);
+		return fields;
 	}
 
 	/**

@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
-import au.com.noojee.acceloapi.util.Constants;
 
 
 

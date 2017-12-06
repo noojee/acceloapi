@@ -23,7 +23,7 @@ public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 		try
 		{
 			periods = AcceloApi.getInstance().getAll(EndPoint.contracts.getURL(contract.getId(), "/periods"),
-					new AcceloFilter<ContractPeriod>(), AcceloFieldList.ALL,
+					new AcceloFilter<ContractPeriod>(), getFieldList(),
 					ResponseList.class);
 		}
 		catch (IOException e)
@@ -33,6 +33,12 @@ public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 
 		return periods;
 
+	}
+
+	@Override
+	protected AcceloFieldList getFieldList()
+	{
+		return AcceloFieldList.ALL;
 	}
 
 	@Override
@@ -75,7 +81,6 @@ public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 		}
 
 	}
-
 
 	@Override
 	protected Class<? extends AcceloResponse<ContractPeriod>> getResponseClass()

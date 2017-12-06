@@ -20,6 +20,10 @@ public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Compara
 	@SuppressWarnings("unused")
 	private String[] _fields = new String[] {AcceloFieldList._ALL};
 
+	public void setFieldList(AcceloFieldList acceloFieldList)
+	{
+		_fields = acceloFieldList.fields();
+	}
 	public int getId()
 	{
 		return id;

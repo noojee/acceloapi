@@ -8,7 +8,6 @@ import org.javamoney.moneta.Money;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
-import au.com.noojee.acceloapi.util.Constants;
 import au.com.noojee.acceloapi.util.Conversions;
 
 public class Contract extends AcceloEntity<Contract> 

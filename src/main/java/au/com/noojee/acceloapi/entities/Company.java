@@ -15,7 +15,6 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
-import au.com.noojee.acceloapi.util.Constants;
 
 public class Company extends AcceloEntity<Company>
 {

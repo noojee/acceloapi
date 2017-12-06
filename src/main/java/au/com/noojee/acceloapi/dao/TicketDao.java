@@ -1,5 +1,7 @@
 package au.com.noojee.acceloapi.dao;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,6 +23,7 @@ import au.com.noojee.acceloapi.entities.meta.Ticket_;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.util.Constants;
+import au.com.noojee.acceloapi.util.LocalDateTimeHelper;
 import au.com.noojee.acceloapi.util.StreamMaths;
 import au.com.noojee.acceloapi.util.Tuple;
 
@@ -34,9 +37,7 @@ public class TicketDao extends AcceloDao<Ticket>
 	@Override
 	public Ticket getById(int ticketNo) throws AcceloException
 	{
-		AcceloFieldList fields = getDefaultFields();
-
-		return getById(EndPoint.tickets, ticketNo, fields);
+		return getById(EndPoint.tickets, ticketNo);
 	}
 
 	/**
@@ -47,12 +48,9 @@ public class TicketDao extends AcceloDao<Ticket>
 	@Override
 	public List<Ticket> getByFilter(AcceloFilter<Ticket> filter) throws AcceloException
 	{
-		AcceloFieldList fields = getDefaultFields();
-
-		return getByFilter(filter, fields);
+		return super.getByFilter(filter);
 	}
 
-	
 	/**
 	 * Returns a list of tickets attached to the passed contract.
 	 * 
@@ -66,8 +64,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.eq(Ticket_.contract, contract.getId()));
 
-		AcceloFieldList fields = getDefaultFields();
-		return this.getByFilter(filter, fields);
+		return this.getByFilter(filter);
 	}
 
 	/**
@@ -83,8 +80,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.against(AgainstType.company, company.getId()));
 
-		AcceloFieldList fields = getDefaultFields();
-		return this.getByFilter(filter, fields);
+		return this.getByFilter(filter);
 	}
 
 	/**
@@ -108,8 +104,7 @@ public class TicketDao extends AcceloDao<Ticket>
 				.and(filter.after(Ticket_.date_closed, dayBefore)
 						.or(filter.before(Ticket_.date_closed, Constants.DATEZERO))));
 
-		AcceloFieldList fields = getDefaultFields();
-		return this.getByFilter(filter, fields);
+		return this.getByFilter(filter);
 	}
 
 	/**
@@ -127,8 +122,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.eq(Ticket_.contract, 0).and(filter.against(AgainstType.company, company.getId())));
 
-		AcceloFieldList fields = getDefaultFields();
-		return this.getByFilter(filter, fields);
+		return this.getByFilter(filter);
 
 	}
 
@@ -171,7 +165,6 @@ public class TicketDao extends AcceloDao<Ticket>
 		return contact;
 	}
 
-	
 	public Duration sumMTDWork(Ticket ticket)
 	{
 		Duration mtdWork = null;
@@ -182,7 +175,8 @@ public class TicketDao extends AcceloDao<Ticket>
 			List<Activity> activities = new ActivityDao().getByTicket(ticket);
 			long work = activities.stream().filter(a ->
 				{
-					return a.getDateTimeCreated().toLocalDate().isAfter(startOfMonth) || a.getDateTimeCreated().toLocalDate().isEqual(startOfMonth);
+					return a.getDateTimeCreated().toLocalDate().isAfter(startOfMonth)
+							|| a.getDateTimeCreated().toLocalDate().isEqual(startOfMonth);
 				}) // greater than or equal to first day of month.
 					.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
@@ -208,11 +202,16 @@ public class TicketDao extends AcceloDao<Ticket>
 
 			long work = activities.stream().filter(a ->
 				{
-					return (a.getDateTimeCreated().toLocalDate().isAfter(startOfLastMonth) // greater than or equal to the 1st day of last
-																			// month.
+					return (a.getDateTimeCreated().toLocalDate().isAfter(startOfLastMonth) // greater than or equal to
+																							// the 1st day of last
+							// month.
 							|| a.getDateTimeCreated().toLocalDate().isEqual(startOfLastMonth))
-							&& a.getDateTimeCreated().toLocalDate().isBefore(LocalDate.now().withDayOfMonth(1)) // before the first day of
-																								// the current month.
+							&& a.getDateTimeCreated().toLocalDate().isBefore(LocalDate.now().withDayOfMonth(1)) // before
+																												// the
+																												// first
+																												// day
+																												// of
+					// the current month.
 					;
 				}).mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
@@ -233,7 +232,7 @@ public class TicketDao extends AcceloDao<Ticket>
 	public Duration totalWork(Ticket ticket)
 	{
 		ActivityDao daoActivity = new ActivityDao();
-		
+
 		long work = daoActivity.getByTicket(ticket, true).stream()
 				.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
@@ -266,15 +265,14 @@ public class TicketDao extends AcceloDao<Ticket>
 	}
 
 	/**
-	 * Rounds billing up on activities to the nears rounding block (roundToMinutes).
-	 * If the excess over the nearest rounding block is no more than leawayMinutes then we don't round up.
-	 * 
-	 * The oldest activity is selected for adjustment, then deleted and replaced with the a new replacement activity
-	 * that contains the correct billings.
+	 * Rounds billing up on activities to the nears rounding block (roundToMinutes). If the excess over the nearest
+	 * rounding block is no more than leawayMinutes then we don't round up. The oldest activity is selected for
+	 * adjustment, then deleted and replaced with the a new replacement activity that contains the correct billings.
 	 * 
 	 * @param a replacement activity for the activity that was adjusted.
 	 */
-	public Tuple<Optional<Activity>, Optional<Activity>> roundBilling(Ticket ticket, long roundToMinutes, long leawayMinutes)
+	public Tuple<Optional<Activity>, Optional<Activity>> roundBilling(Ticket ticket, long roundToMinutes,
+			long leawayMinutes)
 	{
 
 		ActivityDao daoActivity = new ActivityDao();
@@ -289,7 +287,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		Optional<Activity> replacementActivity = oldestActivity
 				.map(activity -> doRounding(roundToMinutes, leawayMinutes, activities, activity));
 
-		return new  Tuple<>(oldestActivity, replacementActivity);
+		return new Tuple<>(oldestActivity, replacementActivity);
 	}
 
 	private Activity doRounding(long roundToMinutes, long leawayMinutes,
@@ -308,7 +306,8 @@ public class TicketDao extends AcceloDao<Ticket>
 			rounded = (long) (Math.ceil(minutes / (float) roundToMinutes) * roundToMinutes);
 
 		Activity oActivity = null;
-		if (rounded != minutes)
+		// If billable minutes is zero then we assume this ticket isn't billable.
+		if (minutes != 0 && rounded != minutes)
 		{
 			// Update the selected activity so the total billable for the ticket is rounded up to the nearest
 			// fifteen minutes.
@@ -318,7 +317,7 @@ public class TicketDao extends AcceloDao<Ticket>
 
 			// We are about to destroy the original created date so if started date is zero
 			// then lets push the created date into the started date.
-			if (selectedActivity.getDateTimeStarted() == Constants.DATETIMEZERO)
+			if (LocalDateTimeHelper.isEmpty(selectedActivity.getDateTimeStarted()))
 				selectedActivity.setDateTimeStarted(selectedActivity.getDateTimeCreated());
 			oActivity = new ActivityDao().replace(selectedActivity);
 		}
@@ -335,16 +334,16 @@ public class TicketDao extends AcceloDao<Ticket>
 		}
 
 	}
-	
-	private AcceloFieldList getDefaultFields()
+
+	@Override
+	protected AcceloFieldList getFieldList()
 	{
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add("_ALL");
 		fields.add("status._ALL");
-		//fields.add("priority._ALL");
+		// fields.add("priority._ALL");
 		return fields;
 	}
-
 
 	@Override
 	protected EndPoint getEndPoint()
@@ -376,6 +375,22 @@ public class TicketDao extends AcceloDao<Ticket>
 	protected Class<? extends AcceloResponse<Ticket>> getResponseClass()
 	{
 		return TicketDao.Response.class;
+	}
+
+	public URL getEditURL(String domain, Ticket ticket)
+	{
+		URL acceloEditURL = null;
+		try
+		{
+			String action = "?action=edit_support_issue&id=" + ticket.getId();
+			acceloEditURL = new URL("https", domain, 443, action);
+		}
+		catch (MalformedURLException e)
+		{
+
+		}
+		return acceloEditURL;
+
 	}
 
 }

@@ -17,14 +17,10 @@ public class CompanyDao extends AcceloDao<Company>
 
 	public Company getByName(String companyName) throws AcceloException
 	{
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add(AcceloFieldList._ALL);
-		fields.add(Contact.FIELDS_ALL);
-
 		AcceloFilter<Company> filter = new AcceloFilter<>();
 		filter.where(filter.search(companyName));
 
-		List<Company> companies = getByFilter(filter, fields);
+		List<Company> companies = getByFilter(filter);
 
 		return companies.size() > 0 ? companies.get(0) : null;
 	}
@@ -50,6 +46,16 @@ public class CompanyDao extends AcceloDao<Company>
 		return  new ContractDao().getActiveContract(company) != null;
 	}
 
+	
+
+	@Override
+	protected AcceloFieldList getFieldList()
+	{
+		AcceloFieldList fields = new AcceloFieldList();
+		fields.add(AcceloFieldList._ALL);
+		fields.add(Contact.FIELDS_ALL);
+		return fields;
+	}
 
 	@Override
 	protected EndPoint getEndPoint()

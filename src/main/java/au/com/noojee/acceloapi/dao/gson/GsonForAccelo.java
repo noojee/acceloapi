@@ -21,7 +21,6 @@ import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.Activity.Standing;
 import au.com.noojee.acceloapi.entities.Priority;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
-import au.com.noojee.acceloapi.util.Constants;
 import au.com.noojee.acceloapi.util.Conversions;
 
 public class GsonForAccelo

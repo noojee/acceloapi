@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
-import au.com.noojee.acceloapi.util.Constants;
 
 public class Invoice extends AcceloEntity<Invoice>
 {
@@ -34,7 +33,7 @@ public class Invoice extends AcceloEntity<Invoice>
 	@DateFilterField
 	private LocalDate date_due ; // unix ts The date the invoice is due.
 	@DateFilterField
-	private LocalDateTime date_modified = Constants.DATETIMEZERO; // unix ts The date the invoice was last modified.
+	private LocalDateTime date_modified; // unix ts The date the invoice was last modified.
 	private int contact; // The id of the contact to whom the invoice is to be billed.
 	private int affiliation_id; // unsigned The unique identifier for the affiliation the invoice is raised against.
 	private int affiliation; // unsigned or object The affiliation against whom the invoice is raised.
