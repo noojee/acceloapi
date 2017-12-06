@@ -43,9 +43,9 @@ public class Contact extends AcceloEntity<Contact>
 	private String invoice_method;
 
 	@DateFilterField
-	private LocalDateTime date_created = Constants.DATETIMEZERO;
+	private LocalDateTime date_created ;
 	@DateFilterField
-	private LocalDateTime date_modified = Constants.DATETIMEZERO;
+	private LocalDateTime date_modified ;
 
 	@SuppressWarnings("unused")
 	private class Meta implements MetaBasicFilterFields

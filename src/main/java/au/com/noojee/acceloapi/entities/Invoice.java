@@ -30,9 +30,9 @@ public class Invoice extends AcceloEntity<Invoice>
 	private int modified_by; // unsigned The unique identifier of the staff member who
 
 	@DateFilterField
-	private LocalDate date_raised = Constants.DATEZERO; // unix ts The date the invoice was raised.
+	private LocalDate date_raised ; // unix ts The date the invoice was raised.
 	@DateFilterField
-	private LocalDate date_due = Constants.DATEZERO; // unix ts The date the invoice is due.
+	private LocalDate date_due ; // unix ts The date the invoice is due.
 	@DateFilterField
 	private LocalDateTime date_modified = Constants.DATETIMEZERO; // unix ts The date the invoice was last modified.
 	private int contact; // The id of the contact to whom the invoice is to be billed.

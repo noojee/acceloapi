@@ -22,9 +22,9 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 	private int against_id;
 	
 	@DateFilterField
-	private LocalDateTime date_locked = Constants.DATETIMEZERO;	// unix ts	The date the activity was locked, that is, when the logged time was approved for invoicing.
+	private LocalDateTime date_locked ;	// unix ts	The date the activity was locked, that is, when the logged time was approved for invoicing.
 	@DateFilterField
-	private LocalDateTime date_created = Constants.DATETIMEZERO;	// unix ts	The date the time was logged.
+	private LocalDateTime date_created ;	// unix ts	The date the time was logged.
 	
 	
 	public String getStanding()

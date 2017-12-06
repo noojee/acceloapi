@@ -16,15 +16,15 @@ public class Contract extends AcceloEntity<Contract>
 	private int company;			// The owning company id.
 	private String title;
 	@DateFilterField
-	private LocalDateTime date_created= Constants.DATETIMEZERO;
+	private LocalDateTime date_created;
 	@DateFilterField
-	private LocalDate date_started= Constants.DATEZERO;
+	private LocalDate date_started;
 	@DateFilterField
-	private LocalDate date_period_expires= Constants.DATEZERO;
+	private LocalDate date_period_expires;
 	@DateFilterField
-	private LocalDate date_expires= Constants.DATEZERO;
+	private LocalDate date_expires;
 	
-	private LocalDateTime date_last_interacted= Constants.DATETIMEZERO;
+	private LocalDateTime date_last_interacted;
 	private int renew_days;
 	@BasicFilterField
 	private String standing;

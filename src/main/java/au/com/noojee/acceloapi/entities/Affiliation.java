@@ -33,10 +33,10 @@ public class Affiliation extends AcceloEntity<Affiliation>
 
 	private String position; // ??
 
-	private LocalDateTime date_last_interacted = Constants.DATETIMEZERO; // unix time
+	private LocalDateTime date_last_interacted; // unix time
 
 	@DateFilterField
-	private LocalDateTime date_modified = Constants.DATETIMEZERO; // unix time
+	private LocalDateTime date_modified; // unix time
 
 	private int staff_bookmarked;
 

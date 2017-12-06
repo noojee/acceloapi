@@ -13,13 +13,13 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 	@BasicFilterField(name = "contract")
 	private int contract_id;
 	@DateFilterField
-	private LocalDateTime date_created = Constants.DATETIMEZERO;
+	private LocalDateTime date_created ;
 	@DateFilterField
-	private LocalDate date_commenced = Constants.DATEZERO;
+	private LocalDate date_commenced ;
 	@DateFilterField
-	private LocalDate date_closed = Constants.DATEZERO;
+	private LocalDate date_closed ;
 	@DateFilterField
-	private LocalDate date_expires = Constants.DATEZERO;
+	private LocalDate date_expires ;
 
 	@BasicFilterField
 	private String budget_type; // pre-paid

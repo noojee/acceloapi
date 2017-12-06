@@ -27,7 +27,7 @@ public class Request extends AcceloEntity<Request>
 	private int lead_id; // The lead id of the request. If this is not provided, affiliation_id or affiliation details must be specified.
 	private int thread_id;
 	@DateFilterField
-	private LocalDateTime date_created = Constants.DATETIMEZERO;
+	private LocalDateTime date_created ;
 	@BasicFilterField
 	private int type_id; // The type id of the request. Want to get a list of types? See the get request types endpoint.
 	@BasicFilterField

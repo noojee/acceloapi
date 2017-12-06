@@ -41,9 +41,9 @@ public class Company extends AcceloEntity<Company>
 	private int postal_address;
 	
 	@DateFilterField
-	private LocalDateTime date_created= Constants.DATETIMEZERO;
+	private LocalDateTime date_created;
 	@DateFilterField
-	private LocalDateTime date_modified= Constants.DATETIMEZERO;
+	private LocalDateTime date_modified;
 	
 	private String comments;
 	@BasicFilterField

@@ -81,26 +81,26 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	@OrderByField
 	@DateFilterField
-	private LocalDateTime date_submitted = Constants.DATETIMEZERO;
+	private LocalDateTime date_submitted ;
 
 	@OrderByField
 	@DateFilterField
-	private LocalDateTime date_opened = Constants.DATETIMEZERO;
+	private LocalDateTime date_opened ;
 
 	@OrderByField
-	private LocalDateTime date_resolved = Constants.DATETIMEZERO;
-
-	@OrderByField
-	@DateFilterField
-	private LocalDateTime date_closed = Constants.DATETIMEZERO;
+	private LocalDateTime date_resolved ;
 
 	@OrderByField
 	@DateFilterField
-	private LocalDateTime date_started = Constants.DATETIMEZERO;
+	private LocalDateTime date_closed ;
 
 	@OrderByField
 	@DateFilterField
-	private LocalDate date_due = Constants.DATEZERO;
+	private LocalDateTime date_started ;
+
+	@OrderByField
+	@DateFilterField
+	private LocalDate date_due ;
 	@BasicFilterField
 	private int opened_by; // staff member
 	@BasicFilterField
@@ -117,7 +117,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int billable_seconds;
 
 	@OrderByField
-	private LocalDate date_last_interacted = Constants.DATEZERO;
+	private LocalDate date_last_interacted ;
 
 	@BasicFilterField
 	private int contract; // the contract id or 0 if this ticket is unassigned.

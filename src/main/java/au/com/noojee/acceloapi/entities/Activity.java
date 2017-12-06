@@ -90,15 +90,15 @@ public class Activity extends AcceloEntity<Activity>
 	private int contract_period_id;
 
 	@DateFilterField
-	private LocalDateTime date_created = Constants.DATETIMEZERO;
+	private LocalDateTime date_created;
 	@DateFilterField
-	private LocalDateTime date_started = Constants.DATETIMEZERO;
+	private LocalDateTime date_started;
 	@DateFilterField
-	private LocalDateTime date_ended = Constants.DATETIMEZERO;
+	private LocalDateTime date_ended;
 	@DateFilterField
-	private LocalDateTime date_logged = Constants.DATETIMEZERO;
+	private LocalDateTime date_logged;
 	@DateFilterField
-	private LocalDateTime date_modified = Constants.DATETIMEZERO;
+	private LocalDateTime date_modified;
 
 	private long billable; // amount of billable time logged for the activity in
 							// seconds.
