@@ -2,6 +2,7 @@ package au.com.noojee.acceloapi.util;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
@@ -30,6 +31,12 @@ public interface Formatters
 	{
 		return (date == null ? "" : date.format(dateFormat));
 	}
+	
+	public static String format(LocalDateTime dateTime)
+	{
+		return (dateTime == null ? "" : dateTime.format(dateFormat));
+	}
+
 	
 	/**
 	 * Formats the Duration to H:mm

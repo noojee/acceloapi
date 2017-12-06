@@ -1,12 +1,14 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.javamoney.moneta.Money;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
+import au.com.noojee.acceloapi.util.Constants;
 import au.com.noojee.acceloapi.util.Conversions;
 
 public class Contract extends AcceloEntity<Contract> 
@@ -14,14 +16,15 @@ public class Contract extends AcceloEntity<Contract>
 	private int company;			// The owning company id.
 	private String title;
 	@DateFilterField
-	private LocalDate date_created;
+	private LocalDateTime date_created= Constants.DATETIMEZERO;
 	@DateFilterField
-	private LocalDate date_started;
+	private LocalDate date_started= Constants.DATEZERO;
 	@DateFilterField
-	private LocalDate date_period_expires;
+	private LocalDate date_period_expires= Constants.DATEZERO;
 	@DateFilterField
-	private LocalDate date_expires;
-	private LocalDate date_last_interacted;
+	private LocalDate date_expires= Constants.DATEZERO;
+	
+	private LocalDateTime date_last_interacted= Constants.DATETIMEZERO;
 	private int renew_days;
 	@BasicFilterField
 	private String standing;
@@ -74,7 +77,7 @@ public class Contract extends AcceloEntity<Contract>
 	}
 
 
-	public LocalDate getDateCreated()
+	public LocalDateTime getDateTimeCreated()
 	{
 		return date_created;
 	}
@@ -94,7 +97,7 @@ public class Contract extends AcceloEntity<Contract>
 		return date_expires;
 	}
 
-	public LocalDate getDateLastInteracted()
+	public LocalDateTime getDateTimeLastInteracted()
 	{
 		return date_last_interacted;
 	}

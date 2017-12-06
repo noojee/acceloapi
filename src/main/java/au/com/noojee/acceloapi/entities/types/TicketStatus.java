@@ -1,9 +1,13 @@
 package au.com.noojee.acceloapi.entities.types;
 
-import com.google.gson.annotations.SerializedName;
+import au.com.noojee.acceloapi.entities.Ticket.Standing;
 
-public enum TicketStatus
+public class TicketStatus
 {
+	/** This shouldn't be here. Need to move it elsewhere **/
+	/*
+	enum NoojeeTicketEnums
+	{
 	@SerializedName("2")
 	Open(2),
 	@SerializedName("4")
@@ -74,23 +78,25 @@ public enum TicketStatus
 	CreateCreditNote(43),
 	@SerializedName("44")
 	ConfigurationPending(44);
+	};
+	*/
 		
-	int id; // A unique identifier for the status.
-	String title; // A title for the status.
-	String color; // The color the status will appear in the Accelo deployment.
-	String standing;// The standing of the status. For example “active”,
-					// “paused”.
-	String start; // Either “yes” or “no”, whether this status is available upon
-					// creation of the object.
-	int ordering;// A number representing the status’ order on the Accelo
-					// deployment.
+	 
+		
+	private int id; 						// A unique identifier for the status.
+	private String title; 			// A title for the status.
+	private String color; 			// The color the status will appear in the Accelo deployment.
+	private Standing standing;	// The standing of the status. For example “active”, “paused”.
+	private String start; 			// Either “yes” or “no”, whether this status is available upon creation of the object.
+	int ordering;						// A number representing the status’ order on the Accelo deployment.
 	
-	
+	/*
 	TicketStatus(int id)
 	{
 		this.id = id;
 		
-		String[] words = this.name().split("(?<!^)(?=[A-Z])");
+	
+		 String[] words = this.name().split("(?<!^)(?=[A-Z])");
 		
 		this.title = "";
 		for (String word : words)
@@ -101,6 +107,7 @@ public enum TicketStatus
 		}
 		
 	}
+	*/
 	
 	
 
@@ -112,6 +119,13 @@ public enum TicketStatus
 	public int getId()
 	{
 		return id;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "TicketStatus [id=" + id + ", title=" + title + ", color=" + color + ", standing=" + standing
+				+ ", start=" + start + ", ordering=" + ordering + "]";
 	}
 
 

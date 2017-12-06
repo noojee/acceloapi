@@ -64,6 +64,7 @@ public class ProgressDao
 			
 			if (result.getResponseCode() == 200)
 			{
+				@SuppressWarnings("unused")
 				ProgressionRunResponse response = result.parseBody(ProgressionRunResponse.class);
 				
 				

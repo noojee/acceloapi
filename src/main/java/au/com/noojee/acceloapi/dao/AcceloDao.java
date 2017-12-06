@@ -50,10 +50,8 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 */
 	public List<E> getByFilter(AcceloFilter<E> filter) throws AcceloException
 	{
-
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add("_ALL");
-
+		
+		AcceloFieldList fields = getFieldList();
 		return this.getByFilter(filter, fields);
 	}
 
@@ -92,13 +90,25 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	{
 		return getById(getEndPoint(), id, AcceloFieldList.ALL);
 	}
+	
+	public E getById(int id, boolean refreshCache) throws AcceloException
+	{
+		return getById(getEndPoint(), id, AcceloFieldList.ALL, refreshCache);
+	}
+
 
 	protected E getById(EndPoint endpoint, int id, AcceloFieldList fields) throws AcceloException
+	{
+		return getById(endpoint, id, fields, false);
+	}
+	protected E getById(EndPoint endpoint, int id, AcceloFieldList fields, boolean refreshCache) throws AcceloException
 	{
 		E entity = null;
 		if (id != 0)
 		{
 			AcceloFilter<E> filter = new AcceloFilter<>();
+			if (refreshCache)
+				filter.refreshCache();
 			FilterField<E, Integer> idField = new FilterField<E, Integer>("id");
 			filter.where(filter.eq(idField, id));
 
@@ -206,46 +216,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	}
 
 
-	/**
-	 * Uses reflection to build the AcceloFieldValues. We only marshal private fields that are not transient and not
-	 * static.
-	 * 
-	 * @param entity
-	 * @return
-	 * @throws IllegalAccessException
-	 */
-	/*
-	private AcceloFieldValues marshalFields(AcceloEntity<E> entity)
-	{
-		AcceloFieldValues fields = new AcceloFieldValues();
-
-		try
-		{
-			Field[] entityFields = entity.getClass().getDeclaredFields();
-			Field[] inheritedFields = entity.getClass().getSuperclass().getDeclaredFields();
-			List<Field> fieldList = new ArrayList<>(Arrays.asList(entityFields));
-			fieldList.addAll(Arrays.asList(inheritedFields));
-			for (Field field : fieldList)
-			{
-				int modifiers = field.getModifiers();
-				if (Modifier.isPrivate(modifiers) && !Modifier.isTransient(modifiers) && !Modifier.isStatic(modifiers))
-				{
-					field.setAccessible(true);
-					Object value;
-					value = field.get(entity);
-
-					fields.add(field.getName(), (value == null ? "" : value.toString()));
-				}
-			}
-		}
-		catch (IllegalArgumentException | IllegalAccessException e)
-		{
-			throw new AcceloException(e);
-		}
-
-		return fields;
-	}
-	*/
+	
 
 	public void delete(E entity)
 	{
@@ -280,7 +251,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	{
 		// We need to clear the query from the cache now as after the
 		// delete/insert the query will be invalid but the entity won't exists
-		// so we can flush it.
+		// so we can't flush it.
 		AcceloCache.getInstance().flushEntity(entity, true);
 		
 		// we do the insert first so if anything goes wrong we don't loose data.
@@ -348,6 +319,19 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		preInsertValidation(entity);
 		
 	}
+	
+	/**
+	 * Override this method if you need to have you Dao return other than the default fieldlist of ALL.
+	 * 
+	 * This is typcially used to get sub-objects like the ticket priority field which can't be gotten via a direct api call.
+	 */
+	protected AcceloFieldList getFieldList()
+	{
+		AcceloFieldList fields = new AcceloFieldList();
+		fields.add("_ALL");
+		
+		return fields;
+}
 
 
 }

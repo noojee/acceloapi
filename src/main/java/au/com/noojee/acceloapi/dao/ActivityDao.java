@@ -11,12 +11,12 @@ import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.Ticket;
+import au.com.noojee.acceloapi.entities.meta.Activity_;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 public class ActivityDao extends AcceloDao<Activity>
 {
-	@SuppressWarnings("unused")
 	static private Logger logger = LogManager.getLogger(Activity.class);
 
 	public List<Activity> getByTicket(Ticket ticket) throws AcceloException
@@ -26,6 +26,40 @@ public class ActivityDao extends AcceloDao<Activity>
 
 		return getByFilter(filter);
 	}
+	
+	/**
+	 * Activities can be roughly categorized in to staff generated and system generated activities. unlike the method
+	 * getActivities this method only returns activites which were logged by a staff member. Mostly we are only
+	 * interested in staff generated activities (for the purposes of timesheets and ticket billable hours). As such you
+	 * will normally want to exclude system activities. This method is generally more useful as there are a lot of
+	 * system activites that for the most part you just don't care about.
+	 * 
+	 * @param ticket
+	 * @param excludeSystemActivities if true then we exclude system activities from the result.
+	 * @return
+	 */
+	public List<Activity> getByTicket(Ticket ticket, boolean excludeSystemActivities)
+	{
+		List<Activity> list = null;
+		try
+		{
+			AcceloFilter<Activity> filter = new AcceloFilter<>();
+
+			filter.where(filter.against(AgainstType.ticket, ticket.getId()));
+
+			if (excludeSystemActivities)
+				// If the staff field is 0 then this is a system generated activity.
+				filter.and(filter.greaterThan(Activity_.staff, 0));
+
+			list = new ActivityDao().getByFilter(filter);
+		}
+		catch (AcceloException e)
+		{
+			logger.error(e, e);
+		}
+		return list;
+	}
+
 
 	@Override
 	void preInsertValidation(Activity activity)

@@ -2,7 +2,7 @@ package au.com.noojee.acceloapi.entities;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +15,7 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
+import au.com.noojee.acceloapi.util.Constants;
 
 public class Company extends AcceloEntity<Company>
 {
@@ -40,9 +41,10 @@ public class Company extends AcceloEntity<Company>
 	private int postal_address;
 	
 	@DateFilterField
-	private LocalDate date_created;
+	private LocalDateTime date_created= Constants.DATETIMEZERO;
 	@DateFilterField
-	private LocalDate date_modified;
+	private LocalDateTime date_modified= Constants.DATETIMEZERO;
+	
 	private String comments;
 	@BasicFilterField
 	private int default_affiliation;
@@ -123,12 +125,12 @@ public class Company extends AcceloEntity<Company>
 		return fax;
 	}
 
-	public LocalDate getDateCreated()
+	public LocalDateTime getDateTimeCreated()
 	{
 		return date_created;
 	}
 
-	public LocalDate getDateModified()
+	public LocalDateTime getDateTimeModified()
 	{
 		return date_modified;
 	}

@@ -1,7 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.swing.text.html.HTML.Tag;
@@ -17,6 +17,7 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
+import au.com.noojee.acceloapi.util.Constants;
 import au.com.noojee.acceloapi.util.Formatters;
 
 public class Activity extends AcceloEntity<Activity>
@@ -48,28 +49,27 @@ public class Activity extends AcceloEntity<Activity>
 
 		}
 	};
-	
+
 	public enum Standing
 	{
 		unapproved, approved, invoiced, locked, empty;
 	}
-	
 
-	private Medium medium = Medium.note; 		// The type of activity.
-	
+	private Medium medium = Medium.note; // The type of activity.
+
 	private String subject;
-	
+
 	@BasicFilterField
-	private String parent;		// the parent entity of the form "activities/0"
+	private String parent; // the parent entity of the form "activities/0"
 
 	private String thread;
-	
+
 	@BasicFilterField
 	private AgainstType against_type;
 
 	@BasicFilterField
 	private int against_id;
-	
+
 	@BasicFilterField
 	private int owner_id;
 
@@ -90,15 +90,15 @@ public class Activity extends AcceloEntity<Activity>
 	private int contract_period_id;
 
 	@DateFilterField
-	private LocalDate date_created;
+	private LocalDateTime date_created = Constants.DATETIMEZERO;
 	@DateFilterField
-	private LocalDate date_started;
+	private LocalDateTime date_started = Constants.DATETIMEZERO;
 	@DateFilterField
-	private LocalDate date_ended;
+	private LocalDateTime date_ended = Constants.DATETIMEZERO;
 	@DateFilterField
-	private LocalDate date_logged;
+	private LocalDateTime date_logged = Constants.DATETIMEZERO;
 	@DateFilterField
-	private LocalDate date_modified;
+	private LocalDateTime date_modified = Constants.DATETIMEZERO;
 
 	private long billable; // amount of billable time logged for the activity in
 							// seconds.
@@ -110,7 +110,7 @@ public class Activity extends AcceloEntity<Activity>
 	@BasicFilterField
 	private int priority;
 
-	@BasicFilterField(name="class")
+	@BasicFilterField(name = "class")
 	@SerializedName("class")
 	private int _class;
 
@@ -119,48 +119,46 @@ public class Activity extends AcceloEntity<Activity>
 
 	@BasicFilterField
 	private int time_allocation; // The id of the time allocation object for the activity.
-	
+
 	private int rate; // id of the rate object
 	private int rate_charged; // The rate at which the billable time was charged.
-	
+
 	private int thread_id;
-	
+
 	private int parent_id;
 
 	List<Tag> tag; // A list of tags associated with the activity
-	
+
 	@SuppressWarnings("unused")
 	private class Meta implements MetaBasicFilterFields
 	{
 		@BasicFilterField
-		private transient String parent_id; 
-		
+		private transient String parent_id;
+
 		@BasicFilterField
 		private String thread_id;
 
-		
 	}
 
 	public void setOwner(ActivityOwnerType ownerType, int ownerId)
 	{
 		this.owner_type = ownerType;
 		this.owner_id = ownerId;
-		
-	}
 
+	}
 
 	public void setMedium(Medium medium)
 	{
 		this.medium = medium;
 	}
-	
+
 	public Medium getMedium()
 	{
 		return this.medium;
 	}
 
 	public void setSubject(String subject)
-	
+
 	{
 		this.subject = subject;
 	}
@@ -201,17 +199,15 @@ public class Activity extends AcceloEntity<Activity>
 		this.task = taskId;
 	}
 
-	
-	public void setDateStarted(LocalDate dateStarted)
+	public void setDateTimeStarted(LocalDateTime dateStarted)
 	{
 		this.date_started = dateStarted;
 	}
 
-	public void setDateEnded(LocalDate dateEnded)
+	public void setDateTimeEnded(LocalDateTime dateEnded)
 	{
 		this.date_ended = dateEnded;
 	}
-
 
 	public String getSubject()
 	{
@@ -223,13 +219,11 @@ public class Activity extends AcceloEntity<Activity>
 		return parent;
 	}
 
-	
 	public AgainstType getAgainstType()
 	{
 		return against_type;
 	}
 
-	
 	public String getBody()
 	{
 		return body;
@@ -238,26 +232,6 @@ public class Activity extends AcceloEntity<Activity>
 	public String getDetails()
 	{
 		return details;
-	}
-
-	public LocalDate getDateCreated()
-	{
-		return date_created;
-	}
-
-	public LocalDate getDateStarted()
-	{
-		return date_started;
-	}
-
-	public LocalDate getDateEnded()
-	{
-		return date_ended;
-	}
-
-	public LocalDate getDateModified()
-	{
-		return date_modified;
 	}
 
 	public int getStaff()
@@ -295,7 +269,6 @@ public class Activity extends AcceloEntity<Activity>
 		return contract_period_id;
 	}
 
-
 	public int getAgainstId()
 	{
 		return against_id;
@@ -314,11 +287,6 @@ public class Activity extends AcceloEntity<Activity>
 	public Visibility getVisiblity()
 	{
 		return visibility;
-	}
-
-	public LocalDate getDateLogged()
-	{
-		return date_logged;
 	}
 
 	public Duration getBillable()
@@ -345,8 +313,6 @@ public class Activity extends AcceloEntity<Activity>
 	{
 		return time_allocation;
 	}
-	
-
 
 	public int getRateId()
 	{
@@ -368,18 +334,113 @@ public class Activity extends AcceloEntity<Activity>
 		return standing != null && (standing.equals(Standing.approved) || standing.equals(Standing.invoiced));
 	}
 
+	public AgainstType getAgainst_type()
+	{
+		return against_type;
+	}
+
+	public int getAgainst_id()
+	{
+		return against_id;
+	}
+
+	public int getOwner_id()
+	{
+		return owner_id;
+	}
+
+	public ActivityOwnerType getOwner_type()
+	{
+		return owner_type;
+	}
+
+	public Visibility getVisibility()
+	{
+		return visibility;
+	}
+
+	public int getInvoice_id()
+	{
+		return invoice_id;
+	}
+
+	public int getContract_period_id()
+	{
+		return contract_period_id;
+	}
+
+	public LocalDateTime getDateTimeCreated()
+	{
+		return date_created;
+	}
+
+	public LocalDateTime getDateTimeStarted()
+	{
+		return date_started;
+	}
+
+	public LocalDateTime getDateTimeEnded()
+	{
+		return date_ended;
+	}
+
+	public LocalDateTime getDateTimeLogged()
+	{
+		return date_logged;
+	}
+
+	public LocalDateTime getDateTimeModified()
+	{
+		return date_modified;
+	}
+
+	public long getNonbillable()
+	{
+		return nonbillable;
+	}
+
+	public int get_class()
+	{
+		return _class;
+	}
+
+	public int getTime_allocation()
+	{
+		return time_allocation;
+	}
+
+	public int getRate()
+	{
+		return rate;
+	}
+
+	public int getRate_charged()
+	{
+		return rate_charged;
+	}
+
+	public int getThread_id()
+	{
+		return thread_id;
+	}
+
+	public int getParent_id()
+	{
+		return parent_id;
+	}
+
 	@Override
 	public int compareTo(Activity o)
 	{
-		return this.getDateCreated().compareTo(o.getDateCreated());
+		return this.getDateTimeCreated().compareTo(o.getDateTimeCreated());
 	}
 
 	@Override
 	public String toString()
 	{
-		return "Activity [id=" + getId() + ", subject=" + subject + ", parent=" + parent 
+		return "Activity [id=" + getId() + ", subject=" + subject + ", parent=" + parent
 				+ ", thread=" + thread + ", against_type=" + against_type + ", against_id="
-				+ against_id + ", owner_id=" + owner_id + ", owner_type=" + owner_type 
+				+ against_id + ", owner_id=" + owner_id + ", owner_type=" + owner_type
 				+ ", body=" + body + ", visibility=" + visibility + ", details=" + details + ", date_created="
 				+ date_created + ", date_started=" + date_started + ", date_ended=" + date_ended + ", date_logged="
 				+ date_logged + ", date_modified=" + date_modified + ", billable=" + billable + ", nonbillable="
@@ -388,119 +449,4 @@ public class Activity extends AcceloEntity<Activity>
 				+ ", tag=" + tag + "]";
 	}
 
-
-	public AgainstType getAgainst_type()
-	{
-		return against_type;
-	}
-
-
-	public int getAgainst_id()
-	{
-		return against_id;
-	}
-
-
-	public int getOwner_id()
-	{
-		return owner_id;
-	}
-
-
-	public ActivityOwnerType getOwner_type()
-	{
-		return owner_type;
-	}
-
-
-	public Visibility getVisibility()
-	{
-		return visibility;
-	}
-
-
-	public int getInvoice_id()
-	{
-		return invoice_id;
-	}
-
-
-	public int getContract_period_id()
-	{
-		return contract_period_id;
-	}
-
-
-	public LocalDate getDate_created()
-	{
-		return date_created;
-	}
-
-
-	public LocalDate getDate_started()
-	{
-		return date_started;
-	}
-
-
-	public LocalDate getDate_ended()
-	{
-		return date_ended;
-	}
-
-
-	public LocalDate getDate_logged()
-	{
-		return date_logged;
-	}
-
-
-	public LocalDate getDate_modified()
-	{
-		return date_modified;
-	}
-
-
-	public long getNonbillable()
-	{
-		return nonbillable;
-	}
-
-
-	public int get_class()
-	{
-		return _class;
-	}
-
-
-	public int getTime_allocation()
-	{
-		return time_allocation;
-	}
-
-
-	public int getRate()
-	{
-		return rate;
-	}
-
-
-	public int getRate_charged()
-	{
-		return rate_charged;
-	}
-
-
-	public int getThread_id()
-	{
-		return thread_id;
-	}
-
-
-	public int getParent_id()
-	{
-		return parent_id;
-	}
-
-	
 }

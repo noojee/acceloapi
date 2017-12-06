@@ -1,80 +1,75 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
+import au.com.noojee.acceloapi.util.Constants;
 
 public class Affiliation extends AcceloEntity<Affiliation>
 {
 	@BasicFilterField
 	private int company; // id of the affiliated company
-	
+
 	@BasicFilterField
 	private int postal_address; // id of an address
-	
+
 	@BasicFilterField
 	private int physical_address; // id of an address
-	
-	
+
 	@BasicFilterField
 	private int contact; // contact id
-
 
 	@SearchFilterField
 	private String phone; // phone no.
 
 	@SearchFilterField
 	private String mobile; // mobile no.
-	
+
 	@SearchFilterField
 	private String email; // email address
-	
+
 	private String position; // ??
-	
-	private LocalDate date_last_interacted; // unix time
-	
+
+	private LocalDateTime date_last_interacted = Constants.DATETIMEZERO; // unix time
+
 	@DateFilterField
-	private LocalDate date_modified; // unix time
-	
+	private LocalDateTime date_modified = Constants.DATETIMEZERO; // unix time
+
 	private int staff_bookmarked;
-	
+
 	@BasicFilterField
 	private String standing;
-	
-	
+
 	@BasicFilterField
 	private String status;
 
-
-
 	private String fax;
-	
-	
+
 	/**
 	 * You can search by these but they aren't returned when you query the entity.
+	 * 
 	 * @author bsutton
-	 *
 	 */
 	class Meta implements MetaBasicFilterFields
 	{
 		@BasicFilterField
-		private transient String contact_number; 
-		
+		private transient String contact_number;
+
 		@SearchFilterField
 		private transient String firstname;
-		
+
 		@SearchFilterField
 		private transient String surname;
 	}
-
 
 	public int getCompanyId()
 	{
 		return company;
 	}
+
 	public void setPhone(String phone)
 	{
 		this.phone = phone;
@@ -130,22 +125,22 @@ public class Affiliation extends AcceloEntity<Affiliation>
 		this.mobile = mobile;
 	}
 
-	public LocalDate getDateLastInteracted()
+	public LocalDateTime getDateTimeLastInteracted()
 	{
 		return date_last_interacted;
 	}
 
-	public void setDateLastInteracted(LocalDate dateLastInteracted)
+	public void setDateTimeLastInteracted(LocalDateTime dateLastInteracted)
 	{
 		this.date_last_interacted = dateLastInteracted;
 	}
 
-	public LocalDate getDateModified()
+	public LocalDateTime getDateTimeModified()
 	{
 		return date_modified;
 	}
 
-	public void setDateModified(LocalDate dateModified)
+	public void setDateTimeModified(LocalDateTime dateModified)
 	{
 		this.date_modified = dateModified;
 	}
@@ -184,11 +179,12 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	{
 		return position;
 	}
-	
+
 	public String getFax()
 	{
 		return fax;
 	}
+
 	public void setFax(String fax)
 	{
 		this.fax = fax;
@@ -197,10 +193,9 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	@Override
 	public int compareTo(Affiliation o)
 	{
-		return this.getDateLastInteracted().compareTo(o.getDateLastInteracted());
+		return this.getDateTimeLastInteracted().compareTo(o.getDateTimeLastInteracted());
 	}
 
-	
 	@Override
 	public String toString()
 	{
@@ -210,8 +205,5 @@ public class Affiliation extends AcceloEntity<Affiliation>
 				+ date_last_interacted + ", date_modified=" + date_modified + ", staff_bookmarked=" + staff_bookmarked
 				+ ", standing=" + standing + "]";
 	}
-
-
-
 
 }

@@ -3,6 +3,7 @@ package au.com.noojee.acceloapi.dao;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
@@ -16,12 +17,12 @@ import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.entities.Contract;
 import au.com.noojee.acceloapi.entities.Staff;
 import au.com.noojee.acceloapi.entities.Ticket;
-import au.com.noojee.acceloapi.entities.meta.Activity_;
 import au.com.noojee.acceloapi.entities.meta.Ticket_;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.util.Constants;
 import au.com.noojee.acceloapi.util.StreamMaths;
+import au.com.noojee.acceloapi.util.Tuple;
 
 public class TicketDao extends AcceloDao<Ticket>
 {
@@ -33,13 +34,9 @@ public class TicketDao extends AcceloDao<Ticket>
 	@Override
 	public Ticket getById(int ticketNo) throws AcceloException
 	{
-
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add("_ALL");
-		fields.add("status(_ALL)");
+		AcceloFieldList fields = getDefaultFields();
 
 		return getById(EndPoint.tickets, ticketNo, fields);
-
 	}
 
 	/**
@@ -50,15 +47,12 @@ public class TicketDao extends AcceloDao<Ticket>
 	@Override
 	public List<Ticket> getByFilter(AcceloFilter<Ticket> filter) throws AcceloException
 	{
-
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add("_ALL");
-		fields.add("status(_ALL)");
+		AcceloFieldList fields = getDefaultFields();
 
 		return getByFilter(filter, fields);
-
 	}
 
+	
 	/**
 	 * Returns a list of tickets attached to the passed contract.
 	 * 
@@ -72,10 +66,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.eq(Ticket_.contract, contract.getId()));
 
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add("_ALL");
-		fields.add("status(_ALL)");
-
+		AcceloFieldList fields = getDefaultFields();
 		return this.getByFilter(filter, fields);
 	}
 
@@ -92,10 +83,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.against(AgainstType.company, company.getId()));
 
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add("_ALL");
-		fields.add("status(_ALL)");
-
+		AcceloFieldList fields = getDefaultFields();
 		return this.getByFilter(filter, fields);
 	}
 
@@ -120,10 +108,7 @@ public class TicketDao extends AcceloDao<Ticket>
 				.and(filter.after(Ticket_.date_closed, dayBefore)
 						.or(filter.before(Ticket_.date_closed, Constants.DATEZERO))));
 
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add("_ALL");
-		fields.add("status(_ALL)");
-
+		AcceloFieldList fields = getDefaultFields();
 		return this.getByFilter(filter, fields);
 	}
 
@@ -142,10 +127,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.eq(Ticket_.contract, 0).and(filter.against(AgainstType.company, company.getId())));
 
-		AcceloFieldList fields = new AcceloFieldList();
-		fields.add("_ALL");
-		fields.add("status(_ALL)");
-
+		AcceloFieldList fields = getDefaultFields();
 		return this.getByFilter(filter, fields);
 
 	}
@@ -189,39 +171,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		return contact;
 	}
 
-	/**
-	 * Activities can be roughly categorized in to staff generated and system generated activities. unlike the method
-	 * getActivities this method only returns activites which were logged by a staff member. Mostly we are only
-	 * interested in staff generated activities (for the purposes of timesheets and ticket billable hours). As such you
-	 * will normally want to exclude system activities. This method is generally more useful as there are a lot of
-	 * system activites that for the most part you just don't care about.
-	 * 
-	 * @param ticket
-	 * @param excludeSystemActivities if true then we exclude system activities from the result.
-	 * @return
-	 */
-	public List<Activity> getActivities(Ticket ticket, boolean excludeSystemActivities)
-	{
-		List<Activity> list = null;
-		try
-		{
-			AcceloFilter<Activity> filter = new AcceloFilter<>();
-
-			filter.where(filter.against(AgainstType.ticket, ticket.getId()));
-
-			if (excludeSystemActivities)
-				// If the staff field is 0 then this is a system generated activity.
-				filter.and(filter.greaterThan(Activity_.staff, 0));
-
-			list = new ActivityDao().getByFilter(filter);
-		}
-		catch (AcceloException e)
-		{
-			logger.error(e, e);
-		}
-		return list;
-	}
-
+	
 	public Duration sumMTDWork(Ticket ticket)
 	{
 		Duration mtdWork = null;
@@ -232,7 +182,7 @@ public class TicketDao extends AcceloDao<Ticket>
 			List<Activity> activities = new ActivityDao().getByTicket(ticket);
 			long work = activities.stream().filter(a ->
 				{
-					return a.getDateCreated().isAfter(startOfMonth) || a.getDateCreated().isEqual(startOfMonth);
+					return a.getDateTimeCreated().toLocalDate().isAfter(startOfMonth) || a.getDateTimeCreated().toLocalDate().isEqual(startOfMonth);
 				}) // greater than or equal to first day of month.
 					.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
@@ -258,10 +208,10 @@ public class TicketDao extends AcceloDao<Ticket>
 
 			long work = activities.stream().filter(a ->
 				{
-					return (a.getDateCreated().isAfter(startOfLastMonth) // greater than or equal to the 1st day of last
+					return (a.getDateTimeCreated().toLocalDate().isAfter(startOfLastMonth) // greater than or equal to the 1st day of last
 																			// month.
-							|| a.getDateCreated().isEqual(startOfLastMonth))
-							&& a.getDateCreated().isBefore(LocalDate.now().withDayOfMonth(1)) // before the first day of
+							|| a.getDateTimeCreated().toLocalDate().isEqual(startOfLastMonth))
+							&& a.getDateTimeCreated().toLocalDate().isBefore(LocalDate.now().withDayOfMonth(1)) // before the first day of
 																								// the current month.
 					;
 				}).mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
@@ -282,8 +232,9 @@ public class TicketDao extends AcceloDao<Ticket>
 	 */
 	public Duration totalWork(Ticket ticket)
 	{
-
-		long work = getActivities(ticket, true).stream()
+		ActivityDao daoActivity = new ActivityDao();
+		
+		long work = daoActivity.getByTicket(ticket, true).stream()
 				.mapToLong(a -> a.getBillable().plus(a.getNonBillable()).getSeconds()).sum();
 
 		return Duration.ofSeconds(work);
@@ -297,21 +248,83 @@ public class TicketDao extends AcceloDao<Ticket>
 	 */
 	public boolean isWorkApproved(Ticket ticket) throws AcceloException
 	{
-		boolean isFullyApproved = getActivities(ticket, true).stream().allMatch(a -> a.isApproved());
+		ActivityDao daoActivity = new ActivityDao();
+		boolean isFullyApproved = daoActivity.getByTicket(ticket, true).stream().allMatch(a -> a.isApproved());
 		return isFullyApproved;
 	}
 
 	public Duration getBillable(Ticket ticket)
 	{
-		return StreamMaths.sum(getActivities(ticket, true).stream(), Activity::getBillable);
+		ActivityDao daoActivity = new ActivityDao();
+		return StreamMaths.sum(daoActivity.getByTicket(ticket, true).stream(), Activity::getBillable);
 	}
 
 	public Duration getNonBillable(Ticket ticket)
 	{
-		return StreamMaths.sum(getActivities(ticket, true).stream(), Activity::getNonBillable);
+		ActivityDao daoActivity = new ActivityDao();
+		return StreamMaths.sum(daoActivity.getByTicket(ticket, true).stream(), Activity::getNonBillable);
 	}
-	
-	
+
+	/**
+	 * Rounds billing up on activities to the nears rounding block (roundToMinutes).
+	 * If the excess over the nearest rounding block is no more than leawayMinutes then we don't round up.
+	 * 
+	 * The oldest activity is selected for adjustment, then deleted and replaced with the a new replacement activity
+	 * that contains the correct billings.
+	 * 
+	 * @param a replacement activity for the activity that was adjusted.
+	 */
+	public Tuple<Optional<Activity>, Optional<Activity>> roundBilling(Ticket ticket, long roundToMinutes, long leawayMinutes)
+	{
+
+		ActivityDao daoActivity = new ActivityDao();
+
+		List<Activity> activities = daoActivity.getByTicket(ticket, true);
+
+		// Find the oldest activity
+		Optional<Activity> oldestActivity = activities.stream()
+				.sorted((a, b) -> (a.getDateTimeCreated().isAfter(b.getDateTimeCreated()) ? 1 : -1)).findFirst();
+
+		// Now add the time to the oldest activity.
+		Optional<Activity> replacementActivity = oldestActivity
+				.map(activity -> doRounding(roundToMinutes, leawayMinutes, activities, activity));
+
+		return new  Tuple<>(oldestActivity, replacementActivity);
+	}
+
+	private Activity doRounding(long roundToMinutes, long leawayMinutes,
+			List<Activity> activities, Activity selectedActivity)
+	{
+		// calculate the current total billable for all activities against this ticket.
+		Duration totalBillable = activities.parallelStream().map(Activity::getBillable).reduce(Duration.ZERO,
+				(lhs, rhs) -> lhs.plus(rhs));
+
+		long minutes = totalBillable.toMinutes();
+		long rounded = minutes;
+
+		// We only round up if they are more than 5 minutes into the next block.
+		long excess = minutes % roundToMinutes;
+		if (minutes < roundToMinutes || excess > leawayMinutes)
+			rounded = (long) (Math.ceil(minutes / (float) roundToMinutes) * roundToMinutes);
+
+		Activity oActivity = null;
+		if (rounded != minutes)
+		{
+			// Update the selected activity so the total billable for the ticket is rounded up to the nearest
+			// fifteen minutes.
+			Duration roundedBillable = Duration.ofMinutes(rounded).minus(totalBillable)
+					.plus(selectedActivity.getBillable());
+			selectedActivity.setBillable(roundedBillable);
+
+			// We are about to destroy the original created date so if started date is zero
+			// then lets push the created date into the started date.
+			if (selectedActivity.getDateTimeStarted() == Constants.DATETIMEZERO)
+				selectedActivity.setDateTimeStarted(selectedActivity.getDateTimeCreated());
+			oActivity = new ActivityDao().replace(selectedActivity);
+		}
+
+		return oActivity;
+	}
 
 	@Override
 	void preInsertValidation(Ticket ticket)
@@ -321,6 +334,15 @@ public class TicketDao extends AcceloDao<Ticket>
 			throw new AcceloException("You must provide a title");
 		}
 
+	}
+	
+	private AcceloFieldList getDefaultFields()
+	{
+		AcceloFieldList fields = new AcceloFieldList();
+		fields.add("_ALL");
+		fields.add("status._ALL");
+		//fields.add("priority._ALL");
+		return fields;
 	}
 
 

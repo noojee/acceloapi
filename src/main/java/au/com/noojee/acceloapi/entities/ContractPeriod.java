@@ -1,23 +1,25 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.util.Constants;
 import au.com.noojee.acceloapi.util.Formatters;
 
 public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {
-	@BasicFilterField(name="contract")
+	@BasicFilterField(name = "contract")
 	private int contract_id;
 	@DateFilterField
-	private LocalDate date_created;
+	private LocalDateTime date_created = Constants.DATETIMEZERO;
 	@DateFilterField
-	private LocalDate date_commenced;
+	private LocalDate date_commenced = Constants.DATEZERO;
 	@DateFilterField
-	private LocalDate date_closed;
+	private LocalDate date_closed = Constants.DATEZERO;
 	@DateFilterField
-	private LocalDate date_expires;
+	private LocalDate date_expires = Constants.DATEZERO;
 
 	@BasicFilterField
 	private String budget_type; // pre-paid
@@ -29,23 +31,22 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 	private String rollover; // yes no
 	@BasicFilterField
 	private String standing; // open
-	
-	@BasicFilterField(name="rate")
+
+	@BasicFilterField(name = "rate")
 	private int rate_id; // -1
-	
+
 	@BasicFilterField
 	private String rate_type; // object
-	
+
 	@BasicFilterField
 	private String allowance_type; // fixed_value
-	
-	@BasicFilterField(name="service_item")
+
+	@BasicFilterField(name = "service_item")
 	private int service_item_id;
-	
-	
+
 	public String getPeriodRange()
 	{
-		return (Formatters.format(getDateCommenced()) + " to " + Formatters.format(getDateExpires())).replace("/",  "-");
+		return (Formatters.format(getDateCommenced()) + " to " + Formatters.format(getDateExpires())).replace("/", "-");
 	}
 
 	public LocalDate getDateCommenced()
@@ -68,7 +69,7 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 		return contract_id;
 	}
 
-	public LocalDate getDateCreated()
+	public LocalDateTime getDateTimeCreated()
 	{
 		return date_created;
 	}
@@ -77,7 +78,6 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 	{
 		return date_closed;
 	}
-
 
 	public String getBudget_type()
 	{
@@ -134,12 +134,11 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 				+ ", rate_id=" + rate_id + ", rate_type=" + rate_type + ", allowance_type="
 				+ allowance_type + ", service_item_id=" + service_item_id + "]";
 	}
-	
+
 	@Override
 	public int compareTo(ContractPeriod o)
 	{
 		return this.getDateCommenced().compareTo(o.getDateCommenced());
 	}
-
 
 }

@@ -1,11 +1,12 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
+import au.com.noojee.acceloapi.util.Constants;
 
 public class Contact extends AcceloEntity<Contact>
 {
@@ -36,24 +37,24 @@ public class Contact extends AcceloEntity<Contact>
 	@BasicFilterField
 	@SearchFilterField
 	private String email;
-	private int default_affiliation; // id of the contacts affiliation. Will normally be the company they are primarily associated with.
+	private int default_affiliation; // id of the contacts affiliation. Will normally be the company they are primarily
+										// associated with.
 	private String communication;
 	private String invoice_method;
-	
-	@DateFilterField
-	private LocalDate date_created;
-	@DateFilterField
-	private LocalDate date_modified;
 
-	
+	@DateFilterField
+	private LocalDateTime date_created = Constants.DATETIMEZERO;
+	@DateFilterField
+	private LocalDateTime date_modified = Constants.DATETIMEZERO;
+
 	@SuppressWarnings("unused")
 	private class Meta implements MetaBasicFilterFields
 	{
 		@BasicFilterField
 		private transient String affiliation; // matches on the default_affiliation.
-		
+
 		@BasicFilterField
-		private transient String contact_number;  // filters over phone, fax and mobile
+		private transient String contact_number; // filters over phone, fax and mobile
 
 	}
 
@@ -112,17 +113,17 @@ public class Contact extends AcceloEntity<Contact>
 		return standing;
 	}
 
-	public int getCountry_id()
+	public int getCountryId()
 	{
 		return country_id;
 	}
 
-	public int getPhysical_address_id()
+	public int getPhysicalAddressId()
 	{
 		return physical_address_id;
 	}
 
-	public int getPostal_address_id()
+	public int getPostalAddressId()
 	{
 		return postal_address_id;
 	}
@@ -151,23 +152,21 @@ public class Contact extends AcceloEntity<Contact>
 	{
 		return invoice_method;
 	}
-	
+
 	public int getDefaultAffiliation()
 	{
 		return default_affiliation;
 	}
 
-
-
 	@Override
 	public String toString()
 	{
-		return "Contact [id=" + getId() +  ", firstname=" + firstname + ", middlename=" + middlename
+		return "Contact [id=" + getId() + ", firstname=" + firstname + ", middlename=" + middlename
 				+ ", surname=" + surname + ", preferred_name=" + preferred_name + ", username=" + username
 				+ ", password=" + password + ", title=" + title + ", salutation=" + salutation + ", comments="
 				+ comments + ", status=" + status + ", standing=" + standing + ", country_id=" + country_id
 				+ ", physical_address_id=" + physical_address_id + ", postal_address_id=" + postal_address_id
-				+ ", phone=" + phone + ", fax=" + fax + ", email=" + email 
+				+ ", phone=" + phone + ", fax=" + fax + ", email=" + email
 				+ ", communication=" + communication + ", invoice_method=" + invoice_method + "]";
 	}
 
@@ -176,16 +175,10 @@ public class Contact extends AcceloEntity<Contact>
 		return firstname + " " + surname;
 	}
 
-	
-	
 	@Override
 	public int compareTo(Contact o)
 	{
 		return this.getSurname().compareTo(o.getSurname());
 	}
 
-
-
-
-	
 }

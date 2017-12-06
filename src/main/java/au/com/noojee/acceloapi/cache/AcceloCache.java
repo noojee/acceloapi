@@ -3,7 +3,6 @@ package au.com.noojee.acceloapi.cache;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -58,7 +57,7 @@ public enum AcceloCache
 	{
 		LoadingCache<CacheKey, List> tmp = CacheBuilder.newBuilder()
 				.maximumSize(100000)
-				.expireAfterAccess(10, TimeUnit.MINUTES)
+				.expireAfterAccess(30, TimeUnit.MINUTES)
 				.removalListener(notification ->
 					{
 						// if (!(notification.getKey() instanceof SingleEntityCacheKey))

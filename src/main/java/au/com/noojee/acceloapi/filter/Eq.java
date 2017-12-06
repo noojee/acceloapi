@@ -1,6 +1,7 @@
 package au.com.noojee.acceloapi.filter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +48,18 @@ class Eq<E extends AcceloEntity<E>> extends Expression
 
 		this.operands.add(formatDateAsFilterOperand(operand));
 	}
+	
+	public Eq(FilterField<E, LocalDateTime> field, LocalDateTime operand)
+	{
+		this.fieldName = field.getFieldName();
+		
+		// HACK Accelo Doesn't support comparison of a date against '0'. Using (\"date_before\", Expression.DATETIMEZERO) is accelos recommended hack.;
+		if (operand == Constants.DATETIMEZERO)
+			this.fieldName = fieldName + "_before";
+
+		this.operands.add(formatDateTimeAsFilterOperand(operand));
+	}
+
 
 	public <T extends Enum<T>> Eq(FilterField<E, T> field, T operand)
 	{

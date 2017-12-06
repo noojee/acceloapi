@@ -1,6 +1,7 @@
 package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,7 +37,7 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	@OrderByField
 	private String title;
-	
+
 	@BasicFilterField
 	private String custom_id;
 	private String description;
@@ -53,15 +54,15 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int company; // If against_type is company, then this holds the id of the company the ticket is
 							// against.
 	@BasicFilterField
-	private String priority;
-	
+	private Priority.NoojeePriority priority;
+
 	@BasicFilterField(name = "class")
 	@SerializedName("class")
 	private int _class;
 
 	@BasicFilterField
 	private int resolution;
-	
+
 	@OrderByField
 	@BasicFilterField
 	private TicketStatus status; // Breaks our rules of using Ids but there is no
@@ -80,27 +81,26 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	@OrderByField
 	@DateFilterField
-	private LocalDate date_submitted;
-	
-	@OrderByField
-	@DateFilterField
-	private LocalDate date_opened;
-	
-	@OrderByField
+	private LocalDateTime date_submitted = Constants.DATETIMEZERO;
 
-	private LocalDate date_resolved;
-	
 	@OrderByField
 	@DateFilterField
-	private LocalDate date_closed;
-	
+	private LocalDateTime date_opened = Constants.DATETIMEZERO;
+
+	@OrderByField
+	private LocalDateTime date_resolved = Constants.DATETIMEZERO;
+
 	@OrderByField
 	@DateFilterField
-	private LocalDate date_started;
-	
+	private LocalDateTime date_closed = Constants.DATETIMEZERO;
+
 	@OrderByField
 	@DateFilterField
-	private LocalDate date_due;
+	private LocalDateTime date_started = Constants.DATETIMEZERO;
+
+	@OrderByField
+	@DateFilterField
+	private LocalDate date_due = Constants.DATEZERO;
 	@BasicFilterField
 	private int opened_by; // staff member
 	@BasicFilterField
@@ -117,7 +117,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int billable_seconds;
 
 	@OrderByField
-	private LocalDate date_last_interacted;
+	private LocalDate date_last_interacted = Constants.DATEZERO;
 
 	@BasicFilterField
 	private int contract; // the contract id or 0 if this ticket is unassigned.
@@ -140,11 +140,8 @@ public class Ticket extends AcceloEntity<Ticket>
 	 */
 	public boolean isOpen()
 	{
-		return getDateClosed() == null || getDateClosed().equals(Constants.DATEZERO)
-				|| getDateClosed().isAfter(LocalDate.now()); // I don't think
-																// this is
-																// possible. but
-																// still.
+		return getDateTimeClosed().equals(Constants.DATETIMEZERO)
+				|| getDateTimeClosed().isAfter(LocalDateTime.now()); // I don't think this is possible. but still.
 	}
 
 	public int getCompanyId()
@@ -187,7 +184,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		return against_type;
 	}
 
-	public String getPriority()
+	public Priority.NoojeePriority getPriority()
 	{
 		return priority;
 	}
@@ -217,17 +214,17 @@ public class Ticket extends AcceloEntity<Ticket>
 		return submitted_by;
 	}
 
-	public LocalDate getDateSubmitted()
+	public LocalDateTime getDateTimeSubmitted()
 	{
 		return date_submitted;
 	}
 
-	public LocalDate getDateOpened()
+	public LocalDateTime getDateTimeOpened()
 	{
 		return date_opened;
 	}
 
-	public LocalDate getDateResolved()
+	public LocalDateTime getDateTimeResolved()
 	{
 		return date_resolved;
 	}
@@ -235,12 +232,12 @@ public class Ticket extends AcceloEntity<Ticket>
 	/**
 	 * @return null if the ticket is still open.
 	 */
-	public LocalDate getDateClosed()
+	public LocalDateTime getDateTimeClosed()
 	{
 		return date_closed;
 	}
 
-	public LocalDate getDateStarted()
+	public LocalDateTime getDateTimeStarted()
 	{
 		return date_started;
 	}
@@ -339,7 +336,7 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.against_id = against_id;
 	}
 
-	public void setPriority(String priority)
+	public void setPriority(Priority.NoojeePriority priority)
 	{
 		this.priority = priority;
 	}
@@ -364,27 +361,27 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.submitted_by = submitted_by;
 	}
 
-	public void setDateSubmitted(LocalDate date_submitted)
+	public void setDateSubmitted(LocalDateTime date_submitted)
 	{
 		this.date_submitted = date_submitted;
 	}
 
-	public void setDateOpened(LocalDate date_opened)
+	public void setDateOpened(LocalDateTime date_opened)
 	{
 		this.date_opened = date_opened;
 	}
 
-	public void setDateResolved(LocalDate date_resolved)
+	public void setDateResolved(LocalDateTime date_resolved)
 	{
 		this.date_resolved = date_resolved;
 	}
 
-	public void setDateClosed(LocalDate date_closed)
+	public void setDateClosed(LocalDateTime date_closed)
 	{
 		this.date_closed = date_closed;
 	}
 
-	public void setDateStarted(LocalDate date_started)
+	public void setDateStarted(LocalDateTime date_started)
 	{
 		this.date_started = date_started;
 	}

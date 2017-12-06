@@ -1,9 +1,10 @@
 package au.com.noojee.acceloapi.filter;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
 
 import au.com.noojee.acceloapi.util.Constants;
+import au.com.noojee.acceloapi.util.Conversions;
 
 public abstract class Expression
 {
@@ -38,13 +39,24 @@ public abstract class Expression
 		String formattedDate = "0";
 		if (date != Constants.DATEZERO)
 		{
-			ZoneId zoneId = ZoneId.systemDefault();
-			long epoch = date.atStartOfDay(zoneId).toEpochSecond();
-
+			long epoch = Conversions.toLong(date);
 			formattedDate = "" + epoch;
 		}
 		return formattedDate;
 	}
+	
+	// Accelo expects date filters to be a unix timestamp.
+		public String formatDateTimeAsFilterOperand(LocalDateTime dateTime)
+		{
+			String formattedDate = "0";
+			if (dateTime != Constants.DATETIMEZERO)
+			{
+				long epoch = Conversions.toLong(dateTime);
+				formattedDate = "" + epoch;
+			}
+			return formattedDate;
+		}
+
 
 	@Override
 	public String toString()

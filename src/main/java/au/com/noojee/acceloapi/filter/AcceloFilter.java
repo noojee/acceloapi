@@ -1,6 +1,7 @@
 package au.com.noojee.acceloapi.filter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -124,6 +125,11 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 		return new Eq<E>(field, operand.getName());
 	}
 
+	public <T extends Enum<T>> Expression eq(FilterField<E, T> field, T operand)
+	{
+		return new Eq<E>(field, operand);
+	}
+
 	public Expression eq(FilterField<E, String[]> field, String[] operand)
 	{
 		return new Eq<E>(field, operand);
@@ -134,25 +140,42 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 		return new Eq<E>(field, operand);
 	}
 
-	public <T extends Enum<T>> Expression eq(FilterField<E, T> field, T operand)
+	public Expression before(FilterField<E, LocalDateTime> field, LocalDateTime operand)
 	{
-		return new Eq<E>(field, operand);
+		return new Before<E, LocalDateTime>(field, operand);
 	}
 
 	public Expression before(FilterField<E, LocalDate> field, LocalDate operand)
 	{
-		return new Before<E>(field, operand);
+		return new Before<E, LocalDate>(field, operand);
 	}
 
 	public Expression after(FilterField<E, LocalDate> field, LocalDate operand)
 	{
-		return new After<E>(field, operand);
+		return new After<E, LocalDate>(field, operand);
 	}
 
 	public Expression afterOrEq(FilterField<E, LocalDate> field, LocalDate operand)
 	{
-		return new AfterOrEq<E>(field, operand);
+		return new AfterOrEq<E, LocalDate>(field, operand);
 	}
+	
+	
+	public Expression eq(FilterField<E, LocalDateTime> field, LocalDateTime operand)
+	{
+		return new Eq<E>(field, operand);
+	}
+
+	public Expression after(FilterField<E, LocalDateTime> field, LocalDateTime operand)
+	{
+		return new After<E,LocalDateTime>(field, operand);
+	}
+
+	public Expression afterOrEq(FilterField<E, LocalDateTime> field, LocalDateTime operand)
+	{
+		return new AfterOrEq<E, LocalDateTime>(field, operand);
+	}
+
 
 	public Expression against(AgainstType type, Integer operand)
 	{

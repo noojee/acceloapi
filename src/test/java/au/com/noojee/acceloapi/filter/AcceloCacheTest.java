@@ -82,8 +82,6 @@ public class AcceloCacheTest
 
 		TicketDao daoTicket = new TicketDao();
 
-		AcceloCache cache = AcceloCache.getInstance();
-
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.eq(Ticket_.contract, 0).and(filter.eq(Ticket_.standing, Ticket.Standing.closed))
 				.and(filter.after(Ticket_.date_started, LocalDate.of(2017, 03, 01))))

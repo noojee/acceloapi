@@ -1,10 +1,11 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
+import au.com.noojee.acceloapi.util.Constants;
 
 public class TimeAllocation extends AcceloEntity<TimeAllocation>
 {
@@ -21,9 +22,9 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 	private int against_id;
 	
 	@DateFilterField
-	private LocalDate date_locked;	// unix ts	The date the activity was locked, that is, when the logged time was approved for invoicing.
+	private LocalDateTime date_locked = Constants.DATETIMEZERO;	// unix ts	The date the activity was locked, that is, when the logged time was approved for invoicing.
 	@DateFilterField
-	private LocalDate date_created;	// unix ts	The date the time was logged.
+	private LocalDateTime date_created = Constants.DATETIMEZERO;	// unix ts	The date the time was logged.
 	
 	
 	public String getStanding()
@@ -51,12 +52,12 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 		return comments;
 	}
 	
-	public LocalDate getDatelocked()
+	public LocalDateTime getDateTimeLocked()
 	{
 		return date_locked;
 	}
 	
-	public LocalDate getDateCreated()
+	public LocalDateTime getDateTimeCreated()
 	{
 		return date_created;
 	}

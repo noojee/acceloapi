@@ -1,34 +1,40 @@
 package au.com.noojee.acceloapi.filter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 
-class AfterOrEq<E extends AcceloEntity<E>> extends Expression
+class AfterOrEq<E extends AcceloEntity<E>, DT> extends Expression
 {
 
-	private FilterField<E, LocalDate> field;
-	private LocalDate operand;
+	private FilterField<E, DT> field;
+	private DT operand;
 
-	public AfterOrEq(FilterField<E, LocalDate> field, LocalDate localDate)
+	public AfterOrEq(FilterField<E, DT> field, DT localDate)
 	{
 		this.field = field;
 		this.operand = localDate;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String toJson()
 	{
-		return (new After<E>(field, operand).or(new Eq<E>(field, operand))).toJson();
+		if (operand instanceof LocalDate)
+			return (new After<E, DT>(field, operand)
+					.or(new Eq<E>((FilterField<E, LocalDate>) field, (LocalDate) operand))).toJson();
+		else
+			return (new After<E, DT>(field, operand)
+					.or(new Eq<E>((FilterField<E, LocalDateTime>) field, (LocalDateTime) operand))).toJson();
 	}
-	
+
 	@Override
 	public Expression copy()
 	{
-		return new AfterOrEq<E>(field, operand);
+		return new AfterOrEq<E, DT>(field, operand);
 	}
-
 
 	@Override
 	public int hashCode()
@@ -50,7 +56,7 @@ class AfterOrEq<E extends AcceloEntity<E>> extends Expression
 		if (getClass() != obj.getClass())
 			return false;
 		@SuppressWarnings("unchecked")
-		AfterOrEq<E> other = (AfterOrEq<E>) obj;
+		AfterOrEq<E, DT> other = (AfterOrEq<E, DT>) obj;
 		if (field == null)
 		{
 			if (other.field != null)
@@ -68,6 +74,4 @@ class AfterOrEq<E extends AcceloEntity<E>> extends Expression
 		return true;
 	}
 
-
-	
 }

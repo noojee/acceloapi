@@ -1,17 +1,18 @@
 package au.com.noojee.acceloapi.filter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 
-class After<E extends AcceloEntity<E>> extends Expression
+class After<E extends AcceloEntity<E>, DT> extends Expression
 {
 
-	private FilterField<E,LocalDate> field;
-	private LocalDate operand;
+	private FilterField<E,DT> field;
+	private DT operand;
 
-	public After(FilterField<E, LocalDate> field, LocalDate localDate)
+	public After(FilterField<E, DT> field, DT localDate)
 	{
 		this.field = field;
 		this.operand = localDate;
@@ -20,7 +21,7 @@ class After<E extends AcceloEntity<E>> extends Expression
 	@Override
 	public Expression copy()
 	{
-		return new After<E>(this.field, operand);
+		return new After<E, DT>(this.field, operand);
 	}
 
 	@Override
@@ -29,12 +30,15 @@ class After<E extends AcceloEntity<E>> extends Expression
 		String nameAndOperator = this.field.getFieldName() + "_after";
 
 		String json = "\"" + nameAndOperator + "\": [";
-		json += "\"" + formatDateAsFilterOperand(operand) + "\"";
+		
+		if (operand instanceof LocalDate)
+			json += "\"" + formatDateAsFilterOperand((LocalDate)operand) + "\"";
+		else
+			json += "\"" + formatDateTimeAsFilterOperand((LocalDateTime)operand) + "\"";
 
 		json += "]";
 
 		return json;
-
 	}
 
 	@Override

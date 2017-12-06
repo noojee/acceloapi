@@ -1,6 +1,6 @@
 package au.com.noojee.acceloapi.entities;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
+import au.com.noojee.acceloapi.util.Constants;
 
 
 
@@ -26,7 +27,7 @@ public class Request extends AcceloEntity<Request>
 	private int lead_id; // The lead id of the request. If this is not provided, affiliation_id or affiliation details must be specified.
 	private int thread_id;
 	@DateFilterField
-	private LocalDate date_created;
+	private LocalDateTime date_created = Constants.DATETIMEZERO;
 	@BasicFilterField
 	private int type_id; // The type id of the request. Want to get a list of types? See the get request types endpoint.
 	@BasicFilterField
@@ -50,22 +51,22 @@ public class Request extends AcceloEntity<Request>
 		return standing;
 	}
 
-	public int getThread_id()
+	public int getThreadId()
 	{
 		return thread_id;
 	}
 
-	public LocalDate getDate_created()
+	public LocalDateTime getDateTimeCreated()
 	{
 		return date_created;
 	}
 
-	public int getPriority_id()
+	public int getPriorityId()
 	{
 		return priority_id;
 	}
 
-	public int getClaimer_id()
+	public int getClaimerId()
 	{
 		return claimer_id;
 	}
@@ -78,11 +79,11 @@ public class Request extends AcceloEntity<Request>
 	{
 		return body;
 	}
-	public int getType_id()
+	public int getTypeId()
 	{
 		return type_id;
 	}
-	public int getAffiliation_id()
+	public int getAffiliationId()
 	{
 		return affiliation_id;
 	}
@@ -90,7 +91,7 @@ public class Request extends AcceloEntity<Request>
 	{
 		return source;
 	}
-	public int getLead_id()
+	public int getLeadId()
 	{
 		return lead_id;
 	}
@@ -115,37 +116,37 @@ public class Request extends AcceloEntity<Request>
 		this.source = source;
 	}
 
-	public void setLead_id(int lead_id)
+	public void setLeadId(int lead_id)
 	{
 		this.lead_id = lead_id;
 	}
 
-	public void setThread_id(int thread_id)
+	public void setThreadId(int thread_id)
 	{
 		this.thread_id = thread_id;
 	}
 
-	public void setDate_created(LocalDate date_created)
+	public void setDateTimeCreated(LocalDateTime date_created)
 	{
 		this.date_created = date_created;
 	}
 
-	public void setType_id(int type_id)
+	public void setTypeId(int type_id)
 	{
 		this.type_id = type_id;
 	}
 
-	public void setPriority_id(int priority_id)
+	public void setPriorityId(int priority_id)
 	{
 		this.priority_id = priority_id;
 	}
 
-	public void setClaimer_id(int claimer_id)
+	public void setClaimerId(int claimer_id)
 	{
 		this.claimer_id = claimer_id;
 	}
 
-	public void setAffiliation_id(int affiliation_id)
+	public void setAffiliationId(int affiliation_id)
 	{
 		this.affiliation_id = affiliation_id;
 	}
