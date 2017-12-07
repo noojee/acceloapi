@@ -151,7 +151,7 @@ public class FieldMetaDataGenerator
 				if (annotation.name().length() == 0)
 					acceloFieldName = javaFieldName;
 	
-				pf.println("\tpublic static FilterField<" + className + ", LocalDate> "
+				pf.println("\tpublic static FilterField<" + className + "," +  objectType.getSimpleName() + ">"
 						+ javaFieldName + " = new FilterField<>(\"" + acceloFieldName + "\"); ");
 			}
 

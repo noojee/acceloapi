@@ -2,6 +2,7 @@ package au.com.noojee.acceloapi.dao;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class TicketDaoMissingContracts
 
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		
-		filter.where(filter.eq(Ticket_.contract, 0)).and(filter.after(Ticket_.date_submitted, LocalDate.of(2017,3,1)).and(filter.eq(Ticket_.standing, Standing.closed)));
+		filter.where(filter.eq(Ticket_.contract, 0)).and(filter.after(Ticket_.date_submitted, LocalDateTime.of(2017, 03, 01, 0, 0, 0)).and(filter.eq(Ticket_.standing, Standing.closed)));
 		
 		filter.limit(10000);
 		

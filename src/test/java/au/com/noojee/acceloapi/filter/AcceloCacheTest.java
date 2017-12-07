@@ -2,6 +2,7 @@ package au.com.noojee.acceloapi.filter;
 
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class AcceloCacheTest
 	{
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.eq(Ticket_.contract, 0).and(filter.eq(Ticket_.standing, Ticket.Standing.closed))
-				.and(filter.after(Ticket_.date_started, LocalDate.of(2017, 03, 01))))
+				.and(filter.after(Ticket_.date_started, LocalDateTime.of(2017, 03, 01, 0, 0, 0))))
 				.orderBy(Ticket_.id, Order.DESC);
 		filter.limit(1);
 		filter.offset(2);
@@ -57,7 +58,7 @@ public class AcceloCacheTest
 
 		AcceloFilter<Ticket> filter2 = new AcceloFilter<>();
 		filter2.where(filter2.eq(Ticket_.contract, 0).and(filter2.eq(Ticket_.standing, Ticket.Standing.closed))
-				.and(filter2.after(Ticket_.date_started, LocalDate.of(2017, 03, 01))))
+				.and(filter2.after(Ticket_.date_started, LocalDateTime.of(2017, 03, 01, 0, 0, 0))))
 				.orderBy(Ticket_.id, Order.DESC);
 
 		filter2.limit(1);
@@ -84,7 +85,7 @@ public class AcceloCacheTest
 
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.eq(Ticket_.contract, 0).and(filter.eq(Ticket_.standing, Ticket.Standing.closed))
-				.and(filter.after(Ticket_.date_started, LocalDate.of(2017, 03, 01))))
+				.and(filter.after(Ticket_.date_started,LocalDateTime.of(2017, 03, 01, 0, 0, 0))))
 				.orderBy(Ticket_.id, Order.DESC);
 		filter.limit(1);
 		filter.offset(0);
@@ -101,7 +102,7 @@ public class AcceloCacheTest
 		// The filter forms part of the cache key and the key must be invariant
 		// so by re-using the filter we check the key is invariant.
 		filter.where(filter.eq(Ticket_.contract, 0).and(filter.eq(Ticket_.standing, Ticket.Standing.closed))
-				.and(filter.after(Ticket_.date_started, LocalDate.of(2017, 03, 01))))
+				.and(filter.after(Ticket_.date_started, LocalDateTime.of(2017, 03, 01, 0, 0, 0))))
 				.orderBy(Ticket_.id, Order.DESC);
 		filter.limit(1);
 		filter.offset(1);

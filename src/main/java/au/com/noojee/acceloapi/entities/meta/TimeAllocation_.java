@@ -1,8 +1,5 @@
 package au.com.noojee.acceloapi.entities.meta;
 
-import java.time.LocalDate;
-
-import au.com.noojee.acceloapi.entities.TimeAllocation;
 /** 
  *
  *          DO NOT MODIFY 
@@ -15,13 +12,15 @@ import au.com.noojee.acceloapi.entities.TimeAllocation;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import au.com.noojee.acceloapi.entities.TimeAllocation;
+import java.time.LocalDateTime;
 
 
 public class TimeAllocation_ 
 {
 
-	public static FilterField<TimeAllocation, LocalDate> date_created = new FilterField<>("date_created"); 
-	public static FilterField<TimeAllocation, LocalDate> date_locked = new FilterField<>("date_locked"); 
+	public static FilterField<TimeAllocation,LocalDateTime>date_created = new FilterField<>("date_created"); 
+	public static FilterField<TimeAllocation,LocalDateTime>date_locked = new FilterField<>("date_locked"); 
 	public static FilterField<TimeAllocation, Integer> id = new FilterField<>("id"); 
 	public static FilterField<TimeAllocation, String> standing = new FilterField<>("standing"); 
 

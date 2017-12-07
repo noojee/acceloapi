@@ -1,9 +1,5 @@
 package au.com.noojee.acceloapi.entities.meta;
 
-import java.time.LocalDate;
-
-import au.com.noojee.acceloapi.entities.Ticket;
-import au.com.noojee.acceloapi.entities.Ticket.Standing;
 /** 
  *
  *          DO NOT MODIFY 
@@ -16,7 +12,12 @@ import au.com.noojee.acceloapi.entities.Ticket.Standing;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import au.com.noojee.acceloapi.entities.Priority.NoojeePriority;
+import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.entities.types.TicketStatus;
+import au.com.noojee.acceloapi.entities.Ticket.Standing;
 
 
 public class Ticket_ 
@@ -29,15 +30,15 @@ public class Ticket_
 	public static FilterField<Ticket, String> contact_number = new FilterField<>("contact_number"); 
 	public static FilterField<Ticket, Integer> contract = new FilterField<>("contract"); 
 	public static FilterField<Ticket, String> custom_id = new FilterField<>("custom_id"); 
-	public static FilterField<Ticket, LocalDate> date_closed = new FilterField<>("date_closed"); 
-	public static FilterField<Ticket, LocalDate> date_due = new FilterField<>("date_due"); 
-	public static FilterField<Ticket, LocalDate> date_opened = new FilterField<>("date_opened"); 
-	public static FilterField<Ticket, LocalDate> date_started = new FilterField<>("date_started"); 
-	public static FilterField<Ticket, LocalDate> date_submitted = new FilterField<>("date_submitted"); 
+	public static FilterField<Ticket,LocalDateTime>date_closed = new FilterField<>("date_closed"); 
+	public static FilterField<Ticket,LocalDate>date_due = new FilterField<>("date_due"); 
+	public static FilterField<Ticket,LocalDateTime>date_opened = new FilterField<>("date_opened"); 
+	public static FilterField<Ticket,LocalDateTime>date_started = new FilterField<>("date_started"); 
+	public static FilterField<Ticket,LocalDateTime>date_submitted = new FilterField<>("date_submitted"); 
 	public static FilterField<Ticket, Integer> id = new FilterField<>("id"); 
 	public static FilterField<Ticket, Integer> issue_type = new FilterField<>("issue_type"); 
 	public static FilterField<Ticket, Integer> opened_by = new FilterField<>("opened_by"); 
-	public static FilterField<Ticket, String> priority = new FilterField<>("priority"); 
+	public static FilterField<Ticket, NoojeePriority> priority = new FilterField<>("priority"); 
 	public static FilterField<Ticket, Integer> referrer_id = new FilterField<>("referrer_id"); 
 	public static FilterField<Ticket, String> referrer_type = new FilterField<>("referrer_type"); 
 	public static FilterField<Ticket, Integer> resolution = new FilterField<>("resolution"); 

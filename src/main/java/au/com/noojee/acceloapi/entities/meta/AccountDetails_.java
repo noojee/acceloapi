@@ -1,6 +1,5 @@
 package au.com.noojee.acceloapi.entities.meta;
 
-import au.com.noojee.acceloapi.entities.AccountDetails;
 /** 
  *
  *          DO NOT MODIFY 
@@ -13,6 +12,7 @@ import au.com.noojee.acceloapi.entities.AccountDetails;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import au.com.noojee.acceloapi.entities.AccountDetails;
 
 
 public class AccountDetails_ 

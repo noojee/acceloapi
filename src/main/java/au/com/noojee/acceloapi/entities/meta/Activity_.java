@@ -1,10 +1,5 @@
 package au.com.noojee.acceloapi.entities.meta;
 
-import java.time.LocalDate;
-
-import au.com.noojee.acceloapi.dao.ActivityOwnerType;
-import au.com.noojee.acceloapi.entities.Activity;
-import au.com.noojee.acceloapi.entities.Activity.Visibility;
 /** 
  *
  *          DO NOT MODIFY 
@@ -17,7 +12,11 @@ import au.com.noojee.acceloapi.entities.Activity.Visibility;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
+import au.com.noojee.acceloapi.dao.ActivityOwnerType;
+import java.time.LocalDateTime;
+import au.com.noojee.acceloapi.entities.Activity.Visibility;
 
 
 public class Activity_ 
@@ -26,11 +25,11 @@ public class Activity_
 	public static FilterField<Activity, Integer> _class = new FilterField<>("class"); 
 	public static FilterField<Activity, Integer> against_id = new FilterField<>("against_id"); 
 	public static FilterField<Activity, AgainstType> against_type = new FilterField<>("against_type"); 
-	public static FilterField<Activity, LocalDate> date_created = new FilterField<>("date_created"); 
-	public static FilterField<Activity, LocalDate> date_ended = new FilterField<>("date_ended"); 
-	public static FilterField<Activity, LocalDate> date_logged = new FilterField<>("date_logged"); 
-	public static FilterField<Activity, LocalDate> date_modified = new FilterField<>("date_modified"); 
-	public static FilterField<Activity, LocalDate> date_started = new FilterField<>("date_started"); 
+	public static FilterField<Activity,LocalDateTime>date_created = new FilterField<>("date_created"); 
+	public static FilterField<Activity,LocalDateTime>date_ended = new FilterField<>("date_ended"); 
+	public static FilterField<Activity,LocalDateTime>date_logged = new FilterField<>("date_logged"); 
+	public static FilterField<Activity,LocalDateTime>date_modified = new FilterField<>("date_modified"); 
+	public static FilterField<Activity,LocalDateTime>date_started = new FilterField<>("date_started"); 
 	public static FilterField<Activity, Integer> id = new FilterField<>("id"); 
 	public static FilterField<Activity, Integer> owner_id = new FilterField<>("owner_id"); 
 	public static FilterField<Activity, ActivityOwnerType> owner_type = new FilterField<>("owner_type"); 

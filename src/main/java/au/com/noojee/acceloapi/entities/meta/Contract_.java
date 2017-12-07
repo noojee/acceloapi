@@ -1,7 +1,5 @@
 package au.com.noojee.acceloapi.entities.meta;
 
-import java.time.LocalDate;
-
 /** 
  *
  *          DO NOT MODIFY 
@@ -15,6 +13,8 @@ import java.time.LocalDate;
  */
 import au.com.noojee.acceloapi.entities.Contract;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 public class Contract_ 
@@ -22,10 +22,10 @@ public class Contract_
 
 	public static FilterField<Contract, String> auto_renew = new FilterField<>("auto_renew"); 
 	public static FilterField<Contract, Integer> billable_affiliation = new FilterField<>("billable_affiliation"); 
-	public static FilterField<Contract, LocalDate> date_created = new FilterField<>("date_created"); 
-	public static FilterField<Contract, LocalDate> date_expires = new FilterField<>("date_expires"); 
-	public static FilterField<Contract, LocalDate> date_period_expires = new FilterField<>("date_period_expires"); 
-	public static FilterField<Contract, LocalDate> date_started = new FilterField<>("date_started"); 
+	public static FilterField<Contract,LocalDateTime>date_created = new FilterField<>("date_created"); 
+	public static FilterField<Contract,LocalDate>date_expires = new FilterField<>("date_expires"); 
+	public static FilterField<Contract,LocalDate>date_period_expires = new FilterField<>("date_period_expires"); 
+	public static FilterField<Contract,LocalDate>date_started = new FilterField<>("date_started"); 
 	public static FilterField<Contract, Integer> id = new FilterField<>("id"); 
 	public static FilterField<Contract, Integer> manager = new FilterField<>("manager"); 
 	public static FilterField<Contract, Integer> owner_affiliation = new FilterField<>("owner_affiliation"); 

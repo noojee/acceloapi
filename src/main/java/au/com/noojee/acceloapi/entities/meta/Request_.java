@@ -1,8 +1,5 @@
 package au.com.noojee.acceloapi.entities.meta;
 
-import java.time.LocalDate;
-
-import au.com.noojee.acceloapi.entities.Request;
 /** 
  *
  *          DO NOT MODIFY 
@@ -15,6 +12,8 @@ import au.com.noojee.acceloapi.entities.Request;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import java.time.LocalDateTime;
+import au.com.noojee.acceloapi.entities.Request;
 
 
 public class Request_ 
@@ -22,7 +21,7 @@ public class Request_
 
 	public static FilterField<Request, Integer> affiliation_id = new FilterField<>("affiliation_id"); 
 	public static FilterField<Request, Integer> claimer_id = new FilterField<>("claimer_id"); 
-	public static FilterField<Request, LocalDate> date_created = new FilterField<>("date_created"); 
+	public static FilterField<Request,LocalDateTime>date_created = new FilterField<>("date_created"); 
 	public static FilterField<Request, Integer> id = new FilterField<>("id"); 
 	public static FilterField<Request, Integer> lead_id = new FilterField<>("lead_id"); 
 	public static FilterField<Request, Integer> priority_id = new FilterField<>("priority_id"); 

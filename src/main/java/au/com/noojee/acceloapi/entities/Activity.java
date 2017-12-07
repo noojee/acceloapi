@@ -53,6 +53,7 @@ public class Activity extends AcceloEntity<Activity>
 	{
 		unapproved, approved, invoiced, locked, empty;
 	}
+	
 
 	private Medium medium = Medium.note; // The type of activity.
 

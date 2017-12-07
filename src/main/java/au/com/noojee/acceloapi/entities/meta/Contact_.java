@@ -1,8 +1,5 @@
 package au.com.noojee.acceloapi.entities.meta;
 
-import java.time.LocalDate;
-
-import au.com.noojee.acceloapi.entities.Contact;
 /** 
  *
  *          DO NOT MODIFY 
@@ -15,6 +12,8 @@ import au.com.noojee.acceloapi.entities.Contact;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import au.com.noojee.acceloapi.entities.Contact;
+import java.time.LocalDateTime;
 
 
 public class Contact_ 
@@ -22,8 +21,8 @@ public class Contact_
 
 	public static FilterField<Contact, String> affiliation = new FilterField<>("affiliation"); 
 	public static FilterField<Contact, String> contact_number = new FilterField<>("contact_number"); 
-	public static FilterField<Contact, LocalDate> date_created = new FilterField<>("date_created"); 
-	public static FilterField<Contact, LocalDate> date_modified = new FilterField<>("date_modified"); 
+	public static FilterField<Contact,LocalDateTime>date_created = new FilterField<>("date_created"); 
+	public static FilterField<Contact,LocalDateTime>date_modified = new FilterField<>("date_modified"); 
 	public static FilterField<Contact, String> email = new FilterField<>("email"); 
 	public static FilterField<Contact, Integer> id = new FilterField<>("id"); 
 	public static FilterField<Contact, String> standing = new FilterField<>("standing"); 

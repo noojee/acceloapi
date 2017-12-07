@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,14 +97,14 @@ public class TicketDao extends AcceloDao<Ticket>
 	public List<Ticket> getRecentByContract(Contract contract, LocalDate firstDateOfInterest) throws AcceloException
 	{
 		// Get the day before the day of interest so we can just use isAfter
-		LocalDate dayBefore = firstDateOfInterest.minusDays(1);
+		LocalDateTime dayBefore = LocalDateTime.of(firstDateOfInterest.minusDays(1), LocalTime.of(0, 0));
 
 		// Get tickets with a close date on or after the firstDateOfInterest
 		// or with no close date.
 		AcceloFilter<Ticket> filter = new AcceloFilter<>();
 		filter.where(filter.eq(Ticket_.contract, contract.getId())
 				.and(filter.after(Ticket_.date_closed, dayBefore)
-						.or(filter.before(Ticket_.date_closed, Constants.DATEZERO))));
+						.or(filter.before(Ticket_.date_closed, Constants.DATETIMEZERO))));
 
 		return this.getByFilter(filter);
 	}
@@ -392,5 +394,34 @@ public class TicketDao extends AcceloDao<Ticket>
 		return acceloEditURL;
 
 	}
+	
+	public URL getApproveURL(String domain, Ticket ticket)
+	{
+		URL acceloApproveURL = null;
+		try
+		{
+			if (ticket.getContractId() == 0)
+			{
+				// Its not attached to a contract
+				String action = "?action=approve_object&object_id=" + ticket.getId() + "&object_table=issue";
+				acceloApproveURL = new URL("https", domain, 443, action);
+			}
+			else
+			{
+				// Its  attached to a contract
+				String action = "?action=contract_management&id=" + ticket.getContractId() ;
+
+				acceloApproveURL = new URL("https", domain, 443, action);
+
+			}
+		}
+		catch (MalformedURLException e)
+		{
+
+		}
+		return acceloApproveURL;
+
+	}
+
 
 }

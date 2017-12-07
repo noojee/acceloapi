@@ -5,6 +5,9 @@ import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -25,6 +28,7 @@ import au.com.noojee.acceloapi.util.Conversions;
 
 public class GsonForAccelo
 {
+	static Logger logger = LogManager.getLogger();
 	static public <E extends AcceloEntity<E>> String toJson(AcceloEntity<E> e)
 	{
 		Gson gson = create();
@@ -227,9 +231,12 @@ public class GsonForAccelo
 	 */
 	static private class StandingSerializer implements JsonSerializer<Standing>
 	{
-		public JsonElement serialize(Standing ownerType, Type typeOfSrc, JsonSerializationContext context)
+		public JsonElement serialize(Standing standing, Type typeOfSrc, JsonSerializationContext context)
 		{
-			return new JsonPrimitive(ownerType.name());
+			String name = standing.name();
+			if (standing == Standing.empty)
+				name = "";
+			return new JsonPrimitive(name);
 		}
 	}
 
@@ -239,7 +246,19 @@ public class GsonForAccelo
 		public Standing deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 				throws JsonParseException
 		{
-			return Standing.valueOf(json.getAsString());
+			try
+			{
+				String standing = json.getAsString();
+				if (standing == null || standing.length() == 0)
+					standing = "empty";
+			return Standing.valueOf(standing);
+			}
+			catch (JsonParseException e)
+			{
+				logger.error(e,e);
+				logger.error("Parsed data was: " + json.getAsString());
+				throw e;
+			}
 		}
 	}
 
