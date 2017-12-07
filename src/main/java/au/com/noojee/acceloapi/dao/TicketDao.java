@@ -299,15 +299,13 @@ public class TicketDao extends AcceloDao<Ticket>
 		Duration totalBillable = activities.parallelStream().map(Activity::getBillable).reduce(Duration.ZERO,
 				(lhs, rhs) -> lhs.plus(rhs));
 
-		long minutes = totalBillable.toMinutes();
-		long rounded = minutes;
-
-		// We only round up if they are more than 5 minutes into the next block.
-		long excess = minutes % roundToMinutes;
-		if (minutes < roundToMinutes || excess > leawayMinutes)
-			rounded = (long) (Math.ceil(minutes / (float) roundToMinutes) * roundToMinutes);
-
+		
+		Tuple<Long, Long> tupleRounding = calcRoundingData(totalBillable,roundToMinutes, leawayMinutes);
 		Activity oActivity = null;
+		
+		Long minutes = tupleRounding.lhs;
+		Long rounded = tupleRounding.rhs;
+		
 		// If billable minutes is zero then we assume this ticket isn't billable.
 		if (minutes != 0 && rounded != minutes)
 		{
@@ -321,10 +319,36 @@ public class TicketDao extends AcceloDao<Ticket>
 			// then lets push the created date into the started date.
 			if (LocalDateTimeHelper.isEmpty(selectedActivity.getDateTimeStarted()))
 				selectedActivity.setDateTimeStarted(selectedActivity.getDateTimeCreated());
+			
+		//	selectedActivity.setDetails(selectedActivity.getDetails() + "\n Code: " +  );
 			oActivity = new ActivityDao().replace(selectedActivity);
 		}
 
 		return oActivity;
+	}
+
+	public boolean isBillAdjustmentRequired(Duration totalBillable, long roundToMinutes, long leawayMinutes)
+	{
+		Tuple<Long, Long> tupleRounding = calcRoundingData(totalBillable,roundToMinutes, leawayMinutes);
+		
+		Long minutes = tupleRounding.lhs;
+		Long rounded = tupleRounding.rhs;
+		
+		return (minutes != 0 && rounded != minutes);
+	}
+	
+	private Tuple<Long, Long> calcRoundingData(Duration totalBillable, long roundToMinutes, long leawayMinutes)
+	{
+
+		long minutes = totalBillable.toMinutes();
+		long rounded = minutes;
+
+		// We only round up if they are more than 5 minutes into the next block.
+		long excess = minutes % roundToMinutes;
+		if (minutes < roundToMinutes || excess > leawayMinutes)
+			rounded = (long) (Math.ceil(minutes / (float) roundToMinutes) * roundToMinutes);
+		
+		return new Tuple<Long, Long>(minutes, rounded);
 	}
 
 	@Override

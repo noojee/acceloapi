@@ -184,6 +184,10 @@ public class Ticket extends AcceloEntity<Ticket>
 		return against_type;
 	}
 
+	public int getBillableSeconds()
+	{
+		return this.billable_seconds;
+	}
 	public Priority.NoojeePriority getPriority()
 	{
 		return priority;
