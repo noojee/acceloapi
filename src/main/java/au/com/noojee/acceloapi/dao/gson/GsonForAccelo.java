@@ -4,6 +4,7 @@ import java.io.StringReader;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -76,6 +77,13 @@ public class GsonForAccelo
 			json += "]";
 		return json;
 	}
+	
+	public static String toJson(List<Object> operands)
+	{
+		Gson gson = create();
+		return gson.toJson(operands);
+	}
+
 
 	static private Gson create()
 	{
@@ -262,4 +270,5 @@ public class GsonForAccelo
 		}
 	}
 
+	
 }

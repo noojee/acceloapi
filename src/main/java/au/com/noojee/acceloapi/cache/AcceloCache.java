@@ -61,8 +61,7 @@ public enum AcceloCache
 				.removalListener(notification ->
 					{
 						// if (!(notification.getKey() instanceof SingleEntityCacheKey))
-						if (notification.getCause() 
-								!= RemovalCause.REPLACED)
+						if (notification.getCause() != RemovalCause.REPLACED)
 							logger.error(
 									"Cache eviction of " + notification.getKey() + " because: "
 											+ notification.getCause());
@@ -87,7 +86,7 @@ public enum AcceloCache
 	{
 		List<AcceloEntity> list;
 
-		if ( AcceloAbstractResponseList.class.isAssignableFrom(key.getMetaResponseClass()))
+		if (AcceloAbstractResponseList.class.isAssignableFrom(key.getMetaResponseClass()))
 		{
 
 			list = AcceloApi.getInstance().getAll(key.getEndPoint(), key.getFilter(), key.getFields(),
@@ -207,9 +206,13 @@ public enum AcceloCache
 	@SuppressWarnings("unchecked")
 	private AcceloEntity copy(AcceloEntity rhs)
 	{
-		String json = GsonForAccelo.toJson(rhs);
+		AcceloEntity copy = null;
 
-		AcceloEntity copy = GsonForAccelo.fromJson(json, rhs.getClass());
+		if (rhs != null)
+		{
+			String json = GsonForAccelo.toJson(rhs);
+			copy = GsonForAccelo.fromJson(json, rhs.getClass());
+		}
 
 		return copy;
 	}

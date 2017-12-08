@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import au.com.noojee.acceloapi.dao.gson.GsonForAccelo;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
 import au.com.noojee.acceloapi.util.Constants;
@@ -14,7 +15,7 @@ class Eq<E extends AcceloEntity<E>> extends Expression
 {
 
 	String fieldName;
-	private List<String> operands = new ArrayList<>();
+	private List<Object> operands = new ArrayList<>();
 
 	// Required for serialization
 	public Eq()
@@ -64,7 +65,8 @@ class Eq<E extends AcceloEntity<E>> extends Expression
 	public <T extends Enum<T>> Eq(FilterField<E, T> field, T operand)
 	{
 		this.fieldName = field.getFieldName();
-		this.operands.add(operand.name());
+		// this.operands.add(operand.name());
+		this.operands.add(operand);
 	}
 	
 	@Override
@@ -85,20 +87,8 @@ class Eq<E extends AcceloEntity<E>> extends Expression
 	@Override
 	public String toJson()
 	{
-		String json = "\"" + fieldName + "\": [";
-
-		boolean firstOperand = true;
-		for (String operand : operands)
-		{
-			if (firstOperand)
-				firstOperand = false;
-			else
-				json += ",";
-
-			json += "\"" + operand + "\"";
-		}
-		json += "]";
-
+		String json =  "\"" + fieldName + "\":";
+		json += GsonForAccelo.toJson(operands);
 		return json;
 	}
 

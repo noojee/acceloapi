@@ -102,7 +102,7 @@ public class AcceloApi
 		try
 		{
 			response = get(endPoint.getURL(), filterMap, fieldList, clazz, 0);
-			
+
 		}
 		catch (MalformedURLException e)
 		{
@@ -251,23 +251,23 @@ public class AcceloApi
 	 * pushing.
 	 * @entityId - the accelo id of the entity to be updated.
 	 */
-	public <E> E update(EndPoint endPoint, int entityId,
-			// AcceloFieldValues fieldNameValues
+	public <E> E update(EndPoint endPoint, int id,
 			String jsonFieldValues, Class<E> clazz)
 	{
 		URL completeUrl;
 		try
 		{
-			completeUrl = new URL(endPoint.getURL(entityId).toExternalForm());
+			completeUrl = new URL(endPoint.getURL(id).toExternalForm());
 		}
 		catch (MalformedURLException e)
 		{
 			throw new AcceloException(e);
 		}
-		// String fieldValues = fieldNameValues.formatAsJson();
 
 		logger.error("Updating: url=" + completeUrl + " jsonFieldValues=" + jsonFieldValues);
 		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, jsonFieldValues);
+		if (response.getResponseCode() != 200)
+			throw new AcceloException("Update faieled for endPoint " + endPoint + " id=" + id);
 
 		return response.parseBody(clazz);
 	}
@@ -277,6 +277,9 @@ public class AcceloApi
 		URL completeUrl = buildURL(endPoint, id);
 		logger.error("Deleting: url=" + completeUrl);
 		HTTPResponse response = _request(HTTPMethod.DELETE, completeUrl, null);
+		if (response.getResponseCode() != 200)
+			throw new AcceloException("Delete faieled for endPoint " + endPoint + " id=" + id + " Reason:" + response.getResponseMessage());
+
 		logger.error("Deleted: url=" + completeUrl);
 
 		return response;

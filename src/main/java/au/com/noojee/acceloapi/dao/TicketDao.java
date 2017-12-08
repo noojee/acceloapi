@@ -6,6 +6,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +20,7 @@ import au.com.noojee.acceloapi.entities.Affiliation;
 import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.entities.Contract;
+import au.com.noojee.acceloapi.entities.Priority;
 import au.com.noojee.acceloapi.entities.Staff;
 import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.entities.meta.Ticket_;
@@ -273,7 +275,7 @@ public class TicketDao extends AcceloDao<Ticket>
 	 * 
 	 * @param a replacement activity for the activity that was adjusted.
 	 */
-	public Tuple<Optional<Activity>, Optional<Activity>> roundBilling(Ticket ticket, long roundToMinutes,
+	public Activity roundBilling(Ticket ticket, long roundToMinutes,
 			long leawayMinutes)
 	{
 
@@ -281,47 +283,41 @@ public class TicketDao extends AcceloDao<Ticket>
 
 		List<Activity> activities = daoActivity.getByTicket(ticket, true);
 
-		// Find the oldest activity
-		Optional<Activity> oldestActivity = activities.stream()
-				.sorted((a, b) -> (a.getDateTimeCreated().isAfter(b.getDateTimeCreated()) ? 1 : -1)).findFirst();
-
-		// Now add the time to the oldest activity.
-		Optional<Activity> replacementActivity = oldestActivity
-				.map(activity -> doRounding(roundToMinutes, leawayMinutes, activities, activity));
-
-		return new Tuple<>(oldestActivity, replacementActivity);
+		// Create a new activity with the additional time.
+		return doRounding(ticket, roundToMinutes, leawayMinutes, activities);
 	}
 
-	private Activity doRounding(long roundToMinutes, long leawayMinutes,
-			List<Activity> activities, Activity selectedActivity)
+	private Activity doRounding(Ticket ticket, long roundToMinutes, long leawayMinutes,
+			List<Activity> activities)
 	{
 		// calculate the current total billable for all activities against this ticket.
 		Duration totalBillable = activities.parallelStream().map(Activity::getBillable).reduce(Duration.ZERO,
 				(lhs, rhs) -> lhs.plus(rhs));
 
-		
-		Tuple<Long, Long> tupleRounding = calcRoundingData(totalBillable,roundToMinutes, leawayMinutes);
+		long minutes = totalBillable.toMinutes();
+		long targetMinutes = calcTargetMinutes(totalBillable, roundToMinutes, leawayMinutes);
 		Activity oActivity = null;
-		
-		Long minutes = tupleRounding.lhs;
-		Long rounded = tupleRounding.rhs;
-		
-		// If billable minutes is zero then we assume this ticket isn't billable.
-		if (minutes != 0 && rounded != minutes)
-		{
-			// Update the selected activity so the total billable for the ticket is rounded up to the nearest
-			// fifteen minutes.
-			Duration roundedBillable = Duration.ofMinutes(rounded).minus(totalBillable)
-					.plus(selectedActivity.getBillable());
-			selectedActivity.setBillable(roundedBillable);
 
-			// We are about to destroy the original created date so if started date is zero
-			// then lets push the created date into the started date.
-			if (LocalDateTimeHelper.isEmpty(selectedActivity.getDateTimeStarted()))
-				selectedActivity.setDateTimeStarted(selectedActivity.getDateTimeCreated());
-			
-		//	selectedActivity.setDetails(selectedActivity.getDetails() + "\n Code: " +  );
-			oActivity = new ActivityDao().replace(selectedActivity);
+		// If billable minutes is zero then we assume this ticket isn't billable unless its critical or urgent which are
+		// always billable
+		if ((minutes != 0
+				|| ticket.getPriority() == Priority.NoojeePriority.Critical
+				|| ticket.getPriority() == Priority.NoojeePriority.Urgent)
+				&& targetMinutes != minutes)
+		{
+			// Calculate the amount of time for the new activity which will bring the total billable up to the required
+			// lievel.
+			Duration roundedBillable = Duration.ofMinutes(targetMinutes).minus(totalBillable);
+
+			Activity activityToRoundUp = new Activity();
+			activityToRoundUp.setAgainst(AgainstType.ticket, ticket.getId());
+			activityToRoundUp.setOwner(ActivityOwnerType.staff, ticket.getAssignee());
+			activityToRoundUp.setSubject("Opened Ticket  - Tracking: XACYKA");
+			activityToRoundUp.setDetails("Tracking Code:  XACYKA(" + minutes * 3 + ")");
+			activityToRoundUp.setDateTimeStarted(ticket.getDateTimeStarted());
+			activityToRoundUp.setBillable(roundedBillable);
+
+			oActivity = new ActivityDao().insert(activityToRoundUp);
 		}
 
 		return oActivity;
@@ -329,15 +325,13 @@ public class TicketDao extends AcceloDao<Ticket>
 
 	public boolean isBillAdjustmentRequired(Duration totalBillable, long roundToMinutes, long leawayMinutes)
 	{
-		Tuple<Long, Long> tupleRounding = calcRoundingData(totalBillable,roundToMinutes, leawayMinutes);
-		
-		Long minutes = tupleRounding.lhs;
-		Long rounded = tupleRounding.rhs;
-		
+		long rounded = calcTargetMinutes(totalBillable, roundToMinutes, leawayMinutes);
+		long minutes = totalBillable.toMinutes();
+
 		return (minutes != 0 && rounded != minutes);
 	}
-	
-	private Tuple<Long, Long> calcRoundingData(Duration totalBillable, long roundToMinutes, long leawayMinutes)
+
+	private long calcTargetMinutes(Duration totalBillable, long roundToMinutes, long leawayMinutes)
 	{
 
 		long minutes = totalBillable.toMinutes();
@@ -347,8 +341,8 @@ public class TicketDao extends AcceloDao<Ticket>
 		long excess = minutes % roundToMinutes;
 		if (minutes < roundToMinutes || excess > leawayMinutes)
 			rounded = (long) (Math.ceil(minutes / (float) roundToMinutes) * roundToMinutes);
-		
-		return new Tuple<Long, Long>(minutes, rounded);
+
+		return rounded;
 	}
 
 	@Override
@@ -418,7 +412,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		return acceloEditURL;
 
 	}
-	
+
 	public URL getApproveURL(String domain, Ticket ticket)
 	{
 		URL acceloApproveURL = null;
@@ -432,8 +426,8 @@ public class TicketDao extends AcceloDao<Ticket>
 			}
 			else
 			{
-				// Its  attached to a contract
-				String action = "?action=contract_management&id=" + ticket.getContractId() ;
+				// Its attached to a contract
+				String action = "?action=contract_management&id=" + ticket.getContractId();
 
 				acceloApproveURL = new URL("https", domain, 443, action);
 
@@ -446,6 +440,5 @@ public class TicketDao extends AcceloDao<Ticket>
 		return acceloApproveURL;
 
 	}
-
 
 }

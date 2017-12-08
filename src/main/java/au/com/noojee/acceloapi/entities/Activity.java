@@ -334,16 +334,6 @@ public class Activity extends AcceloEntity<Activity>
 		return standing != null && (standing.equals(Standing.approved) || standing.equals(Standing.invoiced));
 	}
 
-	public AgainstType getAgainst_type()
-	{
-		return against_type;
-	}
-
-	public int getAgainst_id()
-	{
-		return against_id;
-	}
-
 	public int getOwner_id()
 	{
 		return owner_id;
@@ -357,16 +347,6 @@ public class Activity extends AcceloEntity<Activity>
 	public Visibility getVisibility()
 	{
 		return visibility;
-	}
-
-	public int getInvoice_id()
-	{
-		return invoice_id;
-	}
-
-	public int getContract_period_id()
-	{
-		return contract_period_id;
 	}
 
 	public LocalDateTime getDateTimeCreated()
@@ -399,7 +379,7 @@ public class Activity extends AcceloEntity<Activity>
 		return nonbillable;
 	}
 
-	public int get_class()
+	public int getClazz()
 	{
 		return _class;
 	}
@@ -419,12 +399,12 @@ public class Activity extends AcceloEntity<Activity>
 		return rate_charged;
 	}
 
-	public int getThread_id()
+	public int getThreadId()
 	{
 		return thread_id;
 	}
 
-	public int getParent_id()
+	public int getParentId()
 	{
 		return parent_id;
 	}
