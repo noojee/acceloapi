@@ -339,6 +339,11 @@ public class Activity extends AcceloEntity<Activity>
 		return owner_id;
 	}
 
+	public ActivityOwnerType getOwner_type()
+	{
+		return owner_type;
+	}
+
 	public Visibility getVisibility()
 	{
 		return visibility;
