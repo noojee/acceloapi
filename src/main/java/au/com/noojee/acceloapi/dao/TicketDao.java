@@ -6,7 +6,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +27,7 @@ import au.com.noojee.acceloapi.entities.meta.Ticket_;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 import au.com.noojee.acceloapi.util.Constants;
-import au.com.noojee.acceloapi.util.LocalDateTimeHelper;
 import au.com.noojee.acceloapi.util.StreamMaths;
-import au.com.noojee.acceloapi.util.Tuple;
 
 public class TicketDao extends AcceloDao<Ticket>
 {
@@ -344,6 +342,94 @@ public class TicketDao extends AcceloDao<Ticket>
 
 		return rounded;
 	}
+	
+	
+	/**
+	 * marks all activities associated with the ticket as billable by making any 
+	 * non-billable amounts billable.
+	 * 
+	 * @param ticket
+	 */
+	void makeAllActivitiesBillable(Ticket ticket)
+	{
+		/**
+		 * We have to deal with the activity threads and parent relationships.
+		 * 
+		 */
+		ActivityDao daoActivity = new ActivityDao();
+		List<Activity> activities = daoActivity.getByTicket(ticket);
+		
+		// find the activity that owns the thread and ensure that there is only one or zero of these.
+		List<Activity> owner = getOriginals(activities);
+		
+		
+	}
+
+	private List<Activity> getOriginals(List<Activity> activities)
+	{
+		List<Activity> originals = new ArrayList<>();
+		
+		for (Activity activity : activities)
+		{
+			if (activity.getThreadId() == activity.getId())
+			{
+					originals.add(activity);
+			}
+		}
+		return originals;
+	}
+
+	private List<Activity> getParents(List<Activity> activities)
+	{
+		List<Activity> parents = new ArrayList<>();
+		
+		for (Activity activity : activities)
+		{
+			if (activity.getParentId() != 0)
+			{
+				parents.add(activity);
+			}
+		}
+		return parents;
+	}
+
+	/**
+	 * generates a URL into the Accelo UI for the approval screen.
+	 * It checks to see if the ticket is attached to a contract and modifies the returned url
+	 * to bring up the correct approval screen (ticket or contract).
+	 * 
+	 * @param domain
+	 * @param ticket
+	 * @return
+	 */
+	public URL getApproveURL(String domain, Ticket ticket)
+	{
+		URL acceloApproveURL = null;
+		try
+		{
+			if (ticket.getContractId() == 0)
+			{
+				// Its not attached to a contract
+				String action = "?action=approve_object&object_id=" + ticket.getId() + "&object_table=issue";
+				acceloApproveURL = new URL("https", domain, 443, action);
+			}
+			else
+			{
+				// Its attached to a contract
+				String action = "?action=contract_management&id=" + ticket.getContractId();
+
+				acceloApproveURL = new URL("https", domain, 443, action);
+
+			}
+		}
+		catch (MalformedURLException e)
+		{
+
+		}
+		return acceloApproveURL;
+
+	}
+
 
 	@Override
 	void preInsertValidation(Ticket ticket)
@@ -410,34 +496,6 @@ public class TicketDao extends AcceloDao<Ticket>
 
 		}
 		return acceloEditURL;
-
-	}
-
-	public URL getApproveURL(String domain, Ticket ticket)
-	{
-		URL acceloApproveURL = null;
-		try
-		{
-			if (ticket.getContractId() == 0)
-			{
-				// Its not attached to a contract
-				String action = "?action=approve_object&object_id=" + ticket.getId() + "&object_table=issue";
-				acceloApproveURL = new URL("https", domain, 443, action);
-			}
-			else
-			{
-				// Its attached to a contract
-				String action = "?action=contract_management&id=" + ticket.getContractId();
-
-				acceloApproveURL = new URL("https", domain, 443, action);
-
-			}
-		}
-		catch (MalformedURLException e)
-		{
-
-		}
-		return acceloApproveURL;
 
 	}
 

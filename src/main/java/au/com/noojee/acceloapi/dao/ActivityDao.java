@@ -75,6 +75,8 @@ public class ActivityDao extends AcceloDao<Activity>
 		}
 
 	}
+	
+	
 
 	@Override
 	protected EndPoint getEndPoint()

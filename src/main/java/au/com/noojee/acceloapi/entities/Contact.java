@@ -25,7 +25,7 @@ public class Contact extends AcceloEntity<Contact>
 	private String salutation;
 	private String comments;
 	@BasicFilterField
-	private int status;
+	private int contact_status;
 	@BasicFilterField
 	private String standing;
 	private int country_id;
@@ -104,7 +104,7 @@ public class Contact extends AcceloEntity<Contact>
 
 	public int getStatus()
 	{
-		return status;
+		return contact_status;
 	}
 
 	public String getStanding()
@@ -163,7 +163,7 @@ public class Contact extends AcceloEntity<Contact>
 		return "Contact [id=" + getId() + ", firstname=" + firstname + ", middlename=" + middlename
 				+ ", surname=" + surname + ", preferred_name=" + preferred_name + ", username=" + username
 				+ ", password=" + password + ", title=" + title + ", salutation=" + salutation + ", comments="
-				+ comments + ", status=" + status + ", standing=" + standing + ", country_id=" + country_id
+				+ comments + ", contact_status=" + contact_status + ", standing=" + standing + ", country_id=" + country_id
 				+ ", physical_address_id=" + physical_address_id + ", postal_address_id=" + postal_address_id
 				+ ", phone=" + phone + ", fax=" + fax + ", email=" + email
 				+ ", communication=" + communication + ", invoice_method=" + invoice_method + "]";

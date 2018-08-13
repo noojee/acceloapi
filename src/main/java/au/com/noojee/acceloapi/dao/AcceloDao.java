@@ -237,6 +237,14 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 * In same cases (such as activity) we can't update the entity so we
 	 * have to insert a new (cloned) entity and then delete the old one.
 	 * 
+	 * WARNING: 
+	 * 
+	 * entities such as Activities have a hierarchy (thread, parent).
+	 * If you delete an activity that is the owner of a thread or a parent then all owned/child
+	 * activities are deleted!
+	 * 
+	 * WARNING:
+	 * 
 	 * To use this method, retrieve an entity from accelo.
 	 * Adjust the details of the entity and then call replace.
 	 * 

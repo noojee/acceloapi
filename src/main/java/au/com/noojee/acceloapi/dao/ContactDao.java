@@ -49,7 +49,7 @@ public class ContactDao extends AcceloDao<Contact>
 	{
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add(AcceloFieldList._ALL);
-		fields.add(Company.FIELDS_ALL);
+		//fields.add(Company.FIELDS_ALL);
 		return fields;
 	}
 
