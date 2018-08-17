@@ -16,7 +16,6 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 	private float charged;		// decimal	The rate charged for billable work.
 	private String comments;	// string	Any comments made against the logged time.
 	
-	
 	private AgainstType against_type;
 	private int against_id;
 	

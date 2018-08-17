@@ -1,5 +1,9 @@
 package au.com.noojee.acceloapi.entities.meta;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import au.com.noojee.acceloapi.entities.ContractPeriod;
 /** 
  *
  *          DO NOT MODIFY 
@@ -12,9 +16,6 @@ package au.com.noojee.acceloapi.entities.meta;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import au.com.noojee.acceloapi.entities.ContractPeriod;
 
 
 public class ContractPeriod_ 

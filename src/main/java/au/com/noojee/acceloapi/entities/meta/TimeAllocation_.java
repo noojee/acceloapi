@@ -1,5 +1,8 @@
 package au.com.noojee.acceloapi.entities.meta;
 
+import java.time.LocalDateTime;
+
+import au.com.noojee.acceloapi.entities.TimeAllocation;
 /** 
  *
  *          DO NOT MODIFY 
@@ -12,8 +15,6 @@ package au.com.noojee.acceloapi.entities.meta;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
-import au.com.noojee.acceloapi.entities.TimeAllocation;
-import java.time.LocalDateTime;
 
 
 public class TimeAllocation_ 

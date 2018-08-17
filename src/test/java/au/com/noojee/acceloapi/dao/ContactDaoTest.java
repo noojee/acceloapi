@@ -1,8 +1,7 @@
 package au.com.noojee.acceloapi.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.junit.Test;

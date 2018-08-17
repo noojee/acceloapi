@@ -39,6 +39,7 @@ public class AppTest extends TestCase
 	{
 		super(testName);
 
+
 		AcceloApi.getInstance().connect(AcceloSecret.load());
 	}
 

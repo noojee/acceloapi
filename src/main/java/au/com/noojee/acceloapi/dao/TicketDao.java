@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;

@@ -195,7 +195,7 @@ public enum AcceloCache
 
 		long elapsedTime = System.nanoTime() - startTime;
 
-		logger.error("Returned from cache: " + returnedFromCache + " " + cacheKey + " entities returned: " + list.size()
+		logger.debug("Returned from cache: " + returnedFromCache + " " + cacheKey + " entities returned: " + list.size()
 				+ " Misses: "
 				+ this.missCounter
 				+ " timer: " + elapsedTime / 1000000 + "(ms)");

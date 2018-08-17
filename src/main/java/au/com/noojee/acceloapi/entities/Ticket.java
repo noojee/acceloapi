@@ -46,8 +46,8 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int issue_type;
 
 	@BasicFilterField
-	private int affiliation; // The affiliated with this ticket which links
-								// through to the contact
+	private int affiliation; // The affiliate id of the contact associated with this ticket.
+	
 	private AgainstType against_type;
 	private int against_id;
 
@@ -124,7 +124,6 @@ public class Ticket extends AcceloEntity<Ticket>
 	private String resolution_detail;
 
 	private int issue_object_budget;
-	private int contact;
 
 	private String staff_bookmarked;
 
@@ -448,16 +447,6 @@ public class Ticket extends AcceloEntity<Ticket>
 	public void setIssue_object_budget(int issue_object_budget)
 	{
 		this.issue_object_budget = issue_object_budget;
-	}
-
-	public int getContact()
-	{
-		return contact;
-	}
-
-	public void setContact(int contact)
-	{
-		this.contact = contact;
 	}
 
 	public String getStaff_bookmarked()

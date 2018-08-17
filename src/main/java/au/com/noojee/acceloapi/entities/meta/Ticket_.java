@@ -1,5 +1,11 @@
 package au.com.noojee.acceloapi.entities.meta;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+import au.com.noojee.acceloapi.entities.Priority.NoojeePriority;
+import au.com.noojee.acceloapi.entities.Ticket;
+import au.com.noojee.acceloapi.entities.Ticket.Standing;
 /** 
  *
  *          DO NOT MODIFY 
@@ -12,12 +18,7 @@ package au.com.noojee.acceloapi.entities.meta;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import au.com.noojee.acceloapi.entities.Priority.NoojeePriority;
-import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.entities.types.TicketStatus;
-import au.com.noojee.acceloapi.entities.Ticket.Standing;
 
 
 public class Ticket_ 

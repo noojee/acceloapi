@@ -115,6 +115,11 @@ public class TicketStatus
 	{
 		return title;
 	}
+	
+	public Standing getStanding()
+	{
+		return standing;
+	}
 
 	public int getId()
 	{
