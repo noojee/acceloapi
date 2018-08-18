@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
-import au.com.noojee.acceloapi.util.Formatters;
+import au.com.noojee.acceloapi.util.Format;
 
 public class ContractPeriod extends AcceloEntity<ContractPeriod>
 {
@@ -45,7 +45,7 @@ public class ContractPeriod extends AcceloEntity<ContractPeriod>
 
 	public String getPeriodRange()
 	{
-		return (Formatters.format(getDateCommenced()) + " to " + Formatters.format(getDateExpires())).replace("/", "-");
+		return (Format.format(getDateCommenced()) + " to " + Format.format(getDateExpires())).replace("/", "-");
 	}
 
 	public LocalDate getDateCommenced()

@@ -3,7 +3,7 @@ package au.com.noojee.acceloapi.entities;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.javamoney.moneta.Money;
+import org.joda.money.Money;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;

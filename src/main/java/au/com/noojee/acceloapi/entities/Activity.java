@@ -8,7 +8,7 @@ import javax.swing.text.html.HTML.Tag;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.javamoney.moneta.Money;
+import org.joda.money.Money;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -17,7 +17,7 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
-import au.com.noojee.acceloapi.util.Formatters;
+import au.com.noojee.acceloapi.util.Conversions;
 
 public class Activity extends AcceloEntity<Activity>
 {
@@ -321,7 +321,7 @@ public class Activity extends AcceloEntity<Activity>
 
 	public Money getRateCharged()
 	{
-		return Money.of(rate_charged, Formatters.getCurrency());
+		return Conversions.asMoney(rate_charged);
 	}
 
 	public List<Tag> getTag()
