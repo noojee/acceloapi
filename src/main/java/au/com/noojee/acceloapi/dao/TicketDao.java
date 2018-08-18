@@ -30,6 +30,11 @@ import au.com.noojee.acceloapi.util.StreamMaths;
 
 public class TicketDao extends AcceloDao<Ticket>
 {
+	// The miniumum we bill for any ticket which is raised.
+	public static final long MIN_BILL_INTERVAL = 5;
+	// the amount of time we spend on an individual activity before we bill the MIN_BILL_INTERVAL
+	public static final long BILLING_LEWAY = 0;
+
 	/**
 	 * TicketNo is the id.
 	 * 
@@ -359,6 +364,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		List<Activity> activities = daoActivity.getByTicket(ticket);
 		
 		// find the activity that owns the thread and ensure that there is only one or zero of these.
+		@SuppressWarnings("unused")
 		List<Activity> owner = getOriginals(activities);
 		
 		
@@ -378,6 +384,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		return originals;
 	}
 
+	@SuppressWarnings("unused")
 	private List<Activity> getParents(List<Activity> activities)
 	{
 		List<Activity> parents = new ArrayList<>();

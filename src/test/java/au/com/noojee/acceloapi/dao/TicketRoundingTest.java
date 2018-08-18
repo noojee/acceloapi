@@ -21,8 +21,8 @@ public class TicketRoundingTest
 	@Test
 	public void test()
 	{
-		int rounded = 15;
-		int activity = 5;
+		//int rounded = 15;
+		//int activity = 5;
 		// Duration totalBillable = 7;
 		//
 		// Duration roundedBillable = Duration.ofMinutes(rounded).minus(totalBillable)
