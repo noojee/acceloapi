@@ -21,6 +21,17 @@
 	</properties>
 
 
+	<distributionManagement>
+		<repository>
+			<id>noojee-internal</id>
+			<url>packagecloud+https://packagecloud.io/noojee/internal</url>
+		</repository>
+		<snapshotRepository>
+			<id>noojee-internal</id>
+			<url>packagecloud+https://packagecloud.io/noojee/internal</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 	<dependencies>
 
 		<dependency>
