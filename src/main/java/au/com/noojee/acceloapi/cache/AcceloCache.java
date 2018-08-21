@@ -61,10 +61,10 @@ public enum AcceloCache
 				.removalListener(notification ->
 					{
 						// if (!(notification.getKey() instanceof SingleEntityCacheKey))
-						if (notification.getCause() != RemovalCause.REPLACED)
-							logger.error(
-									"Cache eviction of " + notification.getKey() + " because: "
-											+ notification.getCause());
+//						if (notification.getCause() != RemovalCause.REPLACED)
+//							logger.error(
+//									"Cache eviction of " + notification.getKey() + " because: "
+//											+ notification.getCause());
 					})
 				.build(new CacheLoader<CacheKey, List>()
 				{
