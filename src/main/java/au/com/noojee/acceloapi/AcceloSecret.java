@@ -34,11 +34,6 @@ public class AcceloSecret
 	private String client_secret;
 	private String fqdn;
 
-//	// used when loading from a file.
-//	private AcceloSecret()
-//	{
-//	}
-
 	AcceloSecret(String FQDN, String clientId, String clientSecret)
 	{
 		this.fqdn = FQDN;
@@ -71,12 +66,21 @@ public class AcceloSecret
 			throw new FileNotFoundException(ACCELOSECRETS_JSON);
 		
 		File file = new File(resource.getFile());
+		
+		AcceloSecret secret = load(file);
 
-		FileReader fr = new FileReader(file);
+		return secret;
+	}
+	
+
+	public static AcceloSecret load(File configFile) throws FileNotFoundException
+	{
+		FileReader fr = new FileReader(configFile);
 
 		AcceloSecret secret = new Gson().fromJson(fr, AcceloSecret.class);
 
 		return secret;
 	}
+
 
 }
