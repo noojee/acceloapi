@@ -70,8 +70,6 @@ public class AcceloApi
 	 * method of Accelo returns a list of entities. This method will throw an exception if you try to make a call that
 	 * causes Accelo to return a single entity (e.g. don't try to get a contact by id).
 	 * 
-	 * @param method
-	 * @param url
 	 * @param filterMap
 	 * @param fieldList
 	 * @param clazz
@@ -143,7 +141,6 @@ public class AcceloApi
 	/**
 	 * Send a request to get a single entity or the 'nth' page of entities. The first page is page 0.
 	 * 
-	 * @param method
 	 * @param url
 	 * @param filterMap
 	 * @param fieldList
@@ -179,11 +176,9 @@ public class AcceloApi
 	/**
 	 * Send a request to get a single entity or the 'nth' page of entities. The first page is page 0.
 	 * 
-	 * @param method
 	 * @param url
 	 * @param filterMap
 	 * @param fieldList
-	 * @param clazz
 	 * @param pageNo the Page to return
 	 * @return
 	 */

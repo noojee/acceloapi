@@ -2,12 +2,21 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<name>acceloapi</name>
 	<groupId>au.com.noojee</groupId>
 	<artifactId>acceloapi</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>acceloapi</name>
-	<url>http://maven.apache.org</url>
+	<distributionManagement>
+		<repository>
+			<id>noojee-internal</id>
+			<url>packagecloud+https://packagecloud.io/noojee/internal</url>
+		</repository>
+		<snapshotRepository>
+			<id>noojee-internal</id>
+			<url>packagecloud+https://packagecloud.io/noojee/internal</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 
 
@@ -33,18 +42,6 @@
 		</extensions>
 	</build>
 
-
-
-	<distributionManagement>
-		<repository>
-			<id>noojee-internal</id>
-			<url>packagecloud+https://packagecloud.io/noojee/internal</url>
-		</repository>
-		<snapshotRepository>
-			<id>noojee-internal</id>
-			<url>packagecloud+https://packagecloud.io/noojee/internal</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 
 	<dependencies>
