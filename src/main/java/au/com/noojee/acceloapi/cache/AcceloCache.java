@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import com.google.common.cache.RemovalCause;
 
 import au.com.noojee.acceloapi.AcceloAbstractResponseList;
 import au.com.noojee.acceloapi.AcceloApi;
