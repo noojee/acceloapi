@@ -108,10 +108,12 @@ public class ActivityDao extends AcceloDao<Activity>
 		try
 		{
 			AcceloFilter<Activity> filter = new AcceloFilter<>();
+			filter.noLimit();
 
 			filter.where(filter.eq(Activity_.against_type, AgainstType.issue))
 			.and(filter.afterOrEq(Activity_.date_created, createdDate.atStartOfDay()))
 			// If the staff field is 0 then this is a system generated activity so lets exclude it.
+			// we need system activities as we miss some tickets if no activity ever taken (goes straight to closed).
 			.and(filter.greaterThan(Activity_.staff, 0));
 
 			list = new ActivityDao().getByFilter(filter);
