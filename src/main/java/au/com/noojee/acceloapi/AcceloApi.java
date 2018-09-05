@@ -117,7 +117,8 @@ public class AcceloApi
 		boolean more = true;
 		int page = filter.getOffset();
 
-		while (more && entities.size() < (filter.getLimit() * PAGE_SIZE))
+		// while there are more to fetch and we have fetch less than the requested limit.
+		while (more && filter.belowLimit(entities.size()))
 		{
 			L responseList = get(url, filter, fieldList, responseClass, page);
 

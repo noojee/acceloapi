@@ -27,7 +27,7 @@ public class TicketDaoMissingContracts
 		
 		filter.where(filter.eq(Ticket_.contract, 0)).and(filter.after(Ticket_.date_submitted, LocalDateTime.of(2017, 03, 01, 0, 0, 0)).and(filter.eq(Ticket_.standing, Standing.closed)));
 		
-		filter.limit(10000);
+		filter.limit(AcceloFilter.UNLIMITED);
 		
 		List<Ticket> tickets = daoTicket.getByFilter(filter);
 		

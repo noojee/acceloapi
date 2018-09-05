@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
@@ -17,6 +18,10 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 {
 	public static Logger logger = LogManager.getLogger();
 	public static final String ALL = "_ALL";
+	
+	// Used by limit(int) to remove any limit on the
+	// no. of rows returned.
+	public static final int UNLIMITED = -1;
 
 	private Optional<Expression> expression = Optional.empty();
 
@@ -360,7 +365,15 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 		this.limit = limit;
 	}
 
-	public int getLimit()
+	// removes the limit on the no. of entities returned.
+	// becareful because you can crash accelo.
+	public void noLimit()
+	{
+		limit(AcceloFilter.UNLIMITED);
+	}
+
+
+	private int getLimit()
 	{
 		return this.limit;
 	}
@@ -384,5 +397,13 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 		logger.error("OrderBy: " + orderBy.hashCode());
 
 	}
+
+	// returns true of no. of entities retrieved is less than the
+	// limit imposed by this filter.
+	public boolean belowLimit(int entitiesRetrieved)
+	{
+		 return limit == UNLIMITED || (entitiesRetrieved < (getLimit() * AcceloApi.PAGE_SIZE));
+	}
+
 
 }

@@ -61,8 +61,16 @@ public class ActivityDao extends AcceloDao<Activity>
 		}
 		return list;
 	}
-
-	public List<Activity> getRecentByCompany(Company company, LocalDate asAtDate)
+	
+	
+	/**
+	 * Return a list of activities for the given company that occurred on or after the given createdDate
+	 * 
+	 * @param company
+	 * @param createdDate
+	 * @return
+	 */
+	public List<Activity> getRecentByCompany(Company company, LocalDate createdDate)
 	{
 		List<Activity> list = null;
 		try
@@ -70,7 +78,7 @@ public class ActivityDao extends AcceloDao<Activity>
 			AcceloFilter<Activity> filter = new AcceloFilter<>();
 
 			filter.where(filter.against(AgainstType.company, company.getId()))
-			.and(filter.after(Activity_.date_created, asAtDate.plusDays(1).atStartOfDay()))
+			.and(filter.after(Activity_.date_created, createdDate.atStartOfDay()))
 			// If the staff field is 0 then this is a system generated activity so lets exclude it.
 			.and(filter.greaterThan(Activity_.staff, 0));
 
@@ -82,6 +90,42 @@ public class ActivityDao extends AcceloDao<Activity>
 		}
 		return list;
 	}
+	
+	
+	/**
+	 * Return a list of activities associated to a ticket that occurred on or after the given createdDate
+	 * 
+	 * We exclude system generated activities as they just clutter up the data set
+	 * without adding any real value.
+	 * 
+	 * @param company
+	 * @param createdDate
+	 * @return
+	 */
+	public List<Activity> getRecentTicketActivities(LocalDate createdDate)
+	{
+		List<Activity> list = null;
+		try
+		{
+			AcceloFilter<Activity> filter = new AcceloFilter<>();
+
+			filter.where(filter.eq(Activity_.against_type, AgainstType.issue))
+			.and(filter.afterOrEq(Activity_.date_created, createdDate.atStartOfDay()))
+			// If the staff field is 0 then this is a system generated activity so lets exclude it.
+			.and(filter.greaterThan(Activity_.staff, 0));
+
+			list = new ActivityDao().getByFilter(filter);
+		}
+		catch (AcceloException e)
+		{
+			logger.error(e, e);
+		}
+		return list;
+	}
+
+	
+	
+	
 
 	@Override
 	void preInsertValidation(Activity activity)
