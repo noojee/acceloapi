@@ -8,7 +8,6 @@ import java.util.List;
 import org.junit.Test;
 
 import au.com.noojee.acceloapi.AcceloApi;
-import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloSecret;
 import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.meta.Activity_;

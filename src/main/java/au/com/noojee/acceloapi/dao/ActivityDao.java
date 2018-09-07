@@ -99,10 +99,11 @@ public class ActivityDao extends AcceloDao<Activity>
 	 * without adding any real value.
 	 * 
 	 * @param company
-	 * @param createdDate
+	 * @param firstDate return actives from (and including) this date
+	 * @param lastDate return activities to (and including) this date.
 	 * @return
 	 */
-	public List<Activity> getRecentTicketActivities(LocalDate createdDate)
+	public List<Activity> getRecentTicketActivities(LocalDate firstDate, LocalDate lastDate)
 	{
 		List<Activity> list = null;
 		try
@@ -111,10 +112,16 @@ public class ActivityDao extends AcceloDao<Activity>
 			filter.noLimit();
 
 			filter.where(filter.eq(Activity_.against_type, AgainstType.issue))
-			.and(filter.afterOrEq(Activity_.date_created, createdDate.atStartOfDay()))
+			.and(filter.eq(Activity_.date_created, lastDate.atStartOfDay()))
+
+//			.and(filter.afterOrEq(Activity_.date_created, firstDate.atStartOfDay()))
+//			.and(filter.before(Activity_.date_created, lastDate.atStartOfDay())
+//					.or(filter.eq(Activity_.date_created, lastDate.atStartOfDay())))
 			// If the staff field is 0 then this is a system generated activity so lets exclude it.
 			// we need system activities as we miss some tickets if no activity ever taken (goes straight to closed).
 			.and(filter.greaterThan(Activity_.staff, 0));
+			
+			logger.error("getRecentTicketActivities: " + filter);
 
 			list = new ActivityDao().getByFilter(filter);
 		}
