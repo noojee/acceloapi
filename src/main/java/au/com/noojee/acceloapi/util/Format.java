@@ -13,12 +13,10 @@ public interface Format
 {
 
 	static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-	
+
 	static final DateTimeFormatter saasuDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	
 	static final DateTimeFormatter dateWithMonthFormat = DateTimeFormatter.ofPattern("dd MMM yyyy");
-
 
 	static final DateTimeFormatter dateFormatTime = DateTimeFormatter.ofPattern("dd-MM-yyyy hh:mma");
 
@@ -43,13 +41,11 @@ public interface Format
 	{
 		return (time == null ? "" : time.format(timeFormat));
 	}
-	
+
 	public static String saasuFormat(LocalDate date)
 	{
 		return (date == null ? "" : date.format(saasuDateFormat));
 	}
-
-
 
 	/**
 	 * Formats the Duration to H:mm
@@ -60,11 +56,15 @@ public interface Format
 	public static String format(Duration duration)
 	{
 
-		if (duration.toMillis() >= 60000)
-
-			return (duration == null ? "" : DurationFormatUtils.formatDuration(duration.toMillis(), "H:mm"));
+		if (duration == null)
+			return "";
 		else
-			return (duration == null ? "" : DurationFormatUtils.formatDuration(duration.toMillis(), "s") + " secs");
+		{
+			if (duration.toMillis() >= 60000)
+				return DurationFormatUtils.formatDuration(duration.toMillis(), "H:mm");
+			else
+				return DurationFormatUtils.formatDuration(duration.toMillis(), "s") + " secs";
+		}
 
 	}
 
@@ -102,9 +102,10 @@ public interface Format
 	{
 		return format(money, false);
 	}
-	
+
 	/**
 	 * No delimiters and no currency.
+	 * 
 	 * @param money
 	 * @return
 	 */
@@ -119,7 +120,5 @@ public interface Format
 		else
 			return "0.00";
 	}
-
-
 
 }
