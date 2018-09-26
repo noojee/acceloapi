@@ -5,11 +5,13 @@ import static org.junit.Assert.fail;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloSecret;
 import au.com.noojee.acceloapi.entities.Activity;
+import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.entities.meta.Activity_;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
@@ -17,7 +19,52 @@ import au.com.noojee.acceloapi.filter.AcceloFilter;
 public class ActivityDaoTest
 {
 
+
 	@Test
+	public void testActivityForTicket()
+	{
+
+		AcceloSecret secret;
+		try
+		{
+			secret = AcceloSecret.load();
+			AcceloApi.getInstance().connect(secret);
+			
+			int ticketId = 18587;
+
+			TicketDao daoTicket = new TicketDao();
+			Ticket ticket = daoTicket.getById(ticketId);
+			
+			ActivityDao daoActivity = new ActivityDao();
+			List<Activity> ticketActivities = daoActivity.getByTicket(ticket);
+			
+			
+			System.out.println("count: " + ticketActivities.size());
+			
+			for (Activity item : ticketActivities)
+			{
+				print("++++++++++++++++++++++++++++++++++++++++++++");
+				print(item.toString());
+			}
+
+		}
+		catch (Throwable e)
+		{
+			e.printStackTrace();
+			fail("Excepton");
+		}
+
+	}
+
+
+	private void print(String string)
+	{
+		System.out.println(string);
+	}
+
+
+	@Test
+	@Ignore
 	public void test()
 	{
 
@@ -30,7 +77,7 @@ public class ActivityDaoTest
 			ActivityDao daoActivity = new ActivityDao();
 			Activity activity = daoActivity.getById(349599);
 
-			System.out.println(activity);
+			print(activity.toString());
 
 			List<Activity> list = null;
 			AcceloFilter<Activity> filter = new AcceloFilter<>();

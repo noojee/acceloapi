@@ -23,12 +23,14 @@ public class ContactDaoTest
 			AcceloApi.getInstance().connect(secret);
 
 			ContactDao daoContact = new ContactDao();
-			List<Contact> contacts = daoContact.getByPhone("0385089777");
+			//List<Contact> contacts = daoContact.getByPhone("0385089777");
+			List<Contact> contacts = daoContact.getByPhone("0383208100");
 
 			for (Contact contact : contacts)
 			{
 				System.out.println(contact);
 			}
+			
 
 		}
 		catch (Throwable e)

@@ -418,15 +418,15 @@ public class Activity extends AcceloEntity<Activity>
 	@Override
 	public String toString()
 	{
-		return "Activity [id=" + getId() + ", subject=" + subject + ", parent=" + parent
-				+ ", thread=" + thread + ", against_type=" + against_type + ", against_id="
-				+ against_id + ", owner_id=" + owner_id + ", owner_type=" + owner_type
-				+ ", body=" + body + ", visibility=" + visibility + ", details=" + details + ", date_created="
+		return "Activity [id=" + getId() + ", against_type=" + against_type + ", against_id="
+				+ against_id + ", parent=" + parent
+				+ ", thread=" + thread +  ", owner_id=" + owner_id + ", owner_type=" + owner_type
+				+ ",\n visibility=" + visibility + ", details=" + details + ", date_created="
 				+ date_created + ", date_started=" + date_started + ", date_ended=" + date_ended + ", date_logged="
-				+ date_logged + ", date_modified=" + date_modified + ", billable=" + billable + ", nonbillable="
+				+ date_logged + ",\n date_modified=" + date_modified + ", billable=" + billable + ", nonbillable="
 				+ nonbillable + ", staff=" + staff + ", priority=" + priority + ", _class=" + _class + ", task=" + task
 				+ ", time_allocation=" + time_allocation + ", rate=" + rate + ", rate_charged=" + rate_charged
-				+ ", tag=" + tag + "]";
+				+ ", tag=" + tag+ ",\n subject=" + subject  + ", body=" + body + "]\n\n";
 	}
 
 }
