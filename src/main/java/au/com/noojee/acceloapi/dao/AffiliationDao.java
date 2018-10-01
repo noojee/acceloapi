@@ -1,19 +1,14 @@
 package au.com.noojee.acceloapi.dao;
 
-import java.io.IOException;
 import java.util.List;
 
-import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Affiliation;
-import au.com.noojee.acceloapi.entities.Company;
 import au.com.noojee.acceloapi.entities.Contact;
 import au.com.noojee.acceloapi.entities.meta.Affiliation_;
-import au.com.noojee.acceloapi.entities.meta.Company_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 public class AffiliationDao extends AcceloDao<Affiliation>
