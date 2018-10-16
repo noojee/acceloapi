@@ -23,6 +23,14 @@
 
 	</build>
 
+	<distributionManagement>
+		<repository>
+			<id>central</id>
+			<name>nit-releases</name>
+			<url>https://nit.jfrog.io/nit/libs-release-local</url>
+		</repository>
+	</distributionManagement>
+	
 	<dependencies>
 
 		<dependency>
