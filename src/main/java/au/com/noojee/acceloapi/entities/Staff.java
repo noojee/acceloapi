@@ -19,6 +19,9 @@ public class Staff extends AcceloEntity<Staff>
 
 	}
 
+	// When the accelo performs an action that requires a staff id it uses 0.
+	public static final int SYSTEM = 0;
+
 	private String firstname;
 	private String surname;
 	@BasicFilterField

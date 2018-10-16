@@ -1,5 +1,7 @@
 package au.com.noojee.acceloapi.filter;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 class Not extends Expression
 {
 
@@ -18,6 +20,7 @@ class Not extends Expression
 	}
 	
 	@Override
+	@SuppressFBWarnings
 	public boolean equals(Object e)
 	{
 		return true;

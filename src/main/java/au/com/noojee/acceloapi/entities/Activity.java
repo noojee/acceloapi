@@ -429,4 +429,9 @@ public class Activity extends AcceloEntity<Activity>
 				+ ", tag=" + tag+ ",\n subject=" + subject  + ", body=" + body + "]\n\n";
 	}
 
+	public boolean isSystemActivity()
+	{
+		return getOwnerType() == ActivityOwnerType.staff && staff == Staff.SYSTEM;
+	}
+
 }

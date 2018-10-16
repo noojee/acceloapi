@@ -23,4 +23,9 @@ public class AcceloErrorResponse
 	{
 		return httpResponse.toString();
 	}
+	
+	boolean isBadGateway()
+	{
+		return httpResponse.getResponseCode() == 502;
+	}
 }

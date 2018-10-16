@@ -1,5 +1,6 @@
 package au.com.noojee.acceloapi.entities;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class Priority
 {
@@ -40,7 +41,9 @@ public class Priority
 	enum Color { grey, blue, green, orange, red };
 	
 	private int 	id; 
+	@SuppressFBWarnings
 	private String title;	// A name for the priority.
+	@SuppressFBWarnings
 	private Color color;		// The color of the priority when displayed on the deployment. The colors, in order of increasing urgency a “grey”, “blue”, “green”, “orange”, “red”.
 	private int factor;		// A number representing the urgency of the priority. 5 is “Extreme”, 1 is “None”.
 	
@@ -57,6 +60,7 @@ public class Priority
 	}
 
 
+	
 	public Color getColor()
 	{
 		return color;

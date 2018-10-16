@@ -19,6 +19,12 @@ public class AcceloException extends RuntimeException
 	public AcceloException(AcceloErrorResponse error)
 	{
 		this.error = error;
+		
+	}
+	
+	public boolean isBadGateway()
+	{
+		return this.error != null && this.error.isBadGateway();
 	}
 	
 	@Override

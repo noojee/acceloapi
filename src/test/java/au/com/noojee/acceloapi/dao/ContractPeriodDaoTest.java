@@ -7,6 +7,7 @@ import org.junit.Test;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.HTTPResponse;
 import au.com.noojee.acceloapi.entities.ContractPeriod;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 public class ContractPeriodDaoTest
 {
@@ -50,6 +51,7 @@ public class ContractPeriodDaoTest
 	
 	class Response
 	{
+		@SuppressFBWarnings
 		List<ContractPeriod> periods;
 
 		public List<ContractPeriod> getList()

@@ -27,12 +27,13 @@ public class LookupCompanyByPhone
 			ContactDao daoContact = new ContactDao();
 			List<Contact> contacts = daoContact.getByPhone("0385089777");
 
-			for (Contact contact : contacts)
-			{
-				System.out.println(contact);
-			}
 			if (contacts != null && contacts.size() > 0)
 			{
+				for (Contact contact : contacts)
+				{
+					System.out.println(contact);
+				}
+
 				Contact contact = contacts.get(0);
 				int affiliationId = contact.getDefaultAffiliation();
 				print("Affiliation: " + affiliationId);

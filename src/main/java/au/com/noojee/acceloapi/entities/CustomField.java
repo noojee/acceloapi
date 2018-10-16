@@ -1,10 +1,14 @@
 package au.com.noojee.acceloapi.entities;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 // Class for holding custom Accelo fields
 public class CustomField extends AcceloEntity<CustomField>
 {
+	@SuppressFBWarnings
 	private String value_type;
 	private String field_name;
+	@SuppressFBWarnings
 	private String field_type;
 	private String value;
 

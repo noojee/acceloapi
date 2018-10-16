@@ -95,15 +95,14 @@ public class ActivityDao extends AcceloDao<Activity>
 	/**
 	 * Return a list of activities associated to a ticket that occurred on or after the given createdDate
 	 * 
-	 * We exclude system generated activities as they just clutter up the data set
-	 * without adding any real value.
+	 * We include system activities as in some cases its the only activity we see so if we exclude
+	 * the activity the associated ticket will never be picked up.
 	 * 
 	 * @param company
-	 * @param firstDate return actives from (and including) this date
-	 * @param lastDate return activities to (and including) this date.
+	 * @param extractionDate return all activities from this date.
 	 * @return
 	 */
-	public List<Activity> getRecentTicketActivities(LocalDate firstDate, LocalDate lastDate)
+	public List<Activity> getRecentTicketActivities(LocalDate extractionDate)
 	{
 		List<Activity> list = null;
 		try
@@ -111,19 +110,24 @@ public class ActivityDao extends AcceloDao<Activity>
 			AcceloFilter<Activity> filter = new AcceloFilter<>();
 			filter.noLimit();
 
+			// customer generated activities
 			filter.where(filter.eq(Activity_.against_type, AgainstType.issue))
-			.and(filter.eq(Activity_.date_created, lastDate.atStartOfDay()))
-
-//			.and(filter.afterOrEq(Activity_.date_created, firstDate.atStartOfDay()))
-//			.and(filter.before(Activity_.date_created, lastDate.atStartOfDay())
-//					.or(filter.eq(Activity_.date_created, lastDate.atStartOfDay())))
-			// If the staff field is 0 then this is a system generated activity so lets exclude it.
-			// we need system activities as we miss some tickets if no activity ever taken (goes straight to closed).
-			.and(filter.greaterThan(Activity_.staff, 0));
-			
-			logger.error("getRecentTicketActivities: " + filter);
-
+			.and(filter.eq(Activity_.owner_type, ActivityOwnerType.affiliation))
+			.and(filter.eq(Activity_.staff, 0))
+			.and(filter.eq(Activity_.date_created, extractionDate.atStartOfDay()));
 			list = new ActivityDao().getByFilter(filter);
+			logger.error("getRecentTicketActivities(customer): " + filter);
+			
+			// staff and system generated activities
+			// we need system activities as we miss some tickets if no activity ever taken (goes straight to closed).
+			// system generated activities have a '0' value for the staff field.
+			filter.where(filter.eq(Activity_.against_type, AgainstType.issue))
+			.and(filter.eq(Activity_.owner_type, ActivityOwnerType.staff))
+			// .and(filter.greaterThan(Activity_.staff, 0))
+			.and(filter.eq(Activity_.date_created, extractionDate.atStartOfDay()));
+			
+			list.addAll(new ActivityDao().getByFilter(filter));
+			logger.error("getRecentTicketActivities(staff): " + filter);
 		}
 		catch (AcceloException e)
 		{

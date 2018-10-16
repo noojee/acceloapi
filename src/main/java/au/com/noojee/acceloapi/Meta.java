@@ -1,10 +1,14 @@
 package au.com.noojee.acceloapi;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 public class Meta
 {
-	
+	@SuppressFBWarnings
 	String status;
+	@SuppressFBWarnings
 	String more_info;
+	@SuppressFBWarnings
 	String message;
 	
 	@Override

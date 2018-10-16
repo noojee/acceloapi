@@ -35,6 +35,16 @@ public class Ticket extends AcceloEntity<Ticket>
 		submitted, open, resolved, closed, inactive;
 	}
 
+	/**
+	 * The accelo ticket No.
+	 */
+	@Override
+	public
+	int getId()
+	{
+		return super.getId();
+	}
+	
 	@OrderByField
 	private String title;
 

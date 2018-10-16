@@ -1,5 +1,7 @@
 package au.com.noojee.acceloapi.progressions;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 /**
  * 
  * @author bsutton
@@ -9,8 +11,10 @@ public class Progression
 {
 	private int id;
 	
+	@SuppressFBWarnings
 	private String title;
 	
+	@SuppressFBWarnings
 	private Status status;
 	
 	
