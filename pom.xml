@@ -6,7 +6,7 @@
 	<name>acceloapi</name>
 	<groupId>au.com.noojee</groupId>
 	<artifactId>acceloapi</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -22,15 +22,14 @@
 		</plugins>
 
 	</build>
-
 	<distributionManagement>
-		<repository>
-			<id>central</id>
-			<name>nit-releases</name>
-			<url>https://nit.jfrog.io/nit/libs-release-local</url>
-		</repository>
+    	<snapshotRepository>
+        	<id>snapshots</id>
+        	<name>nit-snapshots</name>
+        	<url>https://nit.jfrog.io/nit/libs-snapshot-local</url>
+    	</snapshotRepository>
 	</distributionManagement>
-	
+
 	<dependencies>
 
 		<dependency>
