@@ -40,7 +40,7 @@ public class TimeAllocationDaoTest
 					break;
 				}
 			}
-			if (ticketWithActivites != null)
+			if (ticketWithActivites != null && activities != null)
 			{
 				Activity activity = activities.get(0);
 				TimeAllocationDao daoTimeAllocation = new TimeAllocationDao();
