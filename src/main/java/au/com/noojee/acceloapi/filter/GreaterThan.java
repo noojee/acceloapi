@@ -26,7 +26,7 @@ class GreaterThan<E extends AcceloEntity<E>> extends Expression
 	@Override
 	public Expression copy()
 	{
-		GreaterThan<E> exp = new GreaterThan<E>(this.field, this.operand.toString());
+		GreaterThan<E> exp = new GreaterThan<>(this.field, this.operand.toString());
 		
 		return exp;
 	}

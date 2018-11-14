@@ -11,6 +11,7 @@ public class AcceloResponseList<E extends AcceloEntity<E>> extends  AcceloAbstra
 	private List<E> response;
 	
 	
+	@Override
 	public List<E> getList()
 	{
 		// Guaranteed to return a list.

@@ -35,7 +35,7 @@ class Against extends Expression
 	public Expression copy()
 	{
 		Against against = new Against(this.type);
-		against.matchIds = new ArrayList<Integer>(this.matchIds);
+		against.matchIds = new ArrayList<>(this.matchIds);
 		
 		return against;
 	}

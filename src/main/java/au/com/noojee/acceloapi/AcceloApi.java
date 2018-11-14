@@ -92,6 +92,7 @@ public class AcceloApi
 		return list;
 	}
 
+	@SuppressWarnings("null")
 	public <E extends AcceloEntity<E>> E get(EndPoint endPoint, AcceloFilter<E> filterMap,
 			AcceloFieldList fieldList,
 			Class<? extends AcceloResponse<E>> clazz)
@@ -107,7 +108,7 @@ public class AcceloApi
 			throw new AcceloException(e);
 		}
 
-		return response.getEntity();
+		return (response != null ? response.getEntity() : (E)null);
 	}
 
 	public <E extends AcceloEntity<E>, L extends AcceloAbstractResponseList<E>> List<E> getAll(URL url,

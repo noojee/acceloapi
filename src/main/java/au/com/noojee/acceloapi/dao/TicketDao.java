@@ -9,6 +9,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponse;
@@ -30,6 +33,8 @@ import au.com.noojee.acceloapi.util.StreamMaths;
 
 public class TicketDao extends AcceloDao<Ticket>
 {
+	static private Logger logger = LogManager.getLogger(TicketDao.class);
+
 	// The miniumum we bill for any ticket which is raised.
 	public static final long MIN_BILL_INTERVAL = 5;
 	// the amount of time we spend on an individual activity before we bill the MIN_BILL_INTERVAL

@@ -19,7 +19,7 @@ public class FilterField<E extends AcceloEntity<E>, T>
 
 	public FilterField<E,T> copy()
 	{
-		return new FilterField<E,T>(this.fieldName);
+		return new FilterField<>(this.fieldName);
 	}
 	
 	

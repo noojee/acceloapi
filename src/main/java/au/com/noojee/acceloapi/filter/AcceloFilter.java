@@ -87,7 +87,7 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	public void orderBy(FilterField<E, Integer> field, Order order)
 	{
 		// this.orderByList.add(new OrderBy<E>(field, order));
-		this.orderBy = Optional.of(new OrderBy<E, Integer>(field, order));
+		this.orderBy = Optional.of(new OrderBy<>(field, order));
 
 	}
 
@@ -117,68 +117,68 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 
 	public Expression eq(FilterField<E, Integer> field, int operand)
 	{
-		return new Eq<E>(field, operand);
+		return new Eq<>(field, operand);
 	}
 
 	public Expression eq(FilterField<E, String> field, String operand)
 	{
-		return new Eq<E>(field, operand);
+		return new Eq<>(field, operand);
 	}
 
 	public Expression eq(FilterField<E, String> field, AgainstType operand)
 	{
-		return new Eq<E>(field, operand.getName());
+		return new Eq<>(field, operand.getName());
 	}
 
 	public <T extends Enum<T>> Expression eq(FilterField<E, T> field, T operand)
 	{
-		return new Eq<E>(field, operand);
+		return new Eq<>(field, operand);
 	}
 
 	public Expression eq(FilterField<E, String[]> field, String[] operand)
 	{
-		return new Eq<E>(field, operand);
+		return new Eq<>(field, operand);
 	}
 
 	public Expression eq(FilterField<E, LocalDate> field, LocalDate operand)
 	{
-		return new Eq<E>(field, operand);
+		return new Eq<>(field, operand);
 	}
 
 	public Expression before(FilterField<E, LocalDateTime> field, LocalDateTime operand)
 	{
-		return new Before<E, LocalDateTime>(field, operand);
+		return new Before<>(field, operand);
 	}
 
 	public Expression before(FilterField<E, LocalDate> field, LocalDate operand)
 	{
-		return new Before<E, LocalDate>(field, operand);
+		return new Before<>(field, operand);
 	}
 
 	public Expression after(FilterField<E, LocalDate> field, LocalDate operand)
 	{
-		return new After<E, LocalDate>(field, operand);
+		return new After<>(field, operand);
 	}
 
 	public Expression afterOrEq(FilterField<E, LocalDate> field, LocalDate operand)
 	{
-		return new AfterOrEq<E, LocalDate>(field, operand);
+		return new AfterOrEq<>(field, operand);
 	}
 	
 	
 	public Expression eq(FilterField<E, LocalDateTime> field, LocalDateTime operand)
 	{
-		return new Eq<E>(field, operand);
+		return new Eq<>(field, operand);
 	}
 
 	public Expression after(FilterField<E, LocalDateTime> field, LocalDateTime operand)
 	{
-		return new After<E,LocalDateTime>(field, operand);
+		return new After<>(field, operand);
 	}
 
 	public Expression afterOrEq(FilterField<E, LocalDateTime> field, LocalDateTime operand)
 	{
-		return new AfterOrEq<E, LocalDateTime>(field, operand);
+		return new AfterOrEq<>(field, operand);
 	}
 
 
@@ -194,47 +194,47 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 
 	public Expression empty(FilterField<E, LocalDate> dateField)
 	{
-		return new Empty<E>(dateField);
+		return new Empty<>(dateField);
 	}
 
 	public Expression greaterThan(FilterField<E, Integer> field, Integer operand)
 	{
-		return new GreaterThan<E>(field, operand);
+		return new GreaterThan<>(field, operand);
 	}
 
 	public Expression greaterThan(FilterField<E, String> field, String operand)
 	{
-		return new GreaterThan<E>(field, operand);
+		return new GreaterThan<>(field, operand);
 	}
 
 	public Expression lessThan(FilterField<E, Integer> field, Integer operand)
 	{
-		return new LessThan<E>(field, operand);
+		return new LessThan<>(field, operand);
 	}
 
 	public Expression lessThan(FilterField<E, String> field, String operand)
 	{
-		return new LessThan<E>(field, operand);
+		return new LessThan<>(field, operand);
 	}
 
 	public Expression greaterThanOrEq(FilterField<E, Integer> field, Integer operand)
 	{
-		return new GreaterThanOrEq<E>(field, operand);
+		return new GreaterThanOrEq<>(field, operand);
 	}
 
 	public Expression greaterThanOrEq(FilterField<E, String> field, String operand)
 	{
-		return new GreaterThanOrEq<E>(field, operand);
+		return new GreaterThanOrEq<>(field, operand);
 	}
 
 	public Expression lessThanOrEq(FilterField<E, Integer> field, Integer operand)
 	{
-		return new LessThanOrEq<E>(field, operand);
+		return new LessThanOrEq<>(field, operand);
 	}
 
 	public Expression lessThanOrEq(FilterField<E, String> field, String operand)
 	{
-		return new LessThanOrEq<E>(field, operand);
+		return new LessThanOrEq<>(field, operand);
 	}
 
 	/**

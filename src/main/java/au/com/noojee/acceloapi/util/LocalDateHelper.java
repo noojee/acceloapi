@@ -13,8 +13,7 @@ public class LocalDateHelper
 		
 		if (lhs.isAfter(rhs))
 				return lhs;
-		else
-			return rhs;
+		return rhs;
 	}
 	
 	public static LocalDate Min(LocalDate lhs, LocalDate rhs)
@@ -26,8 +25,7 @@ public class LocalDateHelper
 
 		if (lhs.isBefore(rhs))
 				return lhs;
-		else
-			return rhs;
+		return rhs;
 	}
 	
 	/**

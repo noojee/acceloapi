@@ -28,7 +28,7 @@ public class OrderBy<E extends AcceloEntity<E>, T extends Object>
 
 	public OrderBy<E,T> copy()
 	{
-		return new OrderBy<E,T>(this.field.copy(),  order);
+		return new OrderBy<>(this.field.copy(),  order);
 	}
 
 	public String toJson()

@@ -13,11 +13,13 @@ class Search extends Expression
 		this.operand = seachValue;
 	}
 
+	@Override
 	public Search copy()
 	{
 		return new Search(this.operand);
 	}
 
+	@Override
 	public String toJson()
 	{
 		String json = "";

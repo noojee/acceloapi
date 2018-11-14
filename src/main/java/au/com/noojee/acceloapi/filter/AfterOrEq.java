@@ -23,17 +23,17 @@ class AfterOrEq<E extends AcceloEntity<E>, DT> extends Expression
 	public String toJson()
 	{
 		if (operand instanceof LocalDate)
-			return (new After<E, DT>(field, operand)
-					.or(new Eq<E>((FilterField<E, LocalDate>) field, (LocalDate) operand))).toJson();
-		else
-			return (new After<E, DT>(field, operand)
-					.or(new Eq<E>((FilterField<E, LocalDateTime>) field, (LocalDateTime) operand))).toJson();
+			return (new After<>(field, operand)
+					.or(new Eq<>((FilterField<E, LocalDate>) field, (LocalDate) operand))).toJson();
+
+		return (new After<>(field, operand)
+					.or(new Eq<>((FilterField<E, LocalDateTime>) field, (LocalDateTime) operand))).toJson();
 	}
 
 	@Override
 	public Expression copy()
 	{
-		return new AfterOrEq<E, DT>(field, operand);
+		return new AfterOrEq<>(field, operand);
 	}
 
 	@Override

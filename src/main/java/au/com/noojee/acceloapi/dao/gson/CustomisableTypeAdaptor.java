@@ -31,6 +31,7 @@ public abstract class CustomisableTypeAdaptor<C> implements TypeAdapterFactory
 		this.customizedClass = customizedClass;
 	}
 
+	@Override
 	@SuppressWarnings("unchecked") // we use a runtime check to guarantee that 'C' and 'T' are equal
 	public final <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
 	{

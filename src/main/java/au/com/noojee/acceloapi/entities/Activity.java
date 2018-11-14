@@ -132,9 +132,11 @@ public class Activity extends AcceloEntity<Activity>
 	@SuppressWarnings("unused")
 	private class Meta implements MetaBasicFilterFields
 	{
+		@SuppressWarnings("hiding")
 		@BasicFilterField
 		private transient String parent_id;
 
+		@SuppressWarnings("hiding")
 		@BasicFilterField
 		private String thread_id;
 

@@ -14,6 +14,7 @@ public class Staff extends AcceloEntity<Staff>
 	@SuppressWarnings("unused")
 	private class Meta implements MetaBasicFilterFields
 	{
+		@SuppressWarnings("hiding")
 		@BasicFilterField
 		private transient String standing;  
 

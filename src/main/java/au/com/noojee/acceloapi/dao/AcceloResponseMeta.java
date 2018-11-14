@@ -18,6 +18,7 @@ public abstract class AcceloResponseMeta<E>
 		return meta.isOK();
 	}
 	
+	@Override
 	public String toString()
 	{
 		return " meta=" + meta; 

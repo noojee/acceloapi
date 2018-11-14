@@ -27,7 +27,7 @@ class LessThan<E extends AcceloEntity<E>> extends Expression
 	@Override
 	public Expression copy()
 	{
-		LessThan<E> exp = new LessThan<E>(this.field, this.operand.toString());
+		LessThan<E> exp = new LessThan<>(this.field, this.operand.toString());
 		
 		return exp;
 	}

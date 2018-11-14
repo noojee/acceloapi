@@ -115,6 +115,7 @@ public class GsonForAccelo
 	static private class LocalDateSerializer implements JsonSerializer<LocalDate>
 	{
 
+		@Override
 		public JsonElement serialize(LocalDate date, Type typeOfSrc, JsonSerializationContext context)
 		{
 			Long longDate = Conversions.toLong(date);
@@ -142,6 +143,7 @@ public class GsonForAccelo
 	static private class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime>
 	{
 
+		@Override
 		public JsonElement serialize(LocalDateTime date, Type typeOfSrc, JsonSerializationContext context)
 		{
 			Long longDate = Conversions.toLong(date);
@@ -170,6 +172,7 @@ public class GsonForAccelo
 	static private class AgainstTypeSerializer implements JsonSerializer<AgainstType>
 	{
 
+		@Override
 		public JsonElement serialize(AgainstType againstType, Type typeOfSrc, JsonSerializationContext context)
 		{
 			return new JsonPrimitive(againstType.getName());
@@ -193,6 +196,7 @@ public class GsonForAccelo
 	static private class ActivityOwnerTypeSerializer implements JsonSerializer<ActivityOwnerType>
 	{
 
+		@Override
 		public JsonElement serialize(ActivityOwnerType ownerType, Type typeOfSrc, JsonSerializationContext context)
 		{
 			return new JsonPrimitive(ownerType.name());
@@ -215,6 +219,7 @@ public class GsonForAccelo
 	static private class PrioritySerializer implements JsonSerializer<Priority.NoojeePriority>
 	{
 
+		@Override
 		public JsonElement serialize(Priority.NoojeePriority priority, Type typeOfSrc, JsonSerializationContext context)
 		{
 			return new JsonPrimitive(priority.getId());
@@ -239,6 +244,7 @@ public class GsonForAccelo
 	 */
 	static private class StandingSerializer implements JsonSerializer<Standing>
 	{
+		@Override
 		public JsonElement serialize(Standing standing, Type typeOfSrc, JsonSerializationContext context)
 		{
 			String name = standing.name();

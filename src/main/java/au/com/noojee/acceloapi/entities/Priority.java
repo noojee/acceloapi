@@ -26,6 +26,7 @@ public class Priority
 			throw new IllegalArgumentException("Unknown Priority passed. Value: "  + id);
 		}
 		
+		@Override
 		public String toString()
 		{
 			return name();
@@ -73,6 +74,7 @@ public class Priority
 	}
 
 
+	@Override
 	public String toString()
 	{
 		return title;

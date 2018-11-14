@@ -191,7 +191,7 @@ public class FieldMetaDataGenerator
 
 	private static Set<String> determinImports(String className, Set<Field> fields)
 	{
-		Set<String> imports = new HashSet<String>();
+		Set<String> imports = new HashSet<>();
 
 		imports.add(au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField.class.getCanonicalName());
 		imports.add("au.com.noojee.acceloapi.entities." + className);

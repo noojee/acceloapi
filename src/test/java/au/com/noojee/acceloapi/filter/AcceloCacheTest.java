@@ -52,7 +52,7 @@ public class AcceloCacheTest
 		filter.limit(1);
 		filter.offset(2);
 
-		CacheKey<Ticket> key = new CacheKey<Ticket>(EndPoint.tickets, filter, AcceloFieldList.ALL,
+		CacheKey<Ticket> key = new CacheKey<>(EndPoint.tickets, filter, AcceloFieldList.ALL,
 				TicketDao.ResponseList.class, Ticket.class);
 
 		AcceloFilter<Ticket> filter2 = new AcceloFilter<>();
@@ -63,7 +63,7 @@ public class AcceloCacheTest
 		filter2.limit(1);
 		filter2.offset(2);
 
-		CacheKey<Ticket> key2 = new CacheKey<Ticket>(EndPoint.tickets, filter2, AcceloFieldList.ALL,
+		CacheKey<Ticket> key2 = new CacheKey<>(EndPoint.tickets, filter2, AcceloFieldList.ALL,
 				TicketDao.ResponseList.class, Ticket.class);
 
 		System.out.println("key: " + key.hashCode());

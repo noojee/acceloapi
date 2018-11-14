@@ -21,7 +21,7 @@ class After<E extends AcceloEntity<E>, DT> extends Expression
 	@Override
 	public Expression copy()
 	{
-		return new After<E, DT>(this.field, operand);
+		return new After<>(this.field, operand);
 	}
 
 	@Override

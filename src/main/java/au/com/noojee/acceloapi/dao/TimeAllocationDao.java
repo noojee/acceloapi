@@ -21,6 +21,7 @@ public class TimeAllocationDao extends AcceloDao<TimeAllocation>
 	static private Logger logger = LogManager.getLogger(TimeAllocation.class);
 
 
+	@Override
 	public List<TimeAllocation> getByFilter(AcceloFilter<TimeAllocation> filter) throws AcceloException
 	{
 		AcceloFieldList fields = new AcceloFieldList();

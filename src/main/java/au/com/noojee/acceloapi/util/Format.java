@@ -58,13 +58,9 @@ public interface Format
 
 		if (duration == null)
 			return "";
-		else
-		{
-			if (duration.toMillis() >= 60000)
-				return DurationFormatUtils.formatDuration(duration.toMillis(), "H:mm");
-			else
-				return DurationFormatUtils.formatDuration(duration.toMillis(), "s") + " secs";
-		}
+		if (duration.toMillis() >= 60000)
+			return DurationFormatUtils.formatDuration(duration.toMillis(), "H:mm");
+		return DurationFormatUtils.formatDuration(duration.toMillis(), "s") + " secs";
 
 	}
 
@@ -93,8 +89,7 @@ public interface Format
 
 			return String.format(prefix + "%,1d.%02d", cents / 100, Math.abs(cents) % 100);
 		}
-		else
-			return prefix + "0.00";
+		return prefix + "0.00";
 
 	}
 
@@ -117,8 +112,7 @@ public interface Format
 
 			return String.format("%1d.%02d", cents / 100, Math.abs(cents) % 100);
 		}
-		else
-			return "0.00";
+		return "0.00";
 	}
 
 }
