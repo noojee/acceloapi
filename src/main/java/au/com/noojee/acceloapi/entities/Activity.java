@@ -436,4 +436,12 @@ public class Activity extends AcceloEntity<Activity>
 		return getOwnerType() == ActivityOwnerType.staff && staff == Staff.SYSTEM;
 	}
 
+	public String getSummary()
+	{
+		String summary = this.body.replaceAll("\n", " ").replaceAll("\r", " ").replaceAll("  ", " ");
+		summary = summary.substring(0, Math.min(150,  summary.length()));
+		return summary;
+	}
+	
+
 }
