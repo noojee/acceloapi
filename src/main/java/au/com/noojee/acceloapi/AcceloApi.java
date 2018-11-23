@@ -198,8 +198,13 @@ public class AcceloApi
 		URL pagedURL;
 		try
 		{
+			if (pageNo > 0)
+			{
+				logger.info("Fetching Page: " + pageNo + " for " + url);
+			}
 			pagedURL = new URL(url + "?_page=" + pageNo + "&_limit=" + PAGE_SIZE);
 			response = _request(HTTPMethod.POST, pagedURL, json);
+			
 		}
 		catch (IOException e)
 		{
