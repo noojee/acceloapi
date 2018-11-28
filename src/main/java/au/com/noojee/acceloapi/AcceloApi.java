@@ -22,6 +22,7 @@ import javax.net.ssl.HttpsURLConnection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.common.util.concurrent.RateLimiter;
 import com.google.gson.Gson;
 
 import au.com.noojee.acceloapi.dao.gson.GsonForAccelo;
@@ -32,6 +33,11 @@ public class AcceloApi
 {
 	private Logger logger = LogManager.getLogger(this.getClass());
 	public static final int PAGE_SIZE = 50;
+	
+	// Accelo limits api calls to 5000 per hour.
+	// We use 4900 to leave a little margin for error.
+	static final RateLimiter rateLimiter = RateLimiter.create(4900/3600);
+
 
 	static private AcceloApi self = null;;
 	/**
@@ -79,6 +85,7 @@ public class AcceloApi
 			AcceloFieldList fieldList,
 			Class<? extends AcceloAbstractResponseList<E>> clazz)
 	{
+		
 		List<E> list;
 		try
 		{
@@ -305,6 +312,9 @@ public class AcceloApi
 	 */
 	public HTTPResponse _request(HTTPMethod method, URL url, String jsonArgs)
 	{
+		// accelo is rate limited.
+		rateLimiter.acquire();
+		
 		HTTPResponse response = null;
 
 		try
