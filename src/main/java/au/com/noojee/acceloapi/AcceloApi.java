@@ -76,12 +76,12 @@ public class AcceloApi
 	 * method of Accelo returns a list of entities. This method will throw an exception if you try to make a call that
 	 * causes Accelo to return a single entity (e.g. don't try to get a contact by id).
 	 * 
-	 * @param filterMap
+	 * @param filter
 	 * @param fieldList
 	 * @param clazz
 	 * @return all entities for the given endpoint subject to the filters limit.
 	 */
-	public <E extends AcceloEntity<E>> List<E> getAll(EndPoint endPoint, AcceloFilter<E> filterMap,
+	public <E extends AcceloEntity<E>> List<E> getAll(EndPoint endPoint, AcceloFilter<E> filter,
 			AcceloFieldList fieldList,
 			Class<? extends AcceloAbstractResponseList<E>> clazz)
 	{
@@ -89,7 +89,7 @@ public class AcceloApi
 		List<E> list;
 		try
 		{
-			list = getAll(endPoint.getURL(), filterMap, fieldList, clazz);
+			list = getAll(endPoint.getURL(), filter, fieldList, clazz);
 		}
 		catch (MalformedURLException e)
 		{

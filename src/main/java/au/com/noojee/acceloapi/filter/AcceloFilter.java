@@ -361,7 +361,7 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	}
 
 	/**
-	 * Sets the maximum no. of entities that will be returned.
+	 * Sets the maximum no. of pages (default is 50 entities per page) the filter will return.
 	 * @param limit
 	 */
 	public void limit(int limit)
@@ -377,6 +377,9 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	}
 
 
+	/**
+	 * @return the maximum no. of pages (default is 50 entities per page) the filter will return.
+	 */
 	private int getLimit()
 	{
 		return this.limit;
