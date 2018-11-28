@@ -92,6 +92,23 @@ public class ActivityDao extends AcceloDao<Activity>
 	}
 	
 	
+	public List<Activity> getRecentTicketActivities(LocalDate extractionDate, int offset, int limit)
+	{
+		AcceloFilter<Activity> filter = new AcceloFilter<>();
+		filter.offset(offset);
+		filter.limit(limit);
+		return getRecentTicketActivities(filter, extractionDate);
+	}
+
+	
+	public List<Activity> getRecentTicketActivities(LocalDate extractionDate)
+	{
+		AcceloFilter<Activity> filter = new AcceloFilter<>();
+		filter.noLimit();
+		return getRecentTicketActivities(filter, extractionDate);
+	}
+
+			
 	/**
 	 * Return a list of activities associated to a ticket that occurred on or after the given createdDate
 	 * 
@@ -102,14 +119,12 @@ public class ActivityDao extends AcceloDao<Activity>
 	 * @param extractionDate return all activities from this date.
 	 * @return
 	 */
-	public List<Activity> getRecentTicketActivities(LocalDate extractionDate)
+	private List<Activity> getRecentTicketActivities(AcceloFilter<Activity> filter, LocalDate extractionDate)
 	{
 		List<Activity> list = null;
 		try
 		{
-			AcceloFilter<Activity> filter = new AcceloFilter<>();
-			filter.noLimit();
-
+	
 			// customer generated activities
 			filter.where(filter.eq(Activity_.against_type, AgainstType.issue))
 			.and(filter.eq(Activity_.owner_type, ActivityOwnerType.affiliation))

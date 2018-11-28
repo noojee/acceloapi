@@ -360,6 +360,10 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 				.isPresent();
 	}
 
+	/**
+	 * Sets the maximum no. of entities that will be returned.
+	 * @param limit
+	 */
 	public void limit(int limit)
 	{
 		this.limit = limit;
