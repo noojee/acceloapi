@@ -163,7 +163,7 @@ public class ActivityDao extends AcceloDao<Activity>
 			throw new AcceloException("Validation Error: when setting a billable amount you must set the OwnerType");
 		}
 
-		if (activity.getSubject().isEmpty())
+		if (activity.getSubject() == null || activity.getSubject().isEmpty())
 		{
 			throw new AcceloException("You must provide a subject");
 		}
