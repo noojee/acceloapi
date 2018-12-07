@@ -63,7 +63,9 @@ public class ContactDao extends AcceloDao<Contact>
 	{
 		Affiliation affiliation = new AffiliationDao().getById(contact.getDefaultAffiliation());
 
-		return new CompanyDao().getById(affiliation.getCompanyId());
+		if (affiliation != null)
+			return new CompanyDao().getById(affiliation.getCompanyId());
+		return null;
 	}
 
 	/**
@@ -79,7 +81,6 @@ public class ContactDao extends AcceloDao<Contact>
 		return super.getByFilter(filter);
 	}
 
-	
 	@Override
 	protected EndPoint getEndPoint()
 	{
@@ -91,7 +92,7 @@ public class ContactDao extends AcceloDao<Contact>
 	{
 		return Contact.class;
 	}
-	
+
 	public class ResponseList extends AcceloResponseList<Contact>
 	{
 	}
@@ -112,5 +113,23 @@ public class ContactDao extends AcceloDao<Contact>
 		return ContactDao.Response.class;
 	}
 
+	public String getMobile(Contact contact)
+	{
+		String mobile = null;
+
+		AffiliationDao daoAffiliation = new AffiliationDao();
+
+		int affiliationId = contact.getDefaultAffiliation();
+		if (affiliationId != 0)
+		{
+			Affiliation affiliation = daoAffiliation.getById(affiliationId);
+			mobile = affiliation.getMobile();
+		}
+
+		if (mobile == null || mobile.trim().length() == 0)
+			mobile = contact.getPhone();
+
+		return mobile;
+	}
 
 }
