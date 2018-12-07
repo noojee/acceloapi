@@ -356,6 +356,12 @@ public class Activity extends AcceloEntity<Activity>
 		return date_created;
 	}
 
+	public void setDateTimeCreated(LocalDateTime dateTimeCreated)
+	{
+		
+		this.date_created = dateTimeCreated;
+	}
+	
 	public LocalDateTime getDateTimeStarted()
 	{
 		return date_started;
