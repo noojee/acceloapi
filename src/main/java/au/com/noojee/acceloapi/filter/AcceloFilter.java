@@ -62,7 +62,6 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	 */
 	// private List<OrderBy<E>> orderByList = new ArrayList<>();
 
-	@SuppressWarnings("rawtypes")
 	private Optional<OrderBy> orderBy = Optional.empty();
 
 	public void where(Search search) throws AcceloException
@@ -98,19 +97,20 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 
 		this.search = Optional.of(new Search(searchValue));
 
-		return this.search.orElseThrow(IllegalStateException::new);
+		return this.search.orElseThrow(() -> new IllegalStateException());
 	}
-
-	public AcceloFilter<E> and(Expression child) // throws AcceloException
+	
+	public AcceloFilter<E> and(Expression child) throws IllegalStateException
 	{
-		this.expression = Optional.of(new And(this.expression.orElseThrow(IllegalStateException::new), child));
+		
+		this.expression = Optional.of(new And(this.expression.orElseThrow(() -> new IllegalStateException()), child));
 
 		return this;
 	}
 
 	public AcceloFilter<E> or(Expression child)
 	{
-		this.expression = Optional.of(new Or(this.expression.orElseThrow(IllegalStateException::new), child));
+		this.expression = Optional.of(new Or(this.expression.orElseThrow(() -> new IllegalStateException()), child));
 
 		return this;
 	}
