@@ -79,20 +79,31 @@ public enum AcceloCache
 		queryCache = tmp;
 	}
 
+	/**
+	 * **********************************************
+	 * 
+	 * This is the main method that actually runs the Accelo query when a cache miss occurs.
+	 * 
+	 * **********************************************
+	 * 
+	 * @param key
+	 * @return
+	 * @throws AcceloException
+	 */
 	@SuppressWarnings("unchecked")
-
 	private List<AcceloEntity> runAccelQuery(CacheKey key) throws AcceloException
 	{
 		List<AcceloEntity> list;
 
 		if (AcceloAbstractResponseList.class.isAssignableFrom(key.getMetaResponseClass()))
 		{
-
+			// its a request for a list.
 			list = AcceloApi.getInstance().getAll(key.getEndPoint(), key.getFilter(), key.getFields(),
 					key.getMetaResponseClass());
 		}
 		else
 		{
+			// its a request for a single entity.
 			AcceloEntity entity = AcceloApi.getInstance().get(key.getEndPoint(), key.getFilter(), key.getFields(),
 					key.getMetaResponseClass());
 
