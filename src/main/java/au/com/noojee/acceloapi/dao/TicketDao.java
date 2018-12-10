@@ -457,7 +457,7 @@ public class TicketDao extends AcceloDao<Ticket>
 	{
 		AcceloFieldList fields = new AcceloFieldList();
 		fields.add("_ALL");
-		fields.add("status._ALL");
+		fields.add("issue_status._ALL");
 		// fields.add("priority._ALL");
 		return fields;
 	}

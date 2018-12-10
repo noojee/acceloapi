@@ -64,7 +64,8 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int company; // If against_type is company, then this holds the id of the company the ticket is
 							// against.
 	@BasicFilterField
-	private Priority.NoojeePriority priority;
+	private Priority.NoojeePriority issue_priority;
+	
 
 	@BasicFilterField(name = "class")
 	@SerializedName("class")
@@ -75,9 +76,9 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	@OrderByField
 	@BasicFilterField
-	private TicketStatus status; // Breaks our rules of using Ids but there is no
+	private TicketStatus issue_status; // Breaks our rules of using Ids but there is no
 	// other way to get the status.
-
+	
 	@BasicFilterField
 	private String referrer_type;
 	@BasicFilterField
@@ -117,7 +118,10 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int closed_by; // staff member
 	@BasicFilterField
 	private int resolved_by; // staff member
-	private String object_budget;
+
+	private int issue_object_budget;
+	
+	
 	@BasicFilterField
 	private int assignee; // staff member
 
@@ -133,7 +137,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int contract; // the contract id or 0 if this ticket is unassigned.
 	private String resolution_detail;
 
-	private int issue_object_budget;
+	
 
 	private String staff_bookmarked;
 
@@ -199,7 +203,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	}
 	public Priority.NoojeePriority getPriority()
 	{
-		return priority;
+		return this.issue_priority;
 	}
 
 	public int getClassId()
@@ -214,7 +218,7 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public TicketStatus getStatus()
 	{
-		return status;
+		return this.issue_status;
 	}
 
 	public Standing getStanding()
@@ -275,9 +279,9 @@ public class Ticket extends AcceloEntity<Ticket>
 		return resolved_by;
 	}
 
-	public String getObjectBudget()
+	public int getObjectBudget()
 	{
-		return object_budget;
+		return issue_object_budget;
 	}
 
 	/**
@@ -351,7 +355,7 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	public void setPriority(Priority.NoojeePriority priority)
 	{
-		this.priority = priority;
+		this.issue_priority = priority;
 	}
 
 	public void setClass(int class_id)
@@ -429,9 +433,9 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.company = companyId;
 	}
 
-	public void setObjectBudget(String object_budget)
+	public void setObjectBudget(int object_budget)
 	{
-		this.object_budget = object_budget;
+		this.issue_object_budget = object_budget;
 	}
 
 	public void setDateLastInteracted(LocalDate date_last_interacted)
@@ -473,12 +477,12 @@ public class Ticket extends AcceloEntity<Ticket>
 	public String toString()
 	{
 		return "Ticket [id=" + getId() + ", title=" + title + ", custom_id=" + custom_id + ", type=" + issue_type
-				+ ", against_id=" + against_id + ", against_type=" + against_type + ", priority=" + priority
-				+ ", resolution=" + resolution + ", status=" + status + ", standing=" + standing + ", submitted_by="
+				+ ", against_id=" + against_id + ", against_type=" + against_type + ", priority=" + issue_priority
+				+ ", resolution=" + resolution + ", status=" + issue_status + ", standing=" + standing + ", submitted_by="
 				+ submitted_by + ", date_submitted=" + date_submitted + ", date_opened=" + date_opened
 				+ ", date_resolved=" + date_resolved + ", date_closed=" + date_closed + ", date_started=" + date_started
 				+ ", date_due=" + date_due + ", closed_by=" + closed_by + ", opened_by=" + opened_by + ", resolved_by="
-				+ resolved_by + ", company=" + company + ", object_budget=" + object_budget + ", assignee=" + assignee
+				+ resolved_by + ", company=" + company + ", object_budget=" + issue_object_budget + ", assignee=" + assignee
 				+ ", billable_seconds=" + billable_seconds + ", date_last_interacted=" + date_last_interacted
 				+ ", contract=" + contract + ", resolution_detail=" + resolution_detail
 				+ ", description=" + description + "]";
