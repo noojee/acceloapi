@@ -155,7 +155,8 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	 */
 	public E insert(E entity)
 	{
-
+		entity.setFieldList(getFieldList());
+		
 		preInsertValidation(entity);
 
 		String fieldValues = toJson(entity, DaoOperation.INSERT);
@@ -197,7 +198,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		return response.getEntity();
 	}
 
-	protected String toJson(E entity, DaoOperation update)
+	protected String toJson(E entity, DaoOperation operation)
 	{
 
 		return GsonForAccelo.toJson(entity);
