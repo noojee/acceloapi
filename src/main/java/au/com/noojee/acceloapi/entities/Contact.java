@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.InsertOnlyField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
 
@@ -46,6 +47,10 @@ public class Contact extends AcceloEntity<Contact>
 	private LocalDateTime date_created ;
 	@DateFilterField
 	private LocalDateTime date_modified ;
+	
+	
+	@InsertOnlyField
+	private int company_id; // only used when inserting new contacts. This value is not normally available.
 
 	@SuppressWarnings("unused")
 	private class Meta implements MetaBasicFilterFields
@@ -83,6 +88,7 @@ public class Contact extends AcceloEntity<Contact>
 		this.surname = surname;
 	}
 
+	
 
 
 	public String getPreferred_name()
@@ -194,6 +200,22 @@ public class Contact extends AcceloEntity<Contact>
 	{
 		return default_affiliation;
 	}
+	
+	public void setDefaultAffiliation(int affiliationId)
+	{
+		this.default_affiliation = affiliationId;
+	}
+	
+	/**
+	 * You can only set this if you are inserting a new contact.
+	 * At all other times the value is meaningless.
+	 * 
+	 * @param company_id
+	 */
+	public void setCompanyId(int company_id)
+	{
+		this.company_id = company_id;
+	}
 
 	@Override
 	public String toString()
@@ -218,4 +240,5 @@ public class Contact extends AcceloEntity<Contact>
 		return this.getSurname().compareTo(o.getSurname());
 	}
 
+	
 }

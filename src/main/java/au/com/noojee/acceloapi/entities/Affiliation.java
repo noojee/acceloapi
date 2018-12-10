@@ -2,6 +2,8 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.LocalDateTime;
 
+import com.google.gson.annotations.SerializedName;
+
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
@@ -10,17 +12,26 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.SearchFilterField;
 public class Affiliation extends AcceloEntity<Affiliation>
 {
 	@BasicFilterField
+	@SerializedName(value="company_id", alternate="company")
 	private int company; // id of the affiliated company
+	
+	@BasicFilterField
+	@SerializedName(value="contact_id", alternate="contact")
+	private int contact; // contact id
+
+
+	@SerializedName(value="country_d", alternate="country")
+	private int country; // id of country
 
 	@BasicFilterField
+	@SerializedName(value="postal_address_id", alternate="postal_address")
 	private int postal_address; // id of an address
 
 	@BasicFilterField
+	@SerializedName(value="physical_address_id", alternate="physical_address")
 	private int physical_address; // id of an address
 
-	@BasicFilterField
-	private int contact; // contact id
-
+	
 	@SearchFilterField
 	private String phone; // phone no.
 
@@ -43,6 +54,7 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	private String standing;
 
 	@BasicFilterField
+	@SerializedName(value="status_id", alternate="status")
 	private String status;
 
 	private String fax;
@@ -67,6 +79,11 @@ public class Affiliation extends AcceloEntity<Affiliation>
 	public int getCompanyId()
 	{
 		return company;
+	}
+	
+	public void setCompany(int company)
+	{
+		this.company = company;
 	}
 
 	public void setPhone(String phone)
