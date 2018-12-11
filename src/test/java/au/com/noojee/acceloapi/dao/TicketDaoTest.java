@@ -39,7 +39,7 @@ public class TicketDaoTest
 		ticket.setTitle("A test ticket via the api for TicketDaoTest");
 		ticket.setResolvedBy(staff.getId());
 		ticket.setOpenedBy(staff.getId());
-		ticket.setAssignee(staff.getId());
+		ticket.setEngineerAssigned(staff.getId());
 		ticket = daoTicket.insert(ticket);
 		
 		ActivityDao daoActivity = new ActivityDao();

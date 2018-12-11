@@ -12,13 +12,12 @@ package au.com.noojee.acceloapi.entities.meta;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
-import au.com.noojee.acceloapi.entities.AccountDetails;
+import au.com.noojee.acceloapi.entities.Progression;
 
 
-public class AccountDetails_ 
+public class Progression_ 
 {
 
-	public static FilterField<AccountDetails, Integer> id = new FilterField<>("id"); 
-	public static FilterField<AccountDetails, String> title = new FilterField<>("title"); 
+	public static FilterField<Progression, Integer> id = new FilterField<>("id"); 
 
 }

@@ -1,8 +1,5 @@
 package au.com.noojee.acceloapi.entities.meta;
 
-import java.time.LocalDateTime;
-
-import au.com.noojee.acceloapi.entities.Company;
 /** 
  *
  *          DO NOT MODIFY 
@@ -15,6 +12,8 @@ import au.com.noojee.acceloapi.entities.Company;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import java.time.LocalDateTime;
+import au.com.noojee.acceloapi.entities.Company;
 
 
 public class Company_ 

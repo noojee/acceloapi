@@ -7,7 +7,6 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.OrderByField;
 
 public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Comparable<E>, Cloneable
 {
-
 	@BasicFilterField
 	@OrderByField
 	private int id;
@@ -35,7 +34,6 @@ public abstract class AcceloEntity<E extends AcceloEntity<E>> implements Compara
 		return this.id - rhs.getId();
 	}
 
-	
 
 	/**
 	 * Special - used by the AcceloCache. Don't go there.

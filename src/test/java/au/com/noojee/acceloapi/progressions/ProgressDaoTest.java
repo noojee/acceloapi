@@ -8,7 +8,8 @@ import org.junit.Test;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloSecret;
 import au.com.noojee.acceloapi.EndPoint;
-import au.com.noojee.acceloapi.dao.TicketDao;
+import au.com.noojee.acceloapi.dao.ProgressionDao;
+import au.com.noojee.acceloapi.entities.Progression;
 import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.entities.meta.Ticket_;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
@@ -26,21 +27,22 @@ public class ProgressDaoTest
 			AcceloApi.getInstance().connect(secret);
 			
 			
-			ProgressDao daoProgression = new ProgressDao();
+			ProgressionDao daoProgression = new ProgressionDao();
 			
 			AcceloFilter<Ticket> filter = new AcceloFilter<>();
-			filter.where(filter.eq(Ticket_.id, 17755));
+			filter.where(filter.eq(Ticket_.id, 18017));
 			
-			List<Ticket> tickets = new TicketDao().getByFilter(filter);
+		//	List<Ticket> tickets = new TicketDao().getByFilter(filter);
 			
-			List<Progression> progressions = daoProgression.getByEndPoint(EndPoint.tickets, tickets.get(0));
+			//List<Progression> progressions = daoProgression.getByEndPoint(EndPoint.tickets, tickets.get(0));
+			List<Progression> progressions = daoProgression.getByEndPoint(EndPoint.tickets, null);
 			
 			for (Progression progression : progressions)
 			{
 				System.out.println(progression);
 			}
 			
-			daoProgression.triggerProgression(progressions.get(0), tickets.get(0));
+			// daoProgression.triggerProgression(progressions.get(0), tickets.get(0));
 
 		}
 		catch (FileNotFoundException e)

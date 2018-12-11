@@ -1,10 +1,5 @@
 package au.com.noojee.acceloapi.entities.meta;
 
-import java.time.LocalDateTime;
-
-import au.com.noojee.acceloapi.dao.ActivityOwnerType;
-import au.com.noojee.acceloapi.entities.Activity;
-import au.com.noojee.acceloapi.entities.Activity.Visibility;
 /** 
  *
  *          DO NOT MODIFY 
@@ -17,7 +12,11 @@ import au.com.noojee.acceloapi.entities.Activity.Visibility;
  *
  */
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.FilterField;
+import au.com.noojee.acceloapi.entities.Activity;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
+import au.com.noojee.acceloapi.dao.ActivityOwnerType;
+import java.time.LocalDateTime;
+import au.com.noojee.acceloapi.entities.Activity.Visibility;
 
 
 public class Activity_ 

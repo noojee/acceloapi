@@ -145,7 +145,7 @@ public class TicketDao extends AcceloDao<Ticket>
 		Ticket result = null;
 		try
 		{
-			ticket.setAssignee(staff.getId());
+			ticket.setEngineerAssigned(staff.getId());
 			result = this.update(ticket);
 
 			if (result == null)

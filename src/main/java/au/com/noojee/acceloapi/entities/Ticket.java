@@ -10,10 +10,11 @@ import com.google.gson.annotations.SerializedName;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
+import au.com.noojee.acceloapi.entities.meta.fieldTypes.InsertOnlyField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.OrderByField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
-import au.com.noojee.acceloapi.entities.types.TicketStatus;
+import au.com.noojee.acceloapi.entities.types.EntityStatus;
 import au.com.noojee.acceloapi.util.LocalDateTimeHelper;
 
 public class Ticket extends AcceloEntity<Ticket>
@@ -76,8 +77,13 @@ public class Ticket extends AcceloEntity<Ticket>
 
 	@OrderByField
 	@BasicFilterField
-	private TicketStatus issue_status; // Breaks our rules of using Ids but there is no
-	// other way to get the status.
+	private EntityStatus issue_status; // Breaks our rules of using Ids but there is no
+										// other way to get the status.
+	
+	// the int version of the above issue_status field.
+	// You can only insert with an int hence this field's existence.
+	@InsertOnlyField
+	private int issue_status_id;
 	
 	@BasicFilterField
 	private String referrer_type;
@@ -216,11 +222,23 @@ public class Ticket extends AcceloEntity<Ticket>
 		return resolution;
 	}
 
-	public TicketStatus getStatus()
+	public EntityStatus getStatus()
 	{
 		return this.issue_status;
 	}
-
+	
+	
+	/**
+	 * Only use this field when inserting a ticket
+	 * as the standard 
+	 * @param status_id
+	 */
+	public void setStatusId(int status_id)
+	{
+		this.issue_status_id = status_id;
+	}
+	
+	
 	public Standing getStanding()
 	{
 		return standing;
@@ -297,7 +315,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	 * 
 	 * @param staffId
 	 */
-	public void setAssignee(int staffId)
+	public void setEngineerAssigned(int staffId)
 	{
 		this.assignee = staffId;
 	}
