@@ -11,6 +11,7 @@ public enum EndPoint
 	, contacts("contacts")
 	, contracts("contracts")
 	, tickets("issues")
+	, resolutions("issues/resolutions")
 	, requests("requests")
 	, staff("staff"), statuses("statuses")
 	, invoices("invoices")
