@@ -62,6 +62,7 @@ public class AcceloFilter<E extends AcceloEntity<E>>
 	 */
 	// private List<OrderBy<E>> orderByList = new ArrayList<>();
 
+	@SuppressWarnings("rawtypes")
 	private Optional<OrderBy> orderBy = Optional.empty();
 
 	public void where(Search search) throws AcceloException
