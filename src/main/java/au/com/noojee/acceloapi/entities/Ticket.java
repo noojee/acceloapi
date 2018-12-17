@@ -83,7 +83,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	// the int version of the above issue_status field.
 	// You can only insert with an int hence this field's existence.
 	@InsertOnlyField
-	private int issue_status_id;
+	private int status_id;
 	
 	@BasicFilterField
 	private String referrer_type;
@@ -235,7 +235,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	 */
 	public void setStatusId(int status_id)
 	{
-		this.issue_status_id = status_id;
+		this.status_id = status_id;
 	}
 	
 	

@@ -9,6 +9,7 @@ import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloSecret;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.dao.ProgressionDao;
+import au.com.noojee.acceloapi.dao.TicketDao;
 import au.com.noojee.acceloapi.entities.Progression;
 import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.entities.meta.Ticket_;
@@ -32,7 +33,7 @@ public class ProgressDaoTest
 			AcceloFilter<Ticket> filter = new AcceloFilter<>();
 			filter.where(filter.eq(Ticket_.id, 18017));
 			
-		//	List<Ticket> tickets = new TicketDao().getByFilter(filter);
+			List<Ticket> tickets = new TicketDao().getByFilter(filter);
 			
 			//List<Progression> progressions = daoProgression.getByEndPoint(EndPoint.tickets, tickets.get(0));
 			List<Progression> progressions = daoProgression.getByEndPoint(EndPoint.tickets, null);
