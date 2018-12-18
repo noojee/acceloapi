@@ -43,6 +43,18 @@ public class ContactDao extends AcceloDao<Contact>
 		return contacts;
 
 	}
+	
+	public List<Contact>  getByEmailAddress(String emailAddress)
+	{
+		AcceloFilter<Contact> filters = new AcceloFilter<>();
+		filters.where(filters.eq(Contact_.email, emailAddress));
+
+		List<Contact> contacts = getByFilter(filters);
+
+		return contacts;
+
+	}
+
 
 	@Override
 	protected AcceloFieldList getFieldList()
@@ -131,5 +143,33 @@ public class ContactDao extends AcceloDao<Contact>
 
 		return mobile;
 	}
+	
+	// returns Landline and Mobile in a Dupal
+	public Dupal<String, String> getPhoneNumbers(Contact contact)
+	{
+		String mobile = null;
+		String landline = null;
+
+		AffiliationDao daoAffiliation = new AffiliationDao();
+
+		int affiliationId = contact.getDefaultAffiliation();
+		if (affiliationId != 0)
+		{
+			Affiliation affiliation = daoAffiliation.getById(affiliationId);
+			mobile = affiliation.getMobile();
+			landline = affiliation.getPhone();
+		}
+
+		if (mobile == null || mobile.trim().length() == 0)
+			mobile = contact.getMobile();
+		
+		if (landline == null || landline.trim().length() == 0)
+			landline = contact.getPhone();
+
+
+		return new Dupal<>(landline, mobile);
+	}
+
+	
 
 }
