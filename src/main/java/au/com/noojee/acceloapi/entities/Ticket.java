@@ -65,6 +65,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int company; // If against_type is company, then this holds the id of the company the ticket is
 							// against.
 	@BasicFilterField
+	@SerializedName(value ="priority_id", alternate="issue_priority")
 	private Priority.NoojeePriority issue_priority;
 	
 
