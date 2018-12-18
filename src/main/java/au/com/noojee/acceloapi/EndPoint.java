@@ -19,6 +19,7 @@ public enum EndPoint
 	, activitiesAllocations("activities/allocations")
 	, request("request")
 	, progressions("progressions")
+	, priority("issues/priorities")
 	;
 
 	protected String endpoint;

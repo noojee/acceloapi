@@ -2,12 +2,13 @@ package au.com.noojee.acceloapi.entities;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-public class Priority
+public class Priority extends AcceloEntity<Priority>
 {
 	
 	static public enum NoojeePriority
 	{
 		Critical(1), Urgent(2), Standard(3), Low(4), None(5);
+		
 		
 		private int id;
 
@@ -41,7 +42,6 @@ public class Priority
 	// In order of increasing urgency
 	enum Color { grey, blue, green, orange, red };
 	
-	private int 	id; 
 	@SuppressFBWarnings
 	private String title;	// A name for the priority.
 	@SuppressFBWarnings
@@ -49,10 +49,6 @@ public class Priority
 	private int factor;		// A number representing the urgency of the priority. 5 is “Extreme”, 1 is “None”.
 	
 
-	public int getId()
-	{
-		return id;
-	}
 
 
 	public String getTitle()
@@ -74,9 +70,19 @@ public class Priority
 	}
 
 
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
-		return title;
+		return "Priority [title=" + title + ", color=" + color + ", factor=" + factor + ", getId()=" + getId() + "]";
 	}
+
+
+
+	
+
+
 }
