@@ -55,7 +55,7 @@ public class Activity extends AcceloEntity<Activity>
 	}
 	
 
-	private Medium medium = Medium.note; // The type of activity.
+	private Medium medium = Medium.call; // The type of activity.
 
 	private String subject;
 
