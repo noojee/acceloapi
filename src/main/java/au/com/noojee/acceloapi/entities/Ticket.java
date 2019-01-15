@@ -58,6 +58,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int issue_type;
 
 	@BasicFilterField
+	@SerializedName(value = "affiliation_id", alternate = "affiliation") // insert/update use affiliation_id
 	private int affiliation; // The affiliate id of the customer contact associated with this ticket.
 	
 	private AgainstType against_type;
