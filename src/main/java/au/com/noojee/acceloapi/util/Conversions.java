@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.function.Function;
 
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
@@ -86,5 +87,42 @@ public interface Conversions
 	{
 		return LocalDateTime.of(cutoffDate, LocalTime.of(0, 0));
 	}
+	
+
+	public static <E, R> R safe(E object, Function<E, R> method, R orElse)
+	{
+		R result = null;
+
+		if (object != null)
+			result = method.apply(object);
+
+		if (result == null)
+			result = orElse;
+
+		return result;
+	}
+
+	public static <E, R> R safe(E object, Function<E, R> method)
+	{
+		if (object == null)
+			return null;
+		else
+			return method.apply(object);
+	}
+
+	public static <E, P, R> R safe3(E object, Function<E, P> parentMethod, Function<P, R> childMethod)
+	{
+		R value = null;
+
+		if (object != null)
+		{
+			P parent = parentMethod.apply(object);
+			if (parent != null)
+				value = childMethod.apply(parent);
+		}
+
+		return value;
+	}
+
 
 }
