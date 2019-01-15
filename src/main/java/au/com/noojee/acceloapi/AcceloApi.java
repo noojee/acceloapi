@@ -376,6 +376,7 @@ public class AcceloApi
 			{
 				// logger.error("Response body" + body);
 				response = new HTTPResponse(responseCode, connection.getResponseMessage(), body);
+				logger.debug(response);
 			}
 			else
 			{
