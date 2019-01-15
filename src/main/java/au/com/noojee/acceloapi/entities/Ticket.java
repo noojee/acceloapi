@@ -15,6 +15,7 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.OrderByField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
 import au.com.noojee.acceloapi.entities.types.EntityStatus;
+import au.com.noojee.acceloapi.util.Conversions;
 import au.com.noojee.acceloapi.util.LocalDateTimeHelper;
 
 public class Ticket extends AcceloEntity<Ticket>
@@ -57,7 +58,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	private int issue_type;
 
 	@BasicFilterField
-	private int affiliation; // The affiliate id of the contact associated with this ticket.
+	private int affiliation; // The affiliate id of the customer contact associated with this ticket.
 	
 	private AgainstType against_type;
 	private int against_id;
@@ -94,6 +95,8 @@ public class Ticket extends AcceloEntity<Ticket>
 	@OrderByField
 	@BasicFilterField
 	private Standing standing;
+	
+	// The staff member who submitted the ticket on behalf of the client.
 	@BasicFilterField
 	private int submitted_by;
 
@@ -119,6 +122,8 @@ public class Ticket extends AcceloEntity<Ticket>
 	@OrderByField
 	@DateFilterField
 	private LocalDate date_due ;
+	
+	// The staff member that opened the ticket.
 	@BasicFilterField
 	private int opened_by; // staff member
 	@BasicFilterField
@@ -130,7 +135,7 @@ public class Ticket extends AcceloEntity<Ticket>
 	
 	
 	@BasicFilterField
-	private int assignee; // staff member
+	private int assignee; // staff member assigned to the ticket.
 
 	/*
 	 * This field is read-only. To bill time create an activity attached to this ticket.
@@ -151,6 +156,16 @@ public class Ticket extends AcceloEntity<Ticket>
 	public int getAffiliation()
 	{
 		return affiliation;
+	}
+	
+	/**
+	 * Associates the ticket with the contact (of the customer) that requested
+	 * that this ticket was opened.
+	 * @param affiliation
+	 */
+	public void setAffiliation(int affiliation)
+	{
+		this.affiliation = affiliation;
 	}
 
 	/**
@@ -496,8 +511,9 @@ public class Ticket extends AcceloEntity<Ticket>
 	public String toString()
 	{
 		return "Ticket [id=" + getId() + ", title=" + title + ", custom_id=" + custom_id + ", type=" + issue_type
+				+ ", affiliation=" + affiliation
 				+ ", against_id=" + against_id + ", against_type=" + against_type + ", priority=" + issue_priority
-				+ ", resolution=" + resolution + ", status=" + issue_status + ", standing=" + standing + ", submitted_by="
+				+ ", resolution=" + resolution + ", status=" + Conversions.safe(issue_status, EntityStatus::getTitle) + ", standing=" + standing + ", submitted_by="
 				+ submitted_by + ", date_submitted=" + date_submitted + ", date_opened=" + date_opened
 				+ ", date_resolved=" + date_resolved + ", date_closed=" + date_closed + ", date_started=" + date_started
 				+ ", date_due=" + date_due + ", closed_by=" + closed_by + ", opened_by=" + opened_by + ", resolved_by="
