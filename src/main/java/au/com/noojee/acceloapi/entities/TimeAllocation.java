@@ -1,10 +1,14 @@
 package au.com.noojee.acceloapi.entities;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+
+import org.joda.money.Money;
 
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.BasicFilterField;
 import au.com.noojee.acceloapi.entities.meta.fieldTypes.DateFilterField;
 import au.com.noojee.acceloapi.entities.types.AgainstType;
+import au.com.noojee.acceloapi.util.Conversions;
 
 public class TimeAllocation extends AcceloEntity<TimeAllocation>
 {
@@ -30,19 +34,19 @@ public class TimeAllocation extends AcceloEntity<TimeAllocation>
 		return standing;
 	}
 	
-	public long getBillable()
+	public Duration getBillable()
 	{
-		return billable;
+		return Duration.ofSeconds(billable);
 	}
 	
-	public long getNonbillable()
+	public Duration getNonbillable()
 	{
-		return nonbillable;
+		return Duration.ofSeconds(nonbillable);
 	}
 	
-	public float getCharged()
+	public Money getCharged()
 	{
-		return charged;
+		return Conversions.asMoney(charged);
 	}
 	
 	public String getComments()
