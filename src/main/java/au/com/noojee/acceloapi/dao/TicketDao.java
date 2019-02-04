@@ -117,6 +117,16 @@ public class TicketDao extends AcceloDao<Ticket>
 
 		return this.getByFilter(filter);
 	}
+	
+	public List<Ticket> getAllOpen() throws AcceloException
+	{
+		// Get all tickets with no close date.
+		AcceloFilter<Ticket> filter = new AcceloFilter<>();
+		filter.where(filter.eq(Ticket_.date_closed, Constants.DATETIMEZERO));
+
+		return this.getByFilter(filter);
+	}
+
 
 	/**
 	 * returns a list of tickets which haven't been assigned to a contract.
