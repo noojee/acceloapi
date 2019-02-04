@@ -40,18 +40,20 @@ public class ProgressionDao extends AcceloDao<Progression>
 	{
 		return EndPoint.progressions;
 	}
-	
-	
+
 	public <E extends AcceloEntity<E>> List<Progression> getByEndPoint(EndPoint endPoint, E entity)
 	{
 		List<Progression> progressions = null;
-		
+
 		URL url;
 		try
 		{
-			url = EndPoint.progressions.getURL(endPoint,  (entity == null ? 0 : entity.getId())); //  URL(endPoint.getURL() + "/" + entity.getId() + "/progressions");
+			url = EndPoint.progressions.getURL(endPoint, (entity == null ? 0 : entity.getId())); // URL(endPoint.getURL()
+																									// + "/" +
+																									// entity.getId() +
+																									// "/progressions");
 			HTTPResponse result = AcceloApi.getInstance()._request(HTTPMethod.GET, url, null);
-			
+
 			if (result.getResponseCode() == 200)
 			{
 				ProgressionResponseList response = result.parseBody(ProgressionResponseList.class);
@@ -61,52 +63,53 @@ public class ProgressionDao extends AcceloDao<Progression>
 		}
 		catch (Throwable e)
 		{
-			logger.error(e,e);
+			logger.error(e, e);
 			throw new AcceloException(e);
 		}
-		
+
 		return progressions;
 	}
-	
-	
-	
-	public <E extends AcceloEntity<E>> void triggerProgression(int progressionId, E entity)
+
+	public <E extends AcceloEntity<E>> Ticket triggerProgression(int progressionId, E entity)
 	{
-		URL url;
+		ProgressionRunResponse response = null;
 		try
 		{
-			url = new URL(EndPoint.tickets.getURL() + "/" + entity.getId() + "/progressions/" + progressionId + "/auto");
+			URL url = new URL(
+					EndPoint.tickets.getURL() + "/" + entity.getId() + "/progressions/" + progressionId + "/auto");
 			HTTPResponse result = AcceloApi.getInstance()._request(HTTPMethod.POST, url, null);
-			
+
 			if (result.getResponseCode() == 200)
 			{
-				@SuppressWarnings("unused")
-				ProgressionRunResponse response = result.parseBody(ProgressionRunResponse.class);
+				response = result.parseBody(ProgressionRunResponse.class);
 			}
+			else
+				throw new AcceloException("Failed Progression: code: " + result.getResponseCode() + " Message: " + result.getResponseMessage());
 		}
 		catch (Throwable e)
 		{
-			logger.error(e,e);
+			logger.error(e, e);
 			throw new AcceloException(e);
 		}
 		
+		return response.ticket;
+
 	}
-	
+
 	class ProgressionRunResponse
 	{
 		Meta meta;
-		
+
 		@SerializedName("response")
 		Ticket ticket;
 	}
-	
+
 	class ProgressionResponseList
 	{
 		Meta meta;
 		@SerializedName("response")
 		List<Progression> progressions;
 	}
-
 
 	@Override
 	protected Class<Progression> getEntityClass()
