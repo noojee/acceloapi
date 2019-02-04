@@ -36,15 +36,16 @@ public class ProgressDaoTest
 			@SuppressWarnings("unused")
 			List<Ticket> tickets = new TicketDao().getByFilter(filter);
 			
-			//List<Progression> progressions = daoProgression.getByEndPoint(EndPoint.tickets, tickets.get(0));
-			List<Progression> progressions = daoProgression.getByEndPoint(EndPoint.tickets, null);
+			Ticket ticket = tickets.get(0);
+			
+			List<Progression> progressions = daoProgression.getByEndPoint(EndPoint.tickets, ticket);
 			
 			for (Progression progression : progressions)
 			{
 				System.out.println(progression);
 			}
 			
-			// daoProgression.triggerProgression(progressions.get(0), tickets.get(0));
+			daoProgression.triggerProgression(progressions.get(0).getId(), tickets.get(0).getId());
 
 		}
 		catch (FileNotFoundException e)

@@ -70,18 +70,18 @@ public class ProgressionDao extends AcceloDao<Progression>
 		return progressions;
 	}
 
-	public <E extends AcceloEntity<E>> Ticket triggerProgression(int progressionId, E entity)
+	public <E extends AcceloEntity<E>> void triggerProgression(int progressionId, int entityId)
 	{
-		ProgressionRunResponse response = null;
+		
 		try
 		{
 			URL url = new URL(
-					EndPoint.tickets.getURL() + "/" + entity.getId() + "/progressions/" + progressionId + "/auto");
+					EndPoint.tickets.getURL() + "/" + entityId + "/progressions/" + progressionId + "/auto");
 			HTTPResponse result = AcceloApi.getInstance()._request(HTTPMethod.POST, url, null);
 
 			if (result.getResponseCode() == 200)
 			{
-				response = result.parseBody(ProgressionRunResponse.class);
+				result.parseBody(ProgressionRunResponse.class);
 			}
 			else
 				throw new AcceloException("Failed Progression: code: " + result.getResponseCode() + " Message: " + result.getResponseMessage());
@@ -91,9 +91,6 @@ public class ProgressionDao extends AcceloDao<Progression>
 			logger.error(e, e);
 			throw new AcceloException(e);
 		}
-		
-		return response.ticket;
-
 	}
 
 	class ProgressionRunResponse

@@ -244,6 +244,11 @@ public class Ticket extends AcceloEntity<Ticket>
 		return this.issue_status;
 	}
 	
+	public void setStatus(EntityStatus issue_status)
+	{
+		this.issue_status = issue_status;
+		this.status_id = issue_status.getId();
+	}
 	
 	/**
 	 * Only use this field when inserting a ticket
