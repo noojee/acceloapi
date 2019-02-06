@@ -2,6 +2,7 @@ package au.com.noojee.acceloapi.entities;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.text.html.HTML.Tag;
@@ -53,7 +54,6 @@ public class Activity extends AcceloEntity<Activity>
 	{
 		unapproved, approved, invoiced, locked, empty;
 	}
-	
 
 	private Medium medium = Medium.call; // The type of activity.
 
@@ -76,6 +76,7 @@ public class Activity extends AcceloEntity<Activity>
 	@BasicFilterField
 	private ActivityOwnerType owner_type;
 
+	// The main plaintext content of the activity.
 	private String body;
 
 	@BasicFilterField
@@ -129,6 +130,19 @@ public class Activity extends AcceloEntity<Activity>
 
 	List<Tag> tag; // A list of tags associated with the activity
 
+	// When recording an activity with a Medium of email you can specify a list of email addresses that we included.
+	Interactions to = new Interactions();
+	Interactions cc = new Interactions();
+	Interactions bcc = new Interactions();
+
+	class Interactions
+	{
+		List<Integer> affiliation = new ArrayList<>();
+		@SuppressWarnings("hiding")
+		List<Integer> staff = new ArrayList<>();
+		List<String> emails = new ArrayList<>();
+	}
+
 	@SuppressWarnings("unused")
 	private class Meta implements MetaBasicFilterFields
 	{
@@ -147,6 +161,21 @@ public class Activity extends AcceloEntity<Activity>
 		this.owner_type = ownerType;
 		this.owner_id = ownerId;
 
+	}
+
+	public void addTo(String emailAddress)
+	{
+		to.emails.add(emailAddress);
+	}
+
+	public void addCc(String emailAddress)
+	{
+		to.emails.add(emailAddress);
+	}
+
+	public void addBcc(String emailAddress)
+	{
+		to.emails.add(emailAddress);
 	}
 
 	public void setMedium(Medium medium)
@@ -358,10 +387,10 @@ public class Activity extends AcceloEntity<Activity>
 
 	public void setDateTimeCreated(LocalDateTime dateTimeCreated)
 	{
-		
+
 		this.date_created = dateTimeCreated;
 	}
-	
+
 	public LocalDateTime getDateTimeStarted()
 	{
 		return date_started;
@@ -428,13 +457,13 @@ public class Activity extends AcceloEntity<Activity>
 	{
 		return "Activity [id=" + getId() + ", against_type=" + against_type + ", against_id="
 				+ against_id + ", parent=" + parent
-				+ ", thread=" + thread +  ", owner_id=" + owner_id + ", owner_type=" + owner_type
+				+ ", thread=" + thread + ", owner_id=" + owner_id + ", owner_type=" + owner_type
 				+ ",\n visibility=" + visibility + ", details=" + details + ", date_created="
 				+ date_created + ", date_started=" + date_started + ", date_ended=" + date_ended + ", date_logged="
 				+ date_logged + ",\n date_modified=" + date_modified + ", billable=" + billable + ", nonbillable="
 				+ nonbillable + ", staff=" + staff + ", priority=" + priority + ", _class=" + _class + ", task=" + task
 				+ ", time_allocation=" + time_allocation + ", rate=" + rate + ", rate_charged=" + rate_charged
-				+ ", tag=" + tag+ ",\n subject=" + subject  + ", body=" + body + "]\n\n";
+				+ ", tag=" + tag + ",\n subject=" + subject + ", body=" + body + "]\n\n";
 	}
 
 	public boolean isSystemActivity()
@@ -445,9 +474,14 @@ public class Activity extends AcceloEntity<Activity>
 	public String getSummary()
 	{
 		String summary = this.body.replaceAll("\n", " ").replaceAll("\r", " ").replaceAll("  ", " ");
-		summary = summary.substring(0, Math.min(150,  summary.length()));
+		summary = summary.substring(0, Math.min(150, summary.length()));
 		return summary;
 	}
-	
+
+	public void setStaff(int staff)
+	{
+		this.staff = staff;
+		
+	}
 
 }

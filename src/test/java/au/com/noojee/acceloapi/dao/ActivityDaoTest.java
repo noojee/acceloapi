@@ -19,8 +19,33 @@ import au.com.noojee.acceloapi.filter.AcceloFilter;
 public class ActivityDaoTest
 {
 
+	
+	@Test
+	public void getOne()
+	{
+
+		AcceloSecret secret;
+		try
+		{
+			secret = AcceloSecret.load();
+			AcceloApi.getInstance().connect(secret);
+
+			ActivityDao daoActivity = new ActivityDao();
+			Activity activity = daoActivity.getById(349599);
+
+			System.out.println(activity);
+		}
+		catch (Throwable e)
+		{
+			e.printStackTrace();
+			fail("Excepton");
+		}
+
+	}
+
 
 	@Test
+	@Ignore
 	public void testActivityForTicket()
 	{
 

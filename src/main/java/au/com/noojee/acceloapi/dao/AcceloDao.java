@@ -171,7 +171,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	/**
 	 * Updated an existing entity. Any instances in the cache will be updated.
 	 * 
-	 * @param ticket
+	 * @param entity to update
 	 * @throws AcceloException
 	 */
 	public E update(E entity)

@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import au.com.noojee.acceloapi.AcceloException;
+import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.AcceloResponseList;
 import au.com.noojee.acceloapi.EndPoint;
@@ -61,8 +62,7 @@ public class ActivityDao extends AcceloDao<Activity>
 		}
 		return list;
 	}
-	
-	
+
 	/**
 	 * Return a list of activities for the given company that occurred on or after the given createdDate
 	 * 
@@ -78,9 +78,9 @@ public class ActivityDao extends AcceloDao<Activity>
 			AcceloFilter<Activity> filter = new AcceloFilter<>();
 
 			filter.where(filter.against(AgainstType.company, company.getId()))
-			.and(filter.after(Activity_.date_created, createdDate.atStartOfDay()))
-			// If the staff field is 0 then this is a system generated activity so lets exclude it.
-			.and(filter.greaterThan(Activity_.staff, 0));
+					.and(filter.after(Activity_.date_created, createdDate.atStartOfDay()))
+					// If the staff field is 0 then this is a system generated activity so lets exclude it.
+					.and(filter.greaterThan(Activity_.staff, 0));
 
 			list = new ActivityDao().getByFilter(filter);
 		}
@@ -90,8 +90,7 @@ public class ActivityDao extends AcceloDao<Activity>
 		}
 		return list;
 	}
-	
-	
+
 	public List<Activity> getRecentTicketActivities(LocalDate extractionDate, int offset, int limit)
 	{
 		AcceloFilter<Activity> filter = new AcceloFilter<>();
@@ -100,7 +99,6 @@ public class ActivityDao extends AcceloDao<Activity>
 		return getRecentTicketActivities(filter, extractionDate);
 	}
 
-	
 	public List<Activity> getRecentTicketActivities(LocalDate extractionDate)
 	{
 		AcceloFilter<Activity> filter = new AcceloFilter<>();
@@ -108,12 +106,10 @@ public class ActivityDao extends AcceloDao<Activity>
 		return getRecentTicketActivities(filter, extractionDate);
 	}
 
-			
 	/**
-	 * Return a list of activities associated to a ticket that occurred on or after the given createdDate
-	 * 
-	 * We include system activities as in some cases its the only activity we see so if we exclude
-	 * the activity the associated ticket will never be picked up.
+	 * Return a list of activities associated to a ticket that occurred on or after the given createdDate We include
+	 * system activities as in some cases its the only activity we see so if we exclude the activity the associated
+	 * ticket will never be picked up.
 	 * 
 	 * @param company
 	 * @param extractionDate return all activities from this date.
@@ -124,23 +120,23 @@ public class ActivityDao extends AcceloDao<Activity>
 		List<Activity> list = null;
 		try
 		{
-	
+
 			// customer generated activities
 			filter.where(filter.eq(Activity_.against_type, AgainstType.issue))
-			.and(filter.eq(Activity_.owner_type, ActivityOwnerType.affiliation))
-			.and(filter.eq(Activity_.staff, 0))
-			.and(filter.eq(Activity_.date_created, extractionDate.atStartOfDay()));
+					.and(filter.eq(Activity_.owner_type, ActivityOwnerType.affiliation))
+					.and(filter.eq(Activity_.staff, 0))
+					.and(filter.eq(Activity_.date_created, extractionDate.atStartOfDay()));
 			list = new ActivityDao().getByFilter(filter);
 			logger.error("getRecentTicketActivities(customer): " + filter);
-			
+
 			// staff and system generated activities
 			// we need system activities as we miss some tickets if no activity ever taken (goes straight to closed).
 			// system generated activities have a '0' value for the staff field.
 			filter.where(filter.eq(Activity_.against_type, AgainstType.issue))
-			.and(filter.eq(Activity_.owner_type, ActivityOwnerType.staff))
-			// .and(filter.greaterThan(Activity_.staff, 0))
-			.and(filter.eq(Activity_.date_created, extractionDate.atStartOfDay()));
-			
+					.and(filter.eq(Activity_.owner_type, ActivityOwnerType.staff))
+					// .and(filter.greaterThan(Activity_.staff, 0))
+					.and(filter.eq(Activity_.date_created, extractionDate.atStartOfDay()));
+
 			list.addAll(new ActivityDao().getByFilter(filter));
 			logger.error("getRecentTicketActivities(staff): " + filter);
 		}
@@ -150,10 +146,6 @@ public class ActivityDao extends AcceloDao<Activity>
 		}
 		return list;
 	}
-
-	
-	
-	
 
 	@Override
 	void preInsertValidation(Activity activity)
@@ -200,6 +192,15 @@ public class ActivityDao extends AcceloDao<Activity>
 	protected Class<? extends AcceloResponse<Activity>> getResponseClass()
 	{
 		return Response.class;
+	}
+
+	@Override
+	protected AcceloFieldList getFieldList()
+	{
+		AcceloFieldList fields = new AcceloFieldList();
+		fields.add("_ALL");
+		// fields.add("interacts"); - can do it as the format of the response object changes from an array to an object.
+		return fields;
 	}
 
 }
