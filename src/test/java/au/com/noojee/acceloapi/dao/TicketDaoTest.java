@@ -2,7 +2,9 @@ package au.com.noojee.acceloapi.dao;
 
 import java.io.FileNotFoundException;
 import java.time.Duration;
+import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import au.com.noojee.acceloapi.AcceloApi;
@@ -17,6 +19,24 @@ public class TicketDaoTest
 {
 
 	@Test
+	public void getOneTest() throws FileNotFoundException
+	{
+		AcceloSecret secret = AcceloSecret.load();
+		AcceloApi.getInstance().connect(secret);
+		
+		TicketDao daoTicket = new TicketDao();
+		
+		Ticket ticket = daoTicket.getById(18869);
+		System.out.println(ticket);
+		
+		List<Ticket> tickets = daoTicket.getAll();
+		
+		System.out.println(tickets.get(0));
+		
+	}
+	
+	@Test
+	@Ignore
 	public void test() throws FileNotFoundException
 	{
 		AcceloSecret secret = AcceloSecret.load();
