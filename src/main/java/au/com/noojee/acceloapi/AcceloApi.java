@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,11 +34,10 @@ public class AcceloApi
 {
 	private Logger logger = LogManager.getLogger(this.getClass());
 	public static final int PAGE_SIZE = 50;
-	
+
 	// Accelo limits api calls to 5000 per hour.
 	// We use 4900 to leave a little margin for error.
-	static final RateLimiter rateLimiter = RateLimiter.create(4900/3600);
-
+	static final RateLimiter rateLimiter = RateLimiter.create(4900 / 3600);
 
 	static private AcceloApi self = null;;
 	/**
@@ -85,7 +85,7 @@ public class AcceloApi
 			AcceloFieldList fieldList,
 			Class<? extends AcceloAbstractResponseList<E>> clazz)
 	{
-		
+
 		List<E> list;
 		try
 		{
@@ -115,7 +115,7 @@ public class AcceloApi
 			throw new AcceloException(e);
 		}
 
-		return (response != null ? response.getEntity() : (E)null);
+		return (response != null ? response.getEntity() : (E) null);
 	}
 
 	public <E extends AcceloEntity<E>, L extends AcceloAbstractResponseList<E>> List<E> getAll(URL url,
@@ -211,7 +211,7 @@ public class AcceloApi
 			}
 			pagedURL = new URL(url + "?_page=" + pageNo + "&_limit=" + PAGE_SIZE);
 			response = _request(HTTPMethod.POST, pagedURL, json);
-			
+
 		}
 		catch (IOException e)
 		{
@@ -276,7 +276,7 @@ public class AcceloApi
 		logger.error("Updating: url=" + completeUrl + " jsonFieldValues=" + jsonFieldValues);
 		HTTPResponse response = _request(HTTPMethod.PUT, completeUrl, jsonFieldValues);
 		if (response.getResponseCode() != 200)
-			throw new AcceloException("Update faieled for endPoint " + endPoint + " id=" + id);
+			throw new AcceloException("Update failed for endPoint " + endPoint + " id=" + id);
 
 		return response.parseBody(clazz);
 	}
@@ -287,11 +287,20 @@ public class AcceloApi
 		logger.error("Deleting: url=" + completeUrl);
 		HTTPResponse response = _request(HTTPMethod.DELETE, completeUrl, null);
 		if (response.getResponseCode() != 200)
-			throw new AcceloException("Delete faieled for endPoint " + endPoint + " id=" + id + " Reason:" + response.getResponseMessage());
+		{
+			AcceloErrorResponse error = parseErrorResponse(response);
+			throw new AcceloException(error.getMessage());
+		}
 
 		logger.error("Deleted: url=" + completeUrl);
 
 		return response;
+	}
+
+	private AcceloErrorResponse parseErrorResponse(HTTPResponse response)
+	{
+		AcceloErrorResponse error = GsonForAccelo.fromJson(new StringReader(response.getResponseBody()), AcceloErrorResponse.class);
+		return error;
 	}
 
 	private URL buildURL(EndPoint endPoint, int id)
@@ -314,7 +323,7 @@ public class AcceloApi
 	{
 		// accelo is rate limited.
 		rateLimiter.acquire();
-		
+
 		HTTPResponse response = null;
 
 		try
