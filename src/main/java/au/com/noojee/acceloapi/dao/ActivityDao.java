@@ -63,6 +63,33 @@ public class ActivityDao extends AcceloDao<Activity>
 		return list;
 	}
 
+	
+	public void deleteByTicketId(int acceloTicketId)
+	{
+		List<Activity> list = null;
+		try
+		{
+			AcceloFilter<Activity> filter = new AcceloFilter<>();
+
+			filter.where(filter.against(AgainstType.ticket, acceloTicketId));
+
+
+			list = getByFilter(filter);
+			
+			for (Activity activity : list)
+			{
+				delete(activity);
+			}
+		}
+		catch (AcceloException e)
+		{
+			logger.error(e, e);
+		}
+		
+	}
+	
+	
+	
 	/**
 	 * Return a list of activities for the given company that occurred on or after the given createdDate
 	 * 
@@ -202,5 +229,8 @@ public class ActivityDao extends AcceloDao<Activity>
 		// fields.add("interacts"); - can do it as the format of the response object changes from an array to an object.
 		return fields;
 	}
+
+
+
 
 }
