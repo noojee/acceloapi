@@ -19,7 +19,6 @@ import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
 import au.com.noojee.acceloapi.dao.gson.GsonForAccelo;
 import au.com.noojee.acceloapi.entities.AcceloEntity;
-import au.com.noojee.acceloapi.entities.Ticket;
 import au.com.noojee.acceloapi.filter.AcceloFilter;
 
 /**
@@ -375,7 +374,7 @@ public enum AcceloCache
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<AcceloEntity> getIfPresent(CacheKey<Ticket> key)
+	public List<AcceloEntity> getIfPresent(CacheKey<? extends AcceloEntity> key)
 	{
 		return this.queryCache.getIfPresent(key);
 	}
