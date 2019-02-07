@@ -18,6 +18,11 @@ public class AcceloErrorResponse
 		this.httpResponse = httpResponse;
 	}
 	
+	public String getMessage()
+	{
+		return meta.message;
+	}
+	
 	@Override
 	public String toString()
 	{
