@@ -6,7 +6,6 @@ import java.util.List;
 import au.com.noojee.acceloapi.AcceloAbstractResponseList;
 import au.com.noojee.acceloapi.AcceloApi;
 import au.com.noojee.acceloapi.AcceloException;
-import au.com.noojee.acceloapi.AcceloFieldList;
 import au.com.noojee.acceloapi.AcceloResponse;
 import au.com.noojee.acceloapi.EndPoint;
 import au.com.noojee.acceloapi.entities.Contract;
@@ -33,12 +32,6 @@ public class ContractPeriodDao extends AcceloDao<ContractPeriod>
 
 		return periods;
 
-	}
-
-	@Override
-	protected AcceloFieldList getFieldList()
-	{
-		return AcceloFieldList.ALL;
 	}
 
 	@Override
