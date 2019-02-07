@@ -92,7 +92,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 	public E getById(int id, boolean refreshCache) throws AcceloException
 	{
-		return getById(getEndPoint(), id, AcceloFieldList.ALL, refreshCache);
+		return getById(getEndPoint(), id, getFieldList(), refreshCache);
 	}
 
 	protected E getById(EndPoint endpoint, int id) throws AcceloException
@@ -165,7 +165,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		// pass in an empty filter
 		AcceloFilter<E> filter = new AcceloFilter<>();
 
-		CacheKey<E> key = new CacheKey<>(getEndPoint(), filter, AcceloFieldList.ALL, getResponseListClass(),
+		CacheKey<E> key = new CacheKey<>(getEndPoint(), filter, getFieldList(), getResponseListClass(),
 				this.getEntityClass());
 
 		entities = (List<E>) AcceloCache.getInstance().get(key);
@@ -299,7 +299,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 
 		AcceloFilter<E> filter = new AcceloFilter<>();
 
-		String rawResponse = api.getRaw(this.getEndPoint(), filter, AcceloFieldList.ALL, this.getResponseListClass());
+		String rawResponse = api.getRaw(this.getEndPoint(), filter, getFieldList(), this.getResponseListClass());
 		@SuppressWarnings("unchecked")
 		ResponseForValidation response = new Gson().fromJson(rawResponse, ResponseForValidation.class);
 
