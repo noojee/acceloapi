@@ -121,6 +121,33 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		return entity;
 	}
 
+	public E getByIdIfPresent(int id) throws AcceloException
+	{
+		return getByIdIfPresent(getEndPoint(), id, getFieldList(), false);
+	}
+
+	protected E getByIdIfPresent(EndPoint endpoint, int id, AcceloFieldList fields, boolean refreshCache)
+			throws AcceloException
+	{
+		E entity = null;
+		if (id != 0)
+		{
+
+			AcceloFilter<E> filter = new AcceloFilter<>();
+			if (refreshCache)
+				filter.refreshCache();
+			FilterField<E, Integer> idField = new FilterField<>("id");
+			filter.where(filter.eq(idField, id));
+
+			@SuppressWarnings("unchecked")
+			List<E> entities = (List<E>) AcceloCache.getInstance()
+					.get(new CacheKey<>(endpoint, filter, fields, getResponseListClass(), this.getEntityClass()));
+			if (entities.size() > 0)
+				entity = entities.get(0);
+		}
+		return entity;
+	}
+
 	/**
 	 * This will return 'ALL" entities associated with the end point. - USE WITH CARE!!!
 	 * 
@@ -156,7 +183,7 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 	public E insert(E entity)
 	{
 		entity.setFieldList(getFieldList());
-		
+
 		preInsertValidation(entity);
 
 		String fieldValues = toJson(entity, DaoOperation.INSERT);
@@ -220,6 +247,21 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		// We remove the entity from the cache. Of course it may also be attached to a query.
 		AcceloCache.getInstance().flushEntity(entity);
 
+	}
+
+	public void deleteById(int id)
+	{
+		HTTPResponse response = AcceloApi.getInstance().delete(getEndPoint(), id);
+
+		if (response.getResponseCode() != 200 && response.getResponseCode() != 400)
+			throw new AcceloException("Delete failed with error code: " + response.getResponseCode() + " Message:"
+					+ response.getResponseMessage());
+
+		E entity = getByIdIfPresent(id);
+
+		// We remove the entity from the cache. Of course it may also be attached to a query.
+		if (entity != null)
+			AcceloCache.getInstance().flushEntity(entity);
 	}
 
 	/**
