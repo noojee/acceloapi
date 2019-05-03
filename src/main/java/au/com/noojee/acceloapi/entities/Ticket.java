@@ -468,8 +468,9 @@ public class Ticket extends AcceloEntity<Ticket>
 		this.resolved_by = staffId;
 	}
 
-	public void setCompanyId(int companyId)
+	public void setCompanyId(Integer companyId)
 	{
+		companyId = (companyId == null ? 0 : companyId);
 		this.company = companyId;
 	}
 

@@ -81,9 +81,9 @@ public class Affiliation extends AcceloEntity<Affiliation>
 		return company;
 	}
 	
-	public void setCompany(int company)
+	public void setCompany(Integer company)
 	{
-		this.company = company;
+		this.company = (company == null ? 0 : company);
 	}
 
 	public void setPhone(String phone)

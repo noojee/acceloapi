@@ -212,9 +212,9 @@ public class Contact extends AcceloEntity<Contact>
 	 * 
 	 * @param company_id
 	 */
-	public void setCompanyId(int company_id)
+	public void setCompanyId(Integer company_id)
 	{
-		this.company_id = company_id;
+		this.company_id = (company_id == null ? 0 : company_id);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class TicketDao extends AcceloDao<Ticket>
 	 * @throws AcceloException
 	 */
 	@Override
-	public Ticket getById(int ticketNo) throws AcceloException
+	public Ticket getById(Integer ticketNo) throws AcceloException
 	{
 		return getById(EndPoint.tickets, ticketNo);
 	}

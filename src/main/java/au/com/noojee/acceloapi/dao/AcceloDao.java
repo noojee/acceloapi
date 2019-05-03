@@ -85,23 +85,27 @@ public abstract class AcceloDao<E extends AcceloEntity<E>>
 		return list.isEmpty() ? Optional.empty() : Optional.of((E) list.get(0));
 	}
 
-	public E getById(int id) throws AcceloException
+	public E getById(Integer id) throws AcceloException
 	{
+		id =  (id == null ?  0 : id);
 		return getById(getEndPoint(), id, getFieldList(), false);
 	}
 
-	public E getById(int id, boolean refreshCache) throws AcceloException
+	public E getById(Integer id, boolean refreshCache) throws AcceloException
 	{
+		id =  (id == null ?  0 : id);
 		return getById(getEndPoint(), id, getFieldList(), refreshCache);
 	}
 
-	protected E getById(EndPoint endpoint, int id) throws AcceloException
+	protected E getById(EndPoint endpoint, Integer id) throws AcceloException
 	{
+		id =  (id == null ?  0 : id);
 		return getById(endpoint, id, getFieldList(), false);
 	}
 
-	protected E getById(EndPoint endpoint, int id, AcceloFieldList fields, boolean refreshCache) throws AcceloException
+	protected E getById(EndPoint endpoint, Integer id, AcceloFieldList fields, boolean refreshCache) throws AcceloException
 	{
+		id =  (id == null ?  0 : id);
 		E entity = null;
 		if (id != 0)
 		{

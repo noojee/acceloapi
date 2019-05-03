@@ -87,6 +87,8 @@ public class ContactDao extends AcceloDao<Contact>
 	 */
 	public List<Contact> getByCompany(Integer companyId)
 	{
+		companyId = (companyId == null ? 0 : companyId);
+		
 		AcceloFilter<Contact> filter = new AcceloFilter<>();
 		filter.where(filter.against(AgainstType.company, companyId));
 
