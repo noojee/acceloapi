@@ -33,7 +33,6 @@ public class ProgressDaoTest
 			AcceloFilter<Ticket> filter = new AcceloFilter<>();
 			filter.where(filter.eq(Ticket_.id, 18017));
 			
-			@SuppressWarnings("unused")
 			List<Ticket> tickets = new TicketDao().getByFilter(filter);
 			
 			Ticket ticket = tickets.get(0);

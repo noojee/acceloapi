@@ -11,9 +11,11 @@ import java.util.function.Function;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 
-public interface Conversions
+public class Conversions
 {
-	static public final CurrencyUnit LOCAL_CURRENCY = CurrencyUnit.AUD;
+	public static  final CurrencyUnit LOCAL_CURRENCY = CurrencyUnit.AUD;
+	
+	private Conversions(){}
 
 	/**
 	 * Money
@@ -23,7 +25,7 @@ public interface Conversions
 	 */
 	public static Money asMoney(double value)
 	{
-		return Money.of(LOCAL_CURRENCY,value);
+		return Money.of(LOCAL_CURRENCY, value);
 	}
 
 	public static double asDouble(Money value)
@@ -40,9 +42,7 @@ public interface Conversions
 	 */
 	public static LocalDate toLocalDate(long dateToSeconds)
 	{
-		LocalDate localDate = Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault()).toLocalDate();
-
-		return localDate;
+		return  Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault()).toLocalDate();
 	}
 
 	public static long toLong(LocalDate localDate)
@@ -60,10 +60,8 @@ public interface Conversions
 	 */
 	public static LocalDateTime toLocalDateTime(long dateToSeconds)
 	{
-		LocalDateTime localDateTime = Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault())
+		return Instant.ofEpochSecond(dateToSeconds).atZone(ZoneId.systemDefault())
 				.toLocalDateTime();
-
-		return localDateTime;
 	}
 
 	public static Long toLong(LocalDateTime localDateTime)
@@ -87,7 +85,6 @@ public interface Conversions
 	{
 		return LocalDateTime.of(cutoffDate, LocalTime.of(0, 0));
 	}
-	
 
 	public static <E, R> R safe(E object, Function<E, R> method, R orElse)
 	{
@@ -106,8 +103,7 @@ public interface Conversions
 	{
 		if (object == null)
 			return null;
-		else
-			return method.apply(object);
+		return method.apply(object);
 	}
 
 	public static <E, P, R> R safe3(E object, Function<E, P> parentMethod, Function<P, R> childMethod)
@@ -123,6 +119,5 @@ public interface Conversions
 
 		return value;
 	}
-
 
 }

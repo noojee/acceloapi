@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.html.HTML.Tag;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

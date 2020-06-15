@@ -8,7 +8,6 @@ package au.com.noojee.acceloapi;
  */
 public class AcceloErrorResponse
 {
-	@SuppressWarnings("unused")
 	private Meta meta;
 	
 	private HTTPResponse httpResponse;

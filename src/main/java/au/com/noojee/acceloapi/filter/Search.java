@@ -1,6 +1,6 @@
 package au.com.noojee.acceloapi.filter;
 
-class Search extends Expression
+public class Search extends Expression
 {
 	private String operand;
 

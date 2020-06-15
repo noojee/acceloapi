@@ -68,6 +68,7 @@ public class Company extends AcceloEntity<Company>
 		private transient String contact_number;  // filters over phone and fax
 
 	}
+	
 
 	static public class CustomFieldsResponse extends AcceloResponseList<CustomField>
 	{

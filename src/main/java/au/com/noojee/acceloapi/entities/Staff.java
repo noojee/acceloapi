@@ -6,7 +6,7 @@ import au.com.noojee.acceloapi.entities.meta.fieldTypes.MetaBasicFilterFields;
 public class Staff extends AcceloEntity<Staff>
 {
 	
-	enum Standing
+	public enum Standing
 	{
 		active, inactive,lockout;
 	}

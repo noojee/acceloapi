@@ -39,8 +39,9 @@ public class Priority extends AcceloEntity<Priority>
 		}
 		
 	}
+	
 	// In order of increasing urgency
-	enum Color { grey, blue, green, orange, red };
+	public enum Color { grey, blue, green, orange, red };
 	
 	@SuppressFBWarnings
 	private String title;	// A name for the priority.
