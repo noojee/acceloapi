@@ -33,7 +33,7 @@ public abstract class CustomisableTypeAdaptor<C> implements TypeAdapterFactory
 
 	@Override
 	@SuppressWarnings("unchecked") // we use a runtime check to guarantee that 'C' and 'T' are equal
-	public final <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type)
+	public final <T> TypeAdapter<T> create(@SuppressWarnings("exports") Gson gson, TypeToken<T> type)
 	{
 		return type.getRawType() == customizedClass
 				? (TypeAdapter<T>) customGsonAdapator(gson, (TypeToken<C>) type)
@@ -44,7 +44,7 @@ public abstract class CustomisableTypeAdaptor<C> implements TypeAdapterFactory
 	{
 		final TypeAdapter<C> delegate = gson.getDelegateAdapter(this, type);
 		final TypeAdapter<JsonElement> elementAdapter = gson.getAdapter(JsonElement.class);
-		return new TypeAdapter<C>()
+		return new TypeAdapter<>()
 		{
 			@Override
 			public void write(JsonWriter out, C value) throws IOException

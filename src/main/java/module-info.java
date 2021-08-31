@@ -5,6 +5,7 @@
  * @author bsutton
  *
  */
+
 module acceloapi
 {
 	exports au.com.noojee.acceloapi;
@@ -21,11 +22,10 @@ module acceloapi
 
 	requires com.github.spotbugs.annotations;
 	requires com.google.common;
-	requires commons.lang3;
-	requires gson;
-	requires java.desktop;
-	requires transitive joda.money;
-	requires jsr305;
-	requires log4j.api;
+	requires com.google.gson;
+	requires org.apache.commons.lang3;
+	requires transitive org.joda.money;
+	
+	requires org.apache.logging.log4j;
 	requires reflections;
 }

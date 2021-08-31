@@ -16,7 +16,7 @@ import au.com.noojee.acceloapi.entities.types.AgainstType;
 
 public class AcceloFilter<E extends AcceloEntity<E>>
 {
-	public static Logger logger = LogManager.getLogger();
+	static Logger logger = LogManager.getLogger();
 	public static final String ALL = "_ALL";
 	
 	// Used by limit(int) to remove any limit on the
